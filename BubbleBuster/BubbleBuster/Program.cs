@@ -37,13 +37,25 @@ namespace BubbleBuster
                 }
 
                 string data = readStream.ReadToEnd();
+                SaveDataToFile(@"\BubbleBuster", "test.txt", data);
 
                 response.Close();
                 readStream.Close();
 
-                Console.WriteLine(data);
+                Console.WriteLine();
                 Console.ReadLine();
             }
+        }
+
+        private static void SaveDataToFile(string folderName, string fileName, string data)
+        {
+            string folderPath = Path.GetTempPath() + folderName;
+            string filePath = Path.GetTempPath() + folderName + @"\" + fileName;
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+            File.WriteAllText(filePath, data);
         }
     }
 }
