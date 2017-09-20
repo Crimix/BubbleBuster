@@ -42,10 +42,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="JSON\FollowersID.cs" />
+    <Compile Include="Helper\FileHelper.cs" />
+    <Compile Include="Web\ReturnedObjects\FollowersID.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Request\Request.cs" />
+    <Compile Include="Web\WebHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

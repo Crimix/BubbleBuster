@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BubbleBuster.Request
+namespace BubbleBuster.Web
 {
-    public static class Request
+    public static class WebHandler
     {
         
     }
