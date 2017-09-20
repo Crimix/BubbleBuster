@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helper\FileHelper.cs" />
+    <Compile Include="Helper\RequestBuilder.cs" />
     <Compile Include="Web\ReturnedObjects\FollowersID.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
