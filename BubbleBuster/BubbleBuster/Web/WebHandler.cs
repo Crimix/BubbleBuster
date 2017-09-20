@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -18,15 +19,7 @@ namespace BubbleBuster.Web
 
         public static string MakeRequest(string requestString)
         {
-            return "";
-        }
-
-
-
-
-
-        public static T MakeRequest<T>(string requestString)
-        {
+            string res = "";
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestString);
             request.Headers[HttpRequestHeader.Authorization] = _cred;
 
@@ -46,14 +39,36 @@ namespace BubbleBuster.Web
                     readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
                 }
 
-                string data = readStream.ReadToEnd();
+                res = readStream.ReadToEnd();
 
                 response.Close();
                 readStream.Close();
 
-                
             }
+
+            return res;
         }
-    }
+
+
+
+
+
+        public static T MakeRequest<T>(string requestString)
+        {
+            T res = default(T);
+
+            try
+            {
+                string data = MakeRequest(requestString);
+
+                res = JsonConvert.DeserializeObject<T>(data);
+            }
+            catch (JsonException e)
+            {
+
+            }
+
+            return res;
+        }
     }
 }
