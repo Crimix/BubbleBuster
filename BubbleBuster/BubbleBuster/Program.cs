@@ -38,8 +38,12 @@ namespace BubbleBuster
 
                 string data = readStream.ReadToEnd();
 
+
+                
                 response.Close();
                 readStream.Close();
+
+                
 
                 Console.WriteLine(data);
                 Console.ReadLine();
