@@ -13,6 +13,7 @@ namespace BubbleBuster.Helper
 
         public static void WriteStringToFile(string folderName, string fileName, string data)
         {
+            fileName = CheckFileName(fileName);
             string folderPath = Path.GetTempPath() + folderName;
             string filePath = Path.GetTempPath() + folderName + @"\" + fileName;
             if (!Directory.Exists(folderPath))
@@ -24,6 +25,7 @@ namespace BubbleBuster.Helper
 
         public static string ReadStringFromFile(string folderName, string fileName)
         {
+            fileName = CheckFileName(fileName);
             string folderPath = Path.GetTempPath() + folderName;
             string filePath = Path.GetTempPath() + folderName + @"\" + fileName;
             return File.ReadAllText(filePath);
@@ -31,6 +33,7 @@ namespace BubbleBuster.Helper
 
         public static void WriteObjectToFile(string folderName, string fileName, Object data)
         {
+            fileName = CheckFileName(fileName);
             string folderPath = Path.GetTempPath() + folderName;
             string filePath = Path.GetTempPath() + folderName + @"\" + fileName;
             if (!Directory.Exists(folderPath))
@@ -42,9 +45,23 @@ namespace BubbleBuster.Helper
 
         public static T ReadObjectFromFile<T>(string folderName, string fileName)
         {
+            fileName = CheckFileName(fileName);
             string folderPath = Path.GetTempPath() + folderName;
             string filePath = Path.GetTempPath() + folderName + @"\" + fileName;
             return JsonConvert.DeserializeObject<T>(File.ReadAllText(filePath));
+        }
+
+
+        private static string CheckFileName(string input)
+        {
+            if (input.EndsWith(".txt"))
+            {
+                return input;
+            }
+            else
+            {
+                return input + ".txt";
+            }
         }
     }
 }
