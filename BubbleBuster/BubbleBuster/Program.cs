@@ -6,6 +6,8 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using BubbleBuster;
+using BubbleBuster.Web.ReturnedObjects;
+using BubbleBuster.Helper;
 
 namespace BubbleBuster
 {
@@ -15,22 +17,12 @@ namespace BubbleBuster
         {
             RequestBuilder rb = new RequestBuilder();
 
-            string returnedString = Web.WebHandler.MakeRequest(rb.buildRequest(DataType.friendsId, "pewdiepie"));
-            Console.WriteLine(returnedString);
+            var returned = Web.WebHandler.MakeRequest<Friends>(rb.BuildRequest(DataType.friendsObj, "pewdiepie"));
+            FileHelper.WriteObjectToFile("BubbleBuster", "friends", returned);
+            Console.WriteLine(returned);
 
+            Console.ReadLine();
         }
     
-
-        private static void SaveDataToFile(string folderName, string fileName, string data)
-        {
-            string folderPath = Path.GetTempPath() + folderName;
-            string filePath = Path.GetTempPath() + folderName + @"\" + fileName;
-
-            if (!Directory.Exists(folderPath))
-            {
-                Directory.CreateDirectory(folderPath);
-            }
-            File.WriteAllText(filePath, data);
-        }
     }
 }

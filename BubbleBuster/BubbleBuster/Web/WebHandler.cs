@@ -22,6 +22,8 @@ namespace BubbleBuster.Web
             string res = "";
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestString);
             request.Headers[HttpRequestHeader.Authorization] = _cred;
+            request.UserAgent = "FilterBubble_SW709";
+            request.Method = "GET";
 
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
@@ -65,7 +67,7 @@ namespace BubbleBuster.Web
             }
             catch (JsonException e)
             {
-
+                Console.WriteLine(e.Message);
             }
 
             return res;

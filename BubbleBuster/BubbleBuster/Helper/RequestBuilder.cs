@@ -12,7 +12,7 @@ namespace BubbleBuster
     {
         string baseUrl = "https://api.twitter.com/1.1/";
         
-        public string buildRequest(DataType returnType, string userName)
+        public string BuildRequest(DataType returnType, string userName)
         {
             string returnString = baseUrl;
 
@@ -28,14 +28,14 @@ namespace BubbleBuster
                     break;
             }
 
-            returnString += ("screen name=" + userName);
+            returnString += ("screen_name=" + userName);
 
             return returnString;
         }
 
-        public string buildRequest(DataType returnType, string userName, string cursor)
+        public string BuildRequest(DataType returnType, string userName, string cursor)
         {
-            string returnString = buildRequest(returnType, userName);
+            string returnString = BuildRequest(returnType, userName);
             returnString += "&cursor=" + cursor;
             return returnString;
         }
