@@ -20,6 +20,9 @@ namespace BubbleBuster
             var returned = Web.WebHandler.MakeRequest<Friends>(rb.BuildRequest(DataType.friendsObj, "pewdiepie"));
             FileHelper.WriteObjectToFile("BubbleBuster", "friends", returned);
             Console.WriteLine(returned);
+            var returned2 = Web.WebHandler.MakeRequest<List<Tweet>>(rb.BuildRequest(DataType.tweets, "pewdiepie"));
+            FileHelper.WriteObjectToFile("BubbleBuster", "tweets", returned2);
+            Console.WriteLine(returned2);
 
             Console.ReadLine();
         }

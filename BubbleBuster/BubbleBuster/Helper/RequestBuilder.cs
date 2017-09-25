@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BubbleBuster
 {
-    public enum DataType { friendsId, friendsObj }; //Expand based on what data is needed
+    public enum DataType { friendsId, friendsObj, tweets }; //Expand based on what data is needed
 
     public class RequestBuilder
     {
@@ -23,6 +23,9 @@ namespace BubbleBuster
                     break;
                 case DataType.friendsObj:
                     returnString += "friends/list.json?";
+                    break;
+                case DataType.tweets:
+                    returnString += "statuses/user_timeline.json?";
                     break;
                 default:
                     break;
