@@ -49,7 +49,6 @@
     <Compile Include="Helper\RequestBuilder.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Web\ReturnedObjects\Entities.cs" />
     <Compile Include="Web\ReturnedObjects\Friends.cs" />
     <Compile Include="Web\ReturnedObjects\Tweet.cs" />
     <Compile Include="Web\ReturnedObjects\User.cs" />
