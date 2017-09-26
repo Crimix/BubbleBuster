@@ -16,7 +16,7 @@ namespace BubbleBuster.Helper
             Limit = limit;
         }
 
-        public bool AllowedToMakeRequest()
+        public bool AllowedToMakeRequest(DataType type)
         {
             return false;
         }
