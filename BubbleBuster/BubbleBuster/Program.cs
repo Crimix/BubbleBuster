@@ -8,21 +8,25 @@ using System.Threading.Tasks;
 using BubbleBuster;
 using BubbleBuster.Web.ReturnedObjects;
 using BubbleBuster.Helper;
+using BubbleBuster.Web.ReturnedObjects.RateLimit;
 
 namespace BubbleBuster
 {
-    class Program
+    public class Program
     {
         static void Main(string[] args)
         {
-            RequestBuilder rb = new RequestBuilder();
 
-            var returned = Web.WebHandler.MakeRequest<Friends>(rb.BuildRequest(DataType.friendsObj, "pewdiepie"));
+            var returned = Web.WebHandler.MakeRequest<Friends>(RequestBuilder.BuildRequest(DataType.friendsObj, "screen_name=pewdiepie"));
             FileHelper.WriteObjectToFile("BubbleBuster", "friends", returned);
             Console.WriteLine(returned);
-            var returned2 = Web.WebHandler.MakeRequest<List<Tweet>>(rb.BuildRequest(DataType.tweets, "pewdiepie"));
+            var returned2 = Web.WebHandler.MakeRequest<List<Tweet>>(RequestBuilder.BuildRequest(DataType.tweets, "screen_name=pewdiepie"));
             FileHelper.WriteObjectToFile("BubbleBuster", "tweets", returned2);
             Console.WriteLine(returned2);
+            var returned3 = Web.WebHandler.MakeRequest<Limit>(RequestBuilder.BuildRequest(DataType.limit));
+            FileHelper.WriteObjectToFile("BubbleBuster", "limits", returned3);
+            Console.WriteLine(returned3);
+
 
             Console.ReadLine();
         }

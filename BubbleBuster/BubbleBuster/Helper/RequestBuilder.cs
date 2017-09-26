@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace BubbleBuster
 {
-    public enum DataType { friendsId, friendsObj, tweets }; //Expand based on what data is needed
+    public enum DataType { friendsId, friendsObj, tweets, limit }; //Expand based on what data is needed
 
     public class RequestBuilder
     {
-        string baseUrl = "https://api.twitter.com/1.1/";
+        private static string baseUrl = "https://api.twitter.com/1.1/";
         
-        public string BuildRequest(DataType returnType, string userName)
+        public static string BuildRequest(DataType returnType, params string[] parameters)
         {
             string returnString = baseUrl;
 
@@ -27,19 +27,19 @@ namespace BubbleBuster
                 case DataType.tweets:
                     returnString += "statuses/user_timeline.json?";
                     break;
+                case DataType.limit:
+                    returnString += "application/rate_limit_status.json?resources=friends,statuses";
+                    break;
                 default:
                     break;
             }
 
-            returnString += ("screen_name=" + userName);
+            foreach (string par in parameters)
+            {
+                returnString += par+"&";
+            }
 
-            return returnString;
-        }
-
-        public string BuildRequest(DataType returnType, string userName, string cursor)
-        {
-            string returnString = BuildRequest(returnType, userName);
-            returnString += "&cursor=" + cursor;
+            returnString = returnString.TrimEnd('&');
             return returnString;
         }
     }
