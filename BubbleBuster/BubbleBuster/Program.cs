@@ -16,24 +16,17 @@ namespace BubbleBuster
     {
         static void Main(string[] args)
         {
-            LimitHelper limitHelper = new LimitHelper();
-            limitHelper.SetLimit(Web.WebHandler.MakeRequest<Limit>(RequestBuilder.BuildRequest(DataType.limit)));
-            if (limitHelper.AllowedToMakeRequest(DataType.friendsObj))
-            {
-                var returned = Web.WebHandler.MakeRequest<Friends>(RequestBuilder.BuildRequest(DataType.friendsObj, "screen_name=pewdiepie"));
-                FileHelper.WriteObjectToFile("BubbleBuster", "friends", returned);
-                Console.WriteLine(returned);
-            }
-            if (limitHelper.AllowedToMakeRequest(DataType.tweets))
-            {
-                var returned2 = Web.WebHandler.MakeRequest<List<Tweet>>(RequestBuilder.BuildRequest(DataType.tweets, "screen_name=pewdiepie"));
-                FileHelper.WriteObjectToFile("BubbleBuster", "tweets", returned2);
-                Console.WriteLine(returned2);
-            }
+            LimitHelper.Instance.SetLimit(Web.WebHandler.MakeRequest<Limit>(RequestBuilder.BuildStartupRequest()));
 
+            var returned = Web.WebHandler.MakeRequest<Friends>(RequestBuilder.BuildRequest(DataType.friendsObj, "screen_name=pewdiepie"));
+            FileHelper.WriteObjectToFile("BubbleBuster", "friends", returned);
+            Console.WriteLine(returned);
+            var returned2 = Web.WebHandler.MakeRequest<List<Tweet>>(RequestBuilder.BuildRequest(DataType.tweets, "screen_name=realDonaldTrump&count=3200&exclude_replies=true"));
+            FileHelper.WriteObjectToFile("BubbleBuster", "tweets", returned2);
+            Console.WriteLine(returned2.Count);
 
             Console.ReadLine();
         }
-    
+
     }
 }

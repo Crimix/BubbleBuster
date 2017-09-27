@@ -11,5 +11,9 @@ namespace BubbleBuster.Web.ReturnedObjects
     {
         [JsonProperty("users")]
         public List<User> Users { get; set; }
+
+        [JsonProperty("next_cursor")]
+        public long NextCursor { get; set; }
+
     }
 }

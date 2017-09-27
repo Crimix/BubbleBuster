@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helper\Constants.cs" />
     <Compile Include="Helper\FileHelper.cs" />
     <Compile Include="Helper\LimitHelper.cs" />
     <Compile Include="Helper\RequestBuilder.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="Web\ReturnedObjects\Friends.cs" />
     <Compile Include="Web\ReturnedObjects\RateLimit\Limit.cs" />
     <Compile Include="Web\ReturnedObjects\RateLimit\Rate.cs" />
+    <Compile Include="Web\ReturnedObjects\RateLimit\ResourceApplication.cs" />
     <Compile Include="Web\ReturnedObjects\RateLimit\ResourceFriends.cs" />
     <Compile Include="Web\ReturnedObjects\RateLimit\Resources.cs" />
     <Compile Include="Web\ReturnedObjects\RateLimit\ResourceStatuses.cs" />

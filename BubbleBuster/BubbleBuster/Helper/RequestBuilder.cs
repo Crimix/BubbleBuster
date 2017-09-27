@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BubbleBuster.Helper;
+using BubbleBuster.Web.ReturnedObjects.RateLimit;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,8 +13,31 @@ namespace BubbleBuster
     public class RequestBuilder
     {
         private static string baseUrl = "https://api.twitter.com/1.1/";
+
+        public static string BuildStartupRequest()
+        {
+            return Build(DataType.limit);
+        }
+
         
         public static string BuildRequest(DataType returnType, params string[] parameters)
+        {
+            string result = Build(returnType, parameters);
+
+            if (!LimitHelper.Instance.AllowedToMakeRequest(returnType))
+            {
+                Console.WriteLine("Sleep at " + DateTime.Now);
+                System.Threading.Thread.Sleep(LimitHelper.Instance.GetResetTime(returnType));
+                Console.WriteLine("Wakeup at "+ DateTime.Now);
+                LimitHelper.Instance.SetLimit(Web.WebHandler.MakeRequest<Limit>(RequestBuilder.BuildStartupRequest()));
+            }
+
+            LimitHelper.Instance.SubtractFrom(returnType);
+
+            return result;
+        }
+
+        private static string Build(DataType returnType, params string[] parameters)
         {
             string returnString = baseUrl;
 
@@ -28,7 +53,7 @@ namespace BubbleBuster
                     returnString += "statuses/user_timeline.json?";
                     break;
                 case DataType.limit:
-                    returnString += "application/rate_limit_status.json?resources=friends,statuses";
+                    returnString += "application/rate_limit_status.json?resources=friends,statuses,application";
                     break;
                 default:
                     break;
@@ -36,7 +61,7 @@ namespace BubbleBuster
 
             foreach (string par in parameters)
             {
-                returnString += par+"&";
+                returnString += par + "&";
             }
 
             returnString = returnString.TrimEnd('&');

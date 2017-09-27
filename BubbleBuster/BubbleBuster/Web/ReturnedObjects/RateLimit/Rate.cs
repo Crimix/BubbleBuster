@@ -18,12 +18,5 @@ namespace BubbleBuster.Web.ReturnedObjects.RateLimit
         [JsonProperty("reset")]
         public long Reset { get; set; }
 
-
-        public TimeSpan GetResetTime()
-        {
-            DateTime now = DateTime.Now;
-            DateTime to = DateTimeOffset.FromUnixTimeSeconds(Reset).DateTime.ToLocalTime();
-            return now - to;
-        }
     }
 }
