@@ -9,5 +9,6 @@ namespace BubbleBuster.Helper
     public static class Constants
     {
         public const int REMAINING_OFFSET = 10;
+        public const string USER_AGENT = "FilterBubble_SW709";
     }
 }

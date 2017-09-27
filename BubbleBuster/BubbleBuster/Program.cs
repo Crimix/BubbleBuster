@@ -25,6 +25,8 @@ namespace BubbleBuster
             FileHelper.WriteObjectToFile("BubbleBuster", "tweets", returned2);
             Console.WriteLine(returned2.Count);
 
+            List<Tweet> retuned3 = TweetRetriever.Instance.getTweets(returned); 
+
             Console.ReadLine();
         }
 
