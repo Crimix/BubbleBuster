@@ -15,5 +15,7 @@ namespace BubbleBuster.Web.ReturnedObjects
         public string Location { get; set; }
         [JsonProperty("protected")]
         public bool IsProtected { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
     }
 }

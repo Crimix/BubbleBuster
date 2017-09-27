@@ -18,15 +18,12 @@ namespace BubbleBuster
         {
             LimitHelper.Instance.SetLimit(Web.WebHandler.MakeRequest<Limit>(RequestBuilder.BuildStartupRequest()));
 
-            var returned = Web.WebHandler.MakeRequest<Friends>(RequestBuilder.BuildRequest(DataType.friendsObj, "screen_name=pewdiepie"));
-            FileHelper.WriteObjectToFile("BubbleBuster", "friends", returned);
-            Console.WriteLine(returned);
-            var returned2 = Web.WebHandler.MakeRequest<List<Tweet>>(RequestBuilder.BuildRequest(DataType.tweets, "screen_name=realDonaldTrump&count=3200&exclude_replies=true"));
-            FileHelper.WriteObjectToFile("BubbleBuster", "tweets", returned2);
-            Console.WriteLine(returned2.Count);
+            var returned = FriendsRetriever.Instance.getFriends("realDonaldTrump");
 
-            List<Tweet> retuned3 = TweetRetriever.Instance.getTweets(returned); 
+            List<Tweet> returned3 = TweetRetriever.Instance.getTweets(returned);
+            FileHelper.WriteObjectToFile("BubbleBuster", "multTweets", returned3);
 
+            Console.WriteLine("Done!!! " + returned3.Count);
             Console.ReadLine();
         }
 

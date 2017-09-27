@@ -10,5 +10,6 @@ namespace BubbleBuster.Helper
     {
         public const int REMAINING_OFFSET = 10;
         public const string USER_AGENT = "FilterBubble_SW709";
+        public const int TWEETS_TO_RETRIEVE = 3200;
     }
 }

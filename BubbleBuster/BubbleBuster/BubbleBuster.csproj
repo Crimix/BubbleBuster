@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Helper\Constants.cs" />
     <Compile Include="Helper\FileHelper.cs" />
+    <Compile Include="Helper\FriendsRetriever.cs" />
     <Compile Include="Helper\LimitHelper.cs" />
     <Compile Include="Helper\RequestBuilder.cs" />
     <Compile Include="Helper\TweetRetriever.cs" />

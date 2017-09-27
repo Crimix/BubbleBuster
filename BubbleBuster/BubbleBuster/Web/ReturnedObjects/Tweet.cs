@@ -12,5 +12,29 @@ namespace BubbleBuster.Web.ReturnedObjects
         [JsonProperty("text")]
         public string Text { get; set; }
 
+        [JsonProperty("user")]
+        public User User { get; set; }
+
+        [JsonProperty("id")]
+        public long Id { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            if(obj is Tweet)
+            {
+                return ((Tweet)obj).Id == Id;
+            }
+            else
+            {
+                return false;
+            }
+            
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
+
     }
 }
