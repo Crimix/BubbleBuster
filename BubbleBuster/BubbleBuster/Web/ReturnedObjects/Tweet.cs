@@ -18,6 +18,8 @@ namespace BubbleBuster.Web.ReturnedObjects
         [JsonProperty("id")]
         public long Id { get; set; }
 
+        public List<string> ImportantWords { get; set; }
+
         public override bool Equals(object obj)
         {
             if(obj is Tweet)

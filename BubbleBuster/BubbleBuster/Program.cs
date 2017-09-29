@@ -16,6 +16,7 @@ namespace BubbleBuster
     {
         static void Main(string[] args)
         {
+            WordChecker.Instance.checkTweetForWords(new Tweet());
             LimitHelper.Instance.SetLimit(Web.WebHandler.MakeRequest<Limit>(RequestBuilder.BuildStartupRequest()));
 
             var returned = FriendsRetriever.Instance.getFriends("realDonaldTrump");
