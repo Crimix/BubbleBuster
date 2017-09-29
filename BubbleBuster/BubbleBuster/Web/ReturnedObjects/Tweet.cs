@@ -18,6 +18,9 @@ namespace BubbleBuster.Web.ReturnedObjects
         [JsonProperty("id")]
         public long Id { get; set; }
 
+        [JsonProperty("entities")]
+        public Entities Entities { get; set; }
+
         public List<string> ImportantWords { get; set; }
 
         public override bool Equals(object obj)

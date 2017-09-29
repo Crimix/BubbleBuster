@@ -55,7 +55,9 @@
     <Compile Include="Helper\WordChecker.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Web\ReturnedObjects\Entities.cs" />
     <Compile Include="Web\ReturnedObjects\Friends.cs" />
+    <Compile Include="Web\ReturnedObjects\Hashtag.cs" />
     <Compile Include="Web\ReturnedObjects\RateLimit\Limit.cs" />
     <Compile Include="Web\ReturnedObjects\RateLimit\Rate.cs" />
     <Compile Include="Web\ReturnedObjects\RateLimit\ResourceApplication.cs" />

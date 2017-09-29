@@ -11,6 +11,7 @@ namespace BubbleBuster.Helper
     {
 
         private static TweetRetriever _instance;
+        private static int userTweetCount = 1;
 
         private TweetRetriever()
         {
@@ -32,12 +33,13 @@ namespace BubbleBuster.Helper
         public List<Tweet> getTweets(Friends friends)
         {
             List<Tweet> tweetList = new List<Tweet>();
-
-            foreach(User user in friends.Users)
+            Console.WriteLine(String.Format("{0,5}: {1,-20} {2,-20} {3,-11}", "Count", "User name", "User id", "Tweet count"));
+            foreach (User user in friends.Users)
             {
                 List<Tweet> temp = getTweetsFromUser(user);
                 tweetList.AddRange(temp);
-                Console.WriteLine(user.Name + " " + temp.Count);
+                Console.WriteLine(String.Format("{0,5}: {1,-20} {2,-20} {3,-11}", userTweetCount, user.Name, user.Id, temp.Count));
+                userTweetCount++;
             }
 
             return tweetList;
