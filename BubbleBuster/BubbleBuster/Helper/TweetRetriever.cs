@@ -42,7 +42,9 @@ namespace BubbleBuster.Helper
             {
                 Task<List<Tweet>> task = new Task<List<Tweet>>(() => createTweetThread(user));
                 taskQueue.Enqueue(task);
+                task = null;
             }
+            friends = null;
 
             while(taskQueue.Count != 0)
             {
@@ -92,7 +94,7 @@ namespace BubbleBuster.Helper
             List<Tweet> tempList = new List<Tweet>();
 
             long lastTweetID = 0;
-            tempList.AddRange( new WebHandler().MakeRequest<List<Tweet>>(RequestBuilder.BuildRequest(DataType.tweets, "user_id=" + user.Id, "count=200")));
+            tempList.AddRange(new WebHandler().MakeRequest<List<Tweet>>(RequestBuilder.BuildRequest(DataType.tweets, "user_id=" + user.Id, "count=200")));
             lastTweetID = tempList.ElementAt(tempList.Count - 1).Id;
             tweetList.AddRange(tempList.Where(x => !tweetList.Contains(x)));
 

@@ -41,6 +41,7 @@ namespace BubbleBuster.Helper
                 Directory.CreateDirectory(folderPath);
             }
             File.WriteAllText(filePath, JsonConvert.SerializeObject(data));
+            data = null;
         }
 
         public static T ReadObjectFromFile<T>(string folderName, string fileName)
