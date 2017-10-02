@@ -7,21 +7,25 @@ using System.Text;
 
 namespace BubbleBuster.Web
 {
-    public static class WebHandler
+    public class WebHandler
     {
         private static string _cred = "Bearer AAAAAAAAAAAAAAAAAAAAAPRw2QAAAAAAsXqGsVRPgYFVjSScMX3ZVa9YifA%3DkPvipEcLJj3QooYO7aVke3vZ9ruSJp9CgkTlKKtvlmSsGqLUdG";
 
 
+        public WebHandler()
+        {
+            ServicePointManager.DefaultConnectionLimit = 1000;
+        }
 
 
-
-        public static string MakeRequest(string requestString)
+        public string MakeRequest(string requestString)
         {
             string res = "";
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestString);
             request.Headers[HttpRequestHeader.Authorization] = _cred;
             request.UserAgent = Constants.USER_AGENT;
             request.Method = "GET";
+            request.Timeout = 1800000;
 
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
@@ -54,7 +58,7 @@ namespace BubbleBuster.Web
 
 
 
-        public static T MakeRequest<T>(string requestString)
+        public T MakeRequest<T>(string requestString)
         {
             T res = default(T);
 

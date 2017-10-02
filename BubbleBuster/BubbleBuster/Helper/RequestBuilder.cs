@@ -1,4 +1,5 @@
 ﻿using BubbleBuster.Helper;
+using BubbleBuster.Web;
 using BubbleBuster.Web.ReturnedObjects.RateLimit;
 using System;
 using System.Collections.Generic;
@@ -29,7 +30,7 @@ namespace BubbleBuster
                 Console.WriteLine("Sleep at " + DateTime.Now);
                 System.Threading.Thread.Sleep(LimitHelper.Instance.GetResetTime(returnType));
                 Console.WriteLine("Wakeup at "+ DateTime.Now);
-                LimitHelper.Instance.SetLimit(Web.WebHandler.MakeRequest<Limit>(RequestBuilder.BuildStartupRequest()));
+                LimitHelper.Instance.SetLimit(new WebHandler().MakeRequest<Limit>(RequestBuilder.BuildStartupRequest()));
             }
 
             LimitHelper.Instance.SubtractFrom(returnType);

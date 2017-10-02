@@ -9,6 +9,7 @@ using BubbleBuster;
 using BubbleBuster.Web.ReturnedObjects;
 using BubbleBuster.Helper;
 using BubbleBuster.Web.ReturnedObjects.RateLimit;
+using BubbleBuster.Web;
 
 namespace BubbleBuster
 {
@@ -17,9 +18,10 @@ namespace BubbleBuster
         static void Main(string[] args)
         {
             WordChecker.Instance.checkTweetForWords(new Tweet());
-            LimitHelper.Instance.SetLimit(Web.WebHandler.MakeRequest<Limit>(RequestBuilder.BuildStartupRequest()));
+            LimitHelper.Instance.SetLimit(new WebHandler().MakeRequest<Limit>(RequestBuilder.BuildStartupRequest()));
 
             var returned = FriendsRetriever.Instance.getFriends("realDonaldTrump");
+            Console.WriteLine(returned.Users.Count);
 
             List<Tweet> returned3 = TweetRetriever.Instance.getTweets(returned);
             FileHelper.WriteObjectToFile("BubbleBuster", "multTweets", returned3);

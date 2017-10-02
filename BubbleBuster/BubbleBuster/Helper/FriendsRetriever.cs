@@ -1,4 +1,5 @@
-﻿using BubbleBuster.Web.ReturnedObjects;
+﻿using BubbleBuster.Web;
+using BubbleBuster.Web.ReturnedObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +36,7 @@ namespace BubbleBuster.Helper
             
             while (cursor != 0)
             {
-                var friends = Web.WebHandler.MakeRequest<Friends>(RequestBuilder.BuildRequest(DataType.friendsObj, "screen_name=" + screenName , "cursor=" + cursor));
+                var friends = new WebHandler().MakeRequest<Friends>(RequestBuilder.BuildRequest(DataType.friendsObj, "screen_name=" + screenName , "cursor=" + cursor));
                 tempList.AddRange(friends.Users);
                 cursor = friends.NextCursor;
             }

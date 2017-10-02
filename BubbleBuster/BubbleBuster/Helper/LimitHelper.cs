@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BubbleBuster.Helper
@@ -30,11 +31,17 @@ namespace BubbleBuster.Helper
         }
 
 
+        private int _FriendsIdsCallsRemaining = 0;
+        private int _FriendsObjectCallsRemaining = 0;
+        private int _TweetCallsRemaining = 0;
+        private int _LimitCallsRemaining = 0;
 
-        public int FriendsIdsCallsRemaining { get; private set; }
-        public int FriendsObjectCallsRemaining { get; private set; }
-        public int TweetCallsRemaining { get; private set; }
-        public int LimitCallsRemaining { get; private set; }
+        public int FriendsIdsCallsRemaining { get { return _FriendsIdsCallsRemaining; } private set { _FriendsIdsCallsRemaining = value; } }
+        public int FriendsObjectCallsRemaining { get { return _FriendsObjectCallsRemaining; } private set { _FriendsObjectCallsRemaining = value; } }
+        public int TweetCallsRemaining { get { return _TweetCallsRemaining; } private set { _TweetCallsRemaining = value; } }
+        public int LimitCallsRemaining { get { return _LimitCallsRemaining; } private set { _LimitCallsRemaining = value; } }
+
+
         public long FriendsIdsCallsReset { get; private set; }
         public long FriendsObjectCallsReset { get; private set; }
         public long TweetCallsReset { get; private set; }
@@ -108,16 +115,16 @@ namespace BubbleBuster.Helper
             switch (type)
             {
                 case DataType.friendsId:
-                    FriendsIdsCallsRemaining--;
+                    Interlocked.Decrement(ref _FriendsIdsCallsRemaining);
                     break;
                 case DataType.friendsObj:
-                    FriendsObjectCallsRemaining--;
+                    Interlocked.Decrement(ref _FriendsObjectCallsRemaining);
                     break;
                 case DataType.tweets:
-                    TweetCallsRemaining--;
+                    Interlocked.Decrement(ref _TweetCallsRemaining);
                     break;
                 case DataType.limit:
-                    LimitCallsRemaining--;
+                    Interlocked.Decrement(ref _LimitCallsRemaining);
                     break;
             }
         }
