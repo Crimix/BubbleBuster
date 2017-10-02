@@ -39,9 +39,11 @@ namespace BubbleBuster.Helper
                 var friends = new WebHandler().MakeRequest<Friends>(RequestBuilder.BuildRequest(DataType.friendsObj, "screen_name=" + screenName , "cursor=" + cursor));
                 tempList.AddRange(friends.Users);
                 cursor = friends.NextCursor;
+                friends = null;
             }
             Friends result = new Friends();
             result.Users = tempList;
+            tempList = null;
             return result;
         }
 

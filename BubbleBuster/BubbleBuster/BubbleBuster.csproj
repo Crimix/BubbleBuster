@@ -65,6 +65,7 @@
     <Compile Include="Web\ReturnedObjects\RateLimit\Resources.cs" />
     <Compile Include="Web\ReturnedObjects\RateLimit\ResourceStatuses.cs" />
     <Compile Include="Web\ReturnedObjects\Tweet.cs" />
+    <Compile Include="Web\ReturnedObjects\Url.cs" />
     <Compile Include="Web\ReturnedObjects\User.cs" />
     <Compile Include="Web\WebHandler.cs" />
   </ItemGroup>
