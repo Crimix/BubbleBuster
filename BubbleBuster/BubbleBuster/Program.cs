@@ -22,7 +22,7 @@ namespace BubbleBuster
             WordChecker.Instance.checkTweetForWords(new Tweet());
             LimitHelper.Instance.SetLimit(new WebHandler().MakeRequest<Limit>(RequestBuilder.BuildStartupRequest()));
 
-            var returned = FriendsRetriever.Instance.getFriends(username);
+            var returned = FriendsRetriever.Instance.GetFriends(username);
             Console.WriteLine(returned.Users.Count);
 
             /*List<Tweet> returned2 = TweetRetriever.Instance.GetTweetsFromUser(909688209080242176);
