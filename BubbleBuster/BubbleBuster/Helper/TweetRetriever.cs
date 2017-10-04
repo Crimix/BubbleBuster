@@ -66,8 +66,11 @@ namespace BubbleBuster.Helper
                 {
                     for (int i = 0; i < 3; i++)
                     {
-                        taskQueue.Peek().Start();
-                        taskList.Add(taskQueue.Dequeue());
+                        if(taskQueue.Count != 0)
+                        {
+                            taskQueue.Peek().Start();
+                            taskList.Add(taskQueue.Dequeue());
+                        }
                     }
                 }
                 else
