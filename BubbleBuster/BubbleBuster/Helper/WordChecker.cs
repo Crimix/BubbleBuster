@@ -30,7 +30,7 @@ namespace BubbleBuster.Helper
                     {                        
                         _instance.importantWords.AddRange(File.ReadAllLines("important_words"));
                     }
-                    catch(Exception e)
+                    catch(FileNotFoundException e)
                     {
                         Console.WriteLine("Important Words file not loaded: " + e.Message);
                     }
@@ -44,7 +44,7 @@ namespace BubbleBuster.Helper
                         }
 
                     }
-                    catch (Exception e)
+                    catch (FileNotFoundException e)
                     {
                         Console.WriteLine("News Sources file not loaded: " + e.Message);
                     }
