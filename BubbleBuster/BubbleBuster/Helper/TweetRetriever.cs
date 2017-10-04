@@ -107,22 +107,28 @@ namespace BubbleBuster.Helper
             List<Tweet> tweetList = new List<Tweet>();
             List<Tweet> tempList = new List<Tweet>();
 
-            long lastTweetID = 0;
-            tempList.AddRange(new WebHandler().MakeRequest<List<Tweet>>(RequestBuilder.BuildRequest(DataType.tweets, "user_id=" + user.Id, "count=200")));
-            lastTweetID = tempList.ElementAt(tempList.Count - 1).Id;
-            tweetList.AddRange(tempList.Where(x => !tweetList.Contains(x)));
-
-
-            while (tweetList.Count < Constants.TWEETS_TO_RETRIEVE)
+            if (!user.IsProtected)
             {
-                tempList.AddRange(new WebHandler().MakeRequest<List<Tweet>>(RequestBuilder.BuildRequest(DataType.tweets, "user_id=" + user.Id, "count=200", "max_id=" + lastTweetID)));
-                if(tempList.ElementAt(tempList.Count - 1).Id == lastTweetID)
+                long lastTweetID = 0;
+                tempList.AddRange(new WebHandler().MakeRequest<List<Tweet>>(RequestBuilder.BuildRequest(DataType.tweets, "user_id=" + user.Id, "count=200")));
+                if (tempList.Count != 0)
                 {
-                    break;
+                    lastTweetID = tempList.ElementAt(tempList.Count - 1).Id;
+                    tweetList.AddRange(tempList.Where(x => !tweetList.Contains(x)));
+
+
+                    while (tweetList.Count < Constants.TWEETS_TO_RETRIEVE)
+                    {
+                        tempList.AddRange(new WebHandler().MakeRequest<List<Tweet>>(RequestBuilder.BuildRequest(DataType.tweets, "user_id=" + user.Id, "count=200", "max_id=" + lastTweetID)));
+                        if (tempList.Count == 0 || tempList.ElementAt(tempList.Count - 1).Id == lastTweetID)
+                        {
+                            break;
+                        }
+                        lastTweetID = tempList.ElementAt(tempList.Count - 1).Id;
+                        tweetList.AddRange(tempList.Where(x => !tweetList.Contains(x)));
+
+                    }
                 }
-                lastTweetID = tempList.ElementAt(tempList.Count - 1).Id;
-                tweetList.AddRange(tempList.Where(x => !tweetList.Contains(x)));
-                
             }
             tempList = null;
             return tweetList;

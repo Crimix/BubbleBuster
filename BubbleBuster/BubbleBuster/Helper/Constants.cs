@@ -8,7 +8,7 @@ namespace BubbleBuster.Helper
 {
     public static class Constants
     {
-        public const int REMAINING_OFFSET = 10;
+        public const int REMAINING_OFFSET = 5;
         public const string USER_AGENT = "FilterBubble_SW709";
         public const int TWEETS_TO_RETRIEVE = 3200;
     }
