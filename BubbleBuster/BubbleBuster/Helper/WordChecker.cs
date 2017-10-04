@@ -67,15 +67,18 @@ namespace BubbleBuster.Helper
             return tweet.ImportantWords.Count > 0;
         }
 
-        public void CheckTweetForHyperlink(Tweet tweet)
+        public bool CheckTweetForHyperlink(Tweet tweet)
         {
             foreach (Url link in tweet.Entities.Urls)
             {
-                if (newsHyperlinks.Keys.Contains(link.ExpandedUrl))
+                string shortenedUrl = UrlHelper.Instance.ShortenUrl(link.ExpandedUrl);
+                if (newsHyperlinks.Keys.Contains(shortenedUrl))
                 {
-                    
+                    tweet.NewsHyperlinks.Add(shortenedUrl, newsHyperlinks[shortenedUrl]);
                 }
             }
+
+            return tweet.NewsHyperlinks.Count > 0;
         }
     }
 }

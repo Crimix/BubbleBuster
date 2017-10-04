@@ -52,7 +52,7 @@
     <Compile Include="Helper\LimitHelper.cs" />
     <Compile Include="Helper\RequestBuilder.cs" />
     <Compile Include="Helper\TweetRetriever.cs" />
-    <Compile Include="Helper\UrlHeper.cs" />
+    <Compile Include="Helper\UrlHelper.cs" />
     <Compile Include="Helper\WordChecker.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
