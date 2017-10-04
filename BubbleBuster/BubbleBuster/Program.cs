@@ -17,7 +17,7 @@ namespace BubbleBuster
     {
         static void Main(string[] args)
         {
-            string username = "TestBot_SW709";
+            string username = "katyperry";
 
             WordChecker.Instance.checkTweetForWords(new Tweet());
             LimitHelper.Instance.SetLimit(new WebHandler().MakeRequest<Limit>(RequestBuilder.BuildStartupRequest()));
