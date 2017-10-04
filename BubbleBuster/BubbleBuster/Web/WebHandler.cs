@@ -1,6 +1,7 @@
 ﻿using BubbleBuster.Helper;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -43,7 +44,15 @@ namespace BubbleBuster.Web
                     readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
                 }
 
-                res = readStream.ReadToEnd();
+                try
+                {
+                    res = readStream.ReadToEnd();
+                }
+                catch (IOException)
+                {
+
+                }
+                    
                 
 
                 response.Close();
@@ -60,6 +69,7 @@ namespace BubbleBuster.Web
 
         public T MakeRequest<T>(string requestString)
         {
+            if(typeof(T) is )
             T res = default(T);
 
             try
