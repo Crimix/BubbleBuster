@@ -28,7 +28,7 @@ namespace BubbleBuster
             if (!LimitHelper.Instance.AllowedToMakeRequest(returnType))
             {
                 Console.WriteLine("Sleep at " + DateTime.Now + " until " + LimitHelper.Instance.GetResetDateTime(returnType));
-                System.Threading.Thread.Sleep(LimitHelper.Instance.GetResetTime(returnType));
+                Task.Delay(LimitHelper.Instance.GetResetTime(returnType));
                 Console.WriteLine("Wakeup at "+ DateTime.Now);
                 LimitHelper.Instance.SetLimit(new WebHandler().MakeRequest<Limit>(RequestBuilder.BuildStartupRequest()));
             }
