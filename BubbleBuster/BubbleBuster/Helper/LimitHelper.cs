@@ -110,6 +110,28 @@ namespace BubbleBuster.Helper
             return to-now;
         }
 
+        public DateTime GetResetDateTime(DataType type)
+        {
+            long resetTime = 0;
+            switch (type)
+            {
+                case DataType.friendsId:
+                    resetTime = FriendsIdsCallsReset;
+                    break;
+                case DataType.friendsObj:
+                    resetTime = FriendsObjectCallsReset;
+                    break;
+                case DataType.tweets:
+                    resetTime = TweetCallsReset;
+                    break;
+                case DataType.limit:
+                    resetTime = LimitCallsReset;
+                    break;
+            }
+
+            return DateTimeOffset.FromUnixTimeSeconds(resetTime).DateTime.ToLocalTime();
+        }
+
         public void SubtractFrom(DataType type)
         {
             switch (type)

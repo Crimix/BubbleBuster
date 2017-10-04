@@ -17,12 +17,13 @@ namespace BubbleBuster
     {
         static void Main(string[] args)
         {
-            string username = "TestBot_SW709";
+            string username = "katyperry";
+            //string username = "TestBot_SW709";
 
             WordChecker.Instance.checkTweetForWords(new Tweet());
             LimitHelper.Instance.SetLimit(new WebHandler().MakeRequest<Limit>(RequestBuilder.BuildStartupRequest()));
 
-            var returned = FriendsRetriever.Instance.GetFriends(username);
+            var returned = FriendsRetriever.Instance.getFriends(username);
             Console.WriteLine(returned.Users.Count);
 
             /*List<Tweet> returned2 = TweetRetriever.Instance.GetTweetsFromUser(909688209080242176);
