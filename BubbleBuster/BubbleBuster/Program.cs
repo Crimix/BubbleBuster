@@ -20,7 +20,7 @@ namespace BubbleBuster
             string username = "katyperry";
             //string username = "TestBot_SW709";
 
-            WordChecker.Instance.checkTweetForWords(new Tweet());
+            WordChecker.Instance.CheckTweetForWords(new Tweet());
             LimitHelper.Instance.SetLimit(new WebHandler().MakeRequest<Limit>(RequestBuilder.BuildStartupRequest()));
 
             var returned = FriendsRetriever.Instance.getFriends(username);
