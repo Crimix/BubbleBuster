@@ -23,6 +23,8 @@ namespace BubbleBuster.Web.ReturnedObjects
 
         public List<string> ImportantWords { get; set; }
 
+        public Dictionary<string, int> NewsHyperlinks { get; set; }
+
         public override bool Equals(object obj)
         {
             if(obj is Tweet)
