@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BubbleBuster
@@ -14,6 +15,7 @@ namespace BubbleBuster
     public class RequestBuilder
     {
         private static string baseUrl = "https://api.twitter.com/1.1/";
+        private static int wakeupDelay = 1;
 
         public static string BuildStartupRequest()
         {
@@ -27,10 +29,13 @@ namespace BubbleBuster
 
             if (!LimitHelper.Instance.AllowedToMakeRequest(returnType))
             {
-                Console.WriteLine("Sleep at " + DateTime.Now + " until " + LimitHelper.Instance.GetResetDateTime(returnType));
-                Task.Delay(LimitHelper.Instance.GetResetTime(returnType));
+                double wakeUpDelayOffset = wakeupDelay * 3;
+                Interlocked.Increment(ref wakeupDelay);
+                Console.WriteLine("Sleep at " + DateTime.Now + " until " + LimitHelper.Instance.GetResetDateTime(returnType).AddSeconds(wakeUpDelayOffset));
+                Thread.Sleep(LimitHelper.Instance.GetResetTime(returnType).Add(new TimeSpan(0,0, (int)wakeUpDelayOffset)));
                 Console.WriteLine("Wakeup at "+ DateTime.Now);
                 LimitHelper.Instance.SetLimit(new WebHandler().MakeRequest<Limit>(RequestBuilder.BuildStartupRequest()));
+                return BuildRequest(returnType, parameters);
             }
 
             LimitHelper.Instance.SubtractFrom(returnType);

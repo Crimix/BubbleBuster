@@ -21,7 +21,7 @@ namespace BubbleBuster
             //string username = "TestBot_SW709";
 
             WordChecker.Instance.CheckTweetForWords(new Tweet());
-           /* LimitHelper.Instance.SetLimit(new WebHandler().MakeRequest<Limit>(RequestBuilder.BuildStartupRequest()));
+           LimitHelper.Instance.SetLimit(new WebHandler().MakeRequest<Limit>(RequestBuilder.BuildStartupRequest()));
 
             var returned = FriendsRetriever.Instance.getFriends(username);
             Console.WriteLine(returned.Users.Count);
@@ -40,10 +40,10 @@ namespace BubbleBuster
             Console.WriteLine("Done!!! " + returned2.Count);
             */
 
-            /*List<Tweet> returned3 = TweetRetriever.Instance.GetTweetsFromFriends(returned);
+            List<Tweet> returned3 = TweetRetriever.Instance.GetTweetsFromFriends(returned);
             FileHelper.WriteObjectToFile("BubbleBuster", "multTweets", returned3);
 
-            Console.WriteLine("Done!!! " + returned3.Count);*/
+            Console.WriteLine("Done!!! " + returned3.Count);
 
             Console.ReadLine();
         }

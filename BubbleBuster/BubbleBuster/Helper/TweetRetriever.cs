@@ -75,7 +75,7 @@ namespace BubbleBuster.Helper
                 }
                 else
                 {
-                    Task.WaitAny(taskList.ToArray());
+                    Task.WaitAny(taskList.ToArray(), -1);
                     taskQueue.Peek().Start();
                     taskList.Add(taskQueue.Dequeue());
                 }
