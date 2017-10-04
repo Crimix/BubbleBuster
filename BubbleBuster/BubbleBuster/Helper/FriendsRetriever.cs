@@ -29,14 +29,14 @@ namespace BubbleBuster.Helper
             }
         }
 
-        public Friends getFriends(string screenName)
+        public Friends GetFriends(string screenName)
         {
             List<User> tempList = new List<User>();
             long cursor = -1;
             
             while (cursor != 0)
             {
-                var friends = new WebHandler().MakeRequest<Friends>(RequestBuilder.BuildRequest(DataType.friendsObj, "screen_name=" + screenName , "cursor=" + cursor));
+                var friends = new WebHandler().MakeRequest<Friends>(RequestBuilder.BuildRequest(DataType.friendsObj, "screen_name=" + screenName , "count=200",  "cursor=" + cursor));
                 tempList.AddRange(friends.Users);
                 cursor = friends.NextCursor;
                 friends = null;
