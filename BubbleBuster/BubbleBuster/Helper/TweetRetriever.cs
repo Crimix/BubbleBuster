@@ -32,7 +32,21 @@ namespace BubbleBuster.Helper
             }
         }
 
-        public List<Tweet> getTweets(Friends friends)
+        public List<Tweet> GetTweetsFromUser(long userId)
+        {
+            List<Tweet> tweetList = new List<Tweet>();
+            User user = new User();
+            user.Id = userId;
+            Task<List<Tweet>> task = new Task<List<Tweet>>(() => TweetThreadMethod(user));
+            task.Start();
+            task.Wait();
+
+            tweetList.AddRange(task.Result);
+
+            return tweetList;
+        }
+
+        public List<Tweet> GetTweetsFromFriends(Friends friends)
         {
             List<Tweet> tweetList = new List<Tweet>();
             List<Task<List<Tweet>>> taskList = new List<Task<List<Tweet>>>();
@@ -40,7 +54,7 @@ namespace BubbleBuster.Helper
             Console.WriteLine(String.Format("{0,5}: {1,-20} {2,-20} {3,-11}", "Count", "User name", "User id", "Tweet count"));
             foreach (User user in friends.Users)
             {
-                Task<List<Tweet>> task = new Task<List<Tweet>>(() => createTweetThread(user));
+                Task<List<Tweet>> task = new Task<List<Tweet>>(() => TweetThreadMethod(user));
                 taskQueue.Enqueue(task);
                 task = null;
             }
@@ -77,15 +91,15 @@ namespace BubbleBuster.Helper
             return tweetList;
         }
 
-        private List<Tweet> createTweetThread(User user)
+        private List<Tweet> TweetThreadMethod(User user)
         {
-            List<Tweet> temp = getTweetsFromUser(user);
+            List<Tweet> temp = GetUserTweets(user);
             Console.WriteLine(String.Format("{0,5}: {1,-20} {2,-20} {3,-11}", userTweetCount, user.Name, user.Id, temp.Count));
             Interlocked.Increment(ref userTweetCount);
             return temp;
         }
 
-        private List<Tweet> getTweetsFromUser(User user)
+        private List<Tweet> GetUserTweets(User user)
         {
             List<Tweet> tweetList = new List<Tweet>();
             List<Tweet> tempList = new List<Tweet>();

@@ -23,10 +23,25 @@ namespace BubbleBuster
             var returned = FriendsRetriever.Instance.getFriends("realDonaldTrump");
             Console.WriteLine(returned.Users.Count);
 
-            List<Tweet> returned3 = TweetRetriever.Instance.getTweets(returned);
+            /*List<Tweet> returned2 = TweetRetriever.Instance.GetTweetsFromUser(909688209080242176);
+            string temp = "";
+            /foreach (var item in returned2)
+            {
+                foreach (var url in item.Entities.Urls)
+                {
+                    temp += url.ExpandedUrl + Environment.NewLine;
+                }
+            }
+            FileHelper.WriteStringToFile("BubbleBuster", "url", temp);
+
+            Console.WriteLine("Done!!! " + returned2.Count);
+            */
+
+            List<Tweet> returned3 = TweetRetriever.Instance.GetTweetsFromFriends(returned);
             FileHelper.WriteObjectToFile("BubbleBuster", "multTweets", returned3);
 
             Console.WriteLine("Done!!! " + returned3.Count);
+
             Console.ReadLine();
         }
 
