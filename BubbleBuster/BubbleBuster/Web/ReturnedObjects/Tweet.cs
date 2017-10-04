@@ -21,9 +21,11 @@ namespace BubbleBuster.Web.ReturnedObjects
         [JsonProperty("entities")]
         public Entities Entities { get; set; }
 
-        public List<string> ImportantWords { get; set; }
+        private List<string> _ImportantWords = new List<string>();
+        public List<string> ImportantWords { get { return _ImportantWords; } set { _ImportantWords = value; } }
 
-        public Dictionary<string, int> NewsHyperlinks { get; set; }
+        private Dictionary<string, int> _NewsHyperlinks = new Dictionary<string, int>();
+        public Dictionary<string, int> NewsHyperlinks { get { return _NewsHyperlinks; } set { _NewsHyperlinks = value; } }
 
         public override bool Equals(object obj)
         {
