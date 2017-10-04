@@ -1,6 +1,7 @@
 ﻿using BubbleBuster.Helper;
 using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -67,20 +68,30 @@ namespace BubbleBuster.Web
 
 
 
-        public T MakeRequest<T>(string requestString)
+        public T MakeRequest<T>(string requestString) where T : new()
         {
-            if(typeof(T) is )
             T res = default(T);
+            if (typeof(IEnumerable).IsAssignableFrom(typeof(T)))
+            {
+                res = new T();
+            }
+            
+            T tempRes = default(T);
 
             try
             {
                 string data = MakeRequest(requestString);
 
-                res = JsonConvert.DeserializeObject<T>(data);
+                tempRes = JsonConvert.DeserializeObject<T>(data);
             }
             catch (JsonException e)
             {
                 Console.WriteLine(e.Message);
+            }
+
+            if(tempRes != null)
+            {
+                res = tempRes;
             }
 
             return res;

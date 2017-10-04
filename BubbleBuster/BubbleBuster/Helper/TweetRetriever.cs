@@ -97,7 +97,14 @@ namespace BubbleBuster.Helper
         private List<Tweet> TweetThreadMethod(User user)
         {
             List<Tweet> temp = GetUserTweets(user);
-            Console.WriteLine(String.Format("{0,5}: {1,-20} {2,-20} {3,-11}", userTweetCount, user.Name, user.Id, temp.Count));
+            if (user.IsProtected)
+            {
+                Console.WriteLine(String.Format("{0,5}: {1,-20} {2,-20} {3,-11}", userTweetCount, user.Name, user.Id, "Protected"));
+            }
+            else
+            {
+                Console.WriteLine(String.Format("{0,5}: {1,-20} {2,-20} {3,-11}", userTweetCount, user.Name, user.Id, temp.Count));
+            }
             Interlocked.Increment(ref userTweetCount);
             return temp;
         }
