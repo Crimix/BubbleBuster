@@ -29,7 +29,7 @@ namespace BubbleBuster.Helper
             }
         }
 
-        public Friends getFriends(string screenName)
+        public Friends GetFriends(string screenName)
         {
             List<User> tempList = new List<User>();
             long cursor = -1;

@@ -12,10 +12,9 @@ namespace BubbleBuster
 {
     public enum DataType { friendsId, friendsObj, tweets, limit }; //Expand based on what data is needed
 
-    public class RequestBuilder
+    public static class RequestBuilder
     {
         private static string baseUrl = "https://api.twitter.com/1.1/";
-        private static int wakeupDelay = 1;
 
         public static string BuildStartupRequest()
         {
@@ -27,20 +26,35 @@ namespace BubbleBuster
         {
             string result = Build(returnType, parameters);
 
-            if (!LimitHelper.Instance.AllowedToMakeRequest(returnType))
+            if(CheckIfAllowedToMakeRequestOrSleep(returnType, ref result, parameters))
             {
-                double wakeUpDelayOffset = wakeupDelay * 3;
-                Interlocked.Increment(ref wakeupDelay);
-                Console.WriteLine("Sleep at " + DateTime.Now + " until " + LimitHelper.Instance.GetResetDateTime(returnType).AddSeconds(wakeUpDelayOffset));
-                Thread.Sleep(LimitHelper.Instance.GetResetTime(returnType).Add(new TimeSpan(0,0, (int)wakeUpDelayOffset)));
-                Console.WriteLine("Wakeup at "+ DateTime.Now);
-                LimitHelper.Instance.SetLimit(new WebHandler().MakeRequest<Limit>(RequestBuilder.BuildStartupRequest()));
-                return BuildRequest(returnType, parameters);
+                /*Because we need to make sure after wakeup that we have a new request pool and thus we recursly call build.
+                Then when we have the result, we can just return it, if we do not then the request would subtract 2 from the pool*/
+                return result;   
             }
 
             LimitHelper.Instance.SubtractFrom(returnType);
 
             return result;
+        }
+
+
+        private static bool CheckIfAllowedToMakeRequestOrSleep(DataType returnType, ref string result, params string[] parameters)
+        {
+            if (!LimitHelper.Instance.AllowedToMakeRequest(returnType))
+            {
+                TimeSpan sleepTime = LimitHelper.Instance.GetResetTime(returnType);
+                if (sleepTime.TotalMinutes > 0)
+                {
+                    Console.WriteLine("Sleep at " + DateTime.Now + " until " + LimitHelper.Instance.GetResetDateTime(returnType));
+                    Thread.Sleep(sleepTime);
+                    Console.WriteLine("Wakeup at " + DateTime.Now);
+                }
+                LimitHelper.Instance.SetLimit(new WebHandler().MakeRequest<Limit>(BuildStartupRequest()));
+                result = BuildRequest(returnType, parameters);
+                return true;
+            }
+            return false;
         }
 
         private static string Build(DataType returnType, params string[] parameters)

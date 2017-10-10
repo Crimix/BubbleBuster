@@ -49,6 +49,7 @@ namespace BubbleBuster.Helper
         public List<Tweet> GetTweetsFromFriends(Friends friends)
         {
             List<Tweet> tweetList = new List<Tweet>();
+            List<Task<List<Tweet>>> runningTasks = new List<Task<List<Tweet>>>();
             List<Task<List<Tweet>>> taskList = new List<Task<List<Tweet>>>();
             Queue<Task<List<Tweet>>> taskQueue = new Queue<Task<List<Tweet>>>();
             Console.WriteLine(String.Format("{0,5}: {1,-20} {2,-20} {3,-11}", "Count", "User name", "User id", "Tweet count"));
@@ -67,17 +68,22 @@ namespace BubbleBuster.Helper
                     for (int i = 0; i < 3; i++)
                     {
                         if(taskQueue.Count != 0)
-                        {
-                            taskQueue.Peek().Start();
-                            taskList.Add(taskQueue.Dequeue());
+                        { 
+                            var task = taskQueue.Dequeue();
+                            task.Start();
+                            runningTasks.Add(task);
+                            taskList.Add(task);
                         }
                     }
                 }
                 else
                 {
-                    Task.WaitAny(taskList.ToArray(), -1);
-                    taskQueue.Peek().Start();
-                    taskList.Add(taskQueue.Dequeue());
+                    int index =Task.WaitAny(runningTasks.ToArray(), -1);
+                    runningTasks.RemoveAt(index);
+                    var task = taskQueue.Dequeue();
+                    task.Start();
+                    runningTasks.Add(task);
+                    taskList.Add(task);
                 }
             }
             taskQueue = null;
@@ -90,6 +96,7 @@ namespace BubbleBuster.Helper
             }
 
             taskList = null;
+            runningTasks = null;
 
             return tweetList;
         }
