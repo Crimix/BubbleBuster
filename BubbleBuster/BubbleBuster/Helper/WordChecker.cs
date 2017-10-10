@@ -11,7 +11,7 @@ namespace BubbleBuster.Helper
     public class WordChecker
     {
         private static WordChecker _instance;
-        private List<string> importantWords = new List<string>();
+        private Dictionary<string, int> analysisWords = new Dictionary<string, int>();
         private Dictionary<string, int> newsHyperlinks = new Dictionary<string, int>();
 
         private WordChecker()
@@ -26,29 +26,8 @@ namespace BubbleBuster.Helper
                 if (_instance == null)
                 {
                     _instance = new WordChecker();
-                    try
-                    {                        
-                        _instance.importantWords.AddRange(File.ReadAllLines("important_words"));
-                    }
-                    catch(FileNotFoundException e)
-                    {
-                        Console.WriteLine("Important Words file not loaded: " + e.Message);
-                    }
-
-                    try
-                    {
-                        foreach (string link in File.ReadAllLines("news_hyperlinks"))
-                        {
-                            string[] arr = link.Split(';');
-                            _instance.newsHyperlinks.Add(arr[0], Convert.ToInt32(arr[1]));
-                        }
-
-                    }
-                    catch (FileNotFoundException e)
-                    {
-                        Console.WriteLine("News Sources file not loaded: " + e.Message);
-                    }
-
+                    _instance.analysisWords = FileHelper.GetAnalysisWords();
+                    _instance.newsHyperlinks = FileHelper.GetHyperlinks();
                 }
                 return _instance;
             }
@@ -56,7 +35,7 @@ namespace BubbleBuster.Helper
 
         public bool CheckTweetForWords(Tweet tweet)
         {
-            foreach(string word in importantWords)
+            foreach(string word in analysisWords.Keys)
             {
                 if (tweet.Text.Contains(word))
                 {
@@ -67,18 +46,26 @@ namespace BubbleBuster.Helper
             return tweet.ImportantWords.Count > 0;
         }
 
-        public bool CheckTweetForHyperlink(Tweet tweet)
+        public void CheckTweetForHyperlink(List<Tweet> tweetList)
         {
-            foreach (Url link in tweet.Entities.Urls)
+            int totalScore = 0;
+            int tweetNr = 0;
+
+            foreach (Tweet tweet in tweetList)
             {
-                string shortenedUrl = UrlHelper.Instance.ShortenUrl(link.ExpandedUrl);
-                if (newsHyperlinks.Keys.Contains(shortenedUrl))
+                foreach (Url link in tweet.Entities.Urls)
                 {
-                    tweet.NewsHyperlinks.Add(shortenedUrl, newsHyperlinks[shortenedUrl]);
+                    string shortenedUrl = UrlHelper.Instance.ShortenUrl(link.ExpandedUrl);
+                    if (newsHyperlinks.Keys.Contains(shortenedUrl))
+                    {
+                        tweetNr++;
+                        totalScore += newsHyperlinks[shortenedUrl];
+                        tweet.NewsHyperlinks.Add(shortenedUrl, newsHyperlinks[shortenedUrl]);
+                    }
                 }
             }
 
-            return tweet.NewsHyperlinks.Count > 0;
+            Console.WriteLine("Your average political bias is: " + totalScore / tweetNr);
         }
     }
 }

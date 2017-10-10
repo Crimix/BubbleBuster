@@ -17,6 +17,11 @@ namespace BubbleBuster
     {
         static void Main(string[] args)
         {
+            FileHelper.GenerateDirectoryStructure();
+            foreach (string line in FileHelper.GetAnalysisWords().Keys)
+            {
+                Console.WriteLine(line);
+            }
             string username = "katyperry";
             //string username = "TestBot_SW709";
 
