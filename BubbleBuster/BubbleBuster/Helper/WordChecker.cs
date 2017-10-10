@@ -13,6 +13,8 @@ namespace BubbleBuster.Helper
         private static WordChecker _instance;
         private List<string> importantWords = new List<string>();
         private Dictionary<string, int> newsHyperlinks = new Dictionary<string, int>();
+        string impWordsFilename = "important_words";
+        string hyperlinksFilename = "news_hyperlinks";
 
         private WordChecker()
         {
@@ -26,29 +28,6 @@ namespace BubbleBuster.Helper
                 if (_instance == null)
                 {
                     _instance = new WordChecker();
-                    try
-                    {                        
-                        _instance.importantWords.AddRange(File.ReadAllLines("important_words"));
-                    }
-                    catch(FileNotFoundException e)
-                    {
-                        Console.WriteLine("Important Words file not loaded: " + e.Message);
-                    }
-
-                    try
-                    {
-                        foreach (string link in File.ReadAllLines("news_hyperlinks"))
-                        {
-                            string[] arr = link.Split(';');
-                            _instance.newsHyperlinks.Add(arr[0], Convert.ToInt32(arr[1]));
-                        }
-
-                    }
-                    catch (FileNotFoundException e)
-                    {
-                        Console.WriteLine("News Sources file not loaded: " + e.Message);
-                    }
-
                 }
                 return _instance;
             }

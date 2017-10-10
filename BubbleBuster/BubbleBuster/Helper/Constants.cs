@@ -11,5 +11,8 @@ namespace BubbleBuster.Helper
         public const int REMAINING_OFFSET = 5;
         public const string USER_AGENT = "FilterBubble_SW709";
         public const int TWEETS_TO_RETRIEVE = 3200;
+        private static string PROGRAM_DATA = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+
+        public static string PROGRAM_DATA_FILEPATH { get { return PROGRAM_DATA + @"\" + AppDomain.CurrentDomain.FriendlyName.Replace(".exe",""); } }
     }
 }

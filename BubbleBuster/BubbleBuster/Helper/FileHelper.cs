@@ -10,6 +10,69 @@ namespace BubbleBuster.Helper
 {
     public static class FileHelper
     {
+        static Dictionary<string, int> newsHyperlinks;
+        static Dictionary<string, int> analysisWords;
+        static string hyperlinkFilePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + "news_hyperlinks";
+        static string wordsFilePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + "analysis_words";
+
+        public static Dictionary<string, int> GetHyperlinks()
+        {
+            if(newsHyperlinks != null)
+            {
+                return newsHyperlinks;
+            }
+
+            newsHyperlinks = new Dictionary<string, int>();
+
+            try
+            {
+                foreach (string link in File.ReadAllLines(hyperlinkFilePath))
+                {
+                    string[] arr = link.Split(';');
+                    newsHyperlinks.Add(arr[0], Convert.ToInt32(arr[1]));
+                }
+            }
+            catch (FileNotFoundException e)
+            {
+                Console.WriteLine("News Source file not loaded: " + e.Message);
+            }
+            
+            return newsHyperlinks;
+        }
+
+        public static Dictionary<string, int> GetAnalysisWords()
+        {
+            if (analysisWords != null)
+            {
+                return analysisWords;
+            }
+
+            analysisWords = new Dictionary<string, int>();
+
+            try
+            {
+                foreach (string word in File.ReadAllLines(wordsFilePath))
+                {
+                    string[] arr = word.Split(';');
+                    analysisWords.Add(arr[0], Convert.ToInt32(arr[1]));
+                }
+            }
+            catch (FileNotFoundException e)
+            {
+                Console.WriteLine("Words Source file not loaded: " + e.Message);
+            }
+
+            return analysisWords;
+        }
+
+        public static void GenerateDirectoryStructure()
+        {
+            if (!Directory.Exists(Constants.PROGRAM_DATA_FILEPATH))
+            {
+                Directory.CreateDirectory(Constants.PROGRAM_DATA_FILEPATH);
+            }
+        }
+
 
         public static void WriteStringToFile(string folderName, string fileName, string data)
         {
