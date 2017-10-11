@@ -52,7 +52,7 @@ namespace BubbleBuster.Helper
             List<Task<List<Tweet>>> runningTasks = new List<Task<List<Tweet>>>();
             List<Task<List<Tweet>>> taskList = new List<Task<List<Tweet>>>();
             Queue<Task<List<Tweet>>> taskQueue = new Queue<Task<List<Tweet>>>();
-            Console.WriteLine(String.Format("{0,5}: {1,-20} {2,-20} {3,-11}", "Count", "User name", "User id", "Tweet count"));
+            Log.Info(String.Format("{0,5}: {1,-20} {2,-20} {3,-11}", "Count", "User name", "User id", "Tweet count"));
             foreach (User user in friends.Users)
             {
                 Task<List<Tweet>> task = new Task<List<Tweet>>(() => TweetThreadMethod(user));
@@ -78,7 +78,7 @@ namespace BubbleBuster.Helper
                 }
                 else
                 {
-                    int index =Task.WaitAny(runningTasks.ToArray(), -1);
+                    int index = Task.WaitAny(runningTasks.ToArray(), -1);
                     runningTasks.RemoveAt(index);
                     var task = taskQueue.Dequeue();
                     task.Start();
@@ -106,11 +106,11 @@ namespace BubbleBuster.Helper
             List<Tweet> temp = GetUserTweets(user);
             if (user.IsProtected)
             {
-                Console.WriteLine(String.Format("{0,5}: {1,-20} {2,-20} {3,-11}", userTweetCount, user.Name, user.Id, "Protected"));
+                Log.Info(String.Format("{0,5}: {1,-20} {2,-20} {3,-11}", userTweetCount, user.Name, user.Id, "Protected"));
             }
             else
             {
-                Console.WriteLine(String.Format("{0,5}: {1,-20} {2,-20} {3,-11}", userTweetCount, user.Name, user.Id, temp.Count));
+                Log.Info(String.Format("{0,5}: {1,-20} {2,-20} {3,-11}", userTweetCount, user.Name, user.Id, temp.Count));
             }
             Interlocked.Increment(ref userTweetCount);
             return temp;
