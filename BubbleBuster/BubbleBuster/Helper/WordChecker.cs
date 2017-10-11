@@ -46,10 +46,10 @@ namespace BubbleBuster.Helper
             return tweet.ImportantWords.Count > 0;
         }
 
-        public void CheckTweetForHyperlink(List<Tweet> tweetList)
+        public void CheckTweetsForHyperlinks(List<Tweet> tweetList)
         {
-            int totalScore = 0;
-            int tweetNr = 0;
+            double totalScore = 0;
+            double tweetNr = 0;
 
             foreach (Tweet tweet in tweetList)
             {
@@ -59,8 +59,19 @@ namespace BubbleBuster.Helper
                     if (newsHyperlinks.Keys.Contains(shortenedUrl))
                     {
                         tweetNr++;
-                        totalScore += newsHyperlinks[shortenedUrl];
-                        tweet.NewsHyperlinks.Add(shortenedUrl, newsHyperlinks[shortenedUrl]);
+
+                        if (tweet.Bias == 0)
+                        {
+                            tweet.Bias = newsHyperlinks[shortenedUrl];
+                            totalScore += tweet.Bias;
+                        }
+                        else
+                        {
+                            tweet.Bias = (tweet.Bias + newsHyperlinks[shortenedUrl]) / 2;
+                            totalScore += tweet.Bias;
+                        }
+
+                        //tweet.NewsHyperlinks.Add(shortenedUrl, newsHyperlinks[shortenedUrl]);
                     }
                 }
             }
