@@ -16,7 +16,7 @@ namespace BubbleBuster.Web
 
         public WebHandler()
         {
-            ServicePointManager.DefaultConnectionLimit = 1000;
+            ServicePointManager.DefaultConnectionLimit = 4; //Because at normal operation at most 3 threads should be running
         }
 
 
