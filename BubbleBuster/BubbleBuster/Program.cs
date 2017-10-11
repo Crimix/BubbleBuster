@@ -18,10 +18,9 @@ namespace BubbleBuster
         static void Main(string[] args)
         {
             FileHelper.GenerateDirectoryStructure();
-            foreach (string line in FileHelper.GetAnalysisWords().Keys)
-            {
-                Console.WriteLine(line);
-            }
+
+            List<Tweet> tweetList = FileHelper.ReadObjectFromFile<List<Tweet>>("BubbleBuster", "multTweets-DonaldTrump");
+            WordChecker.Instance.CheckTweetsForHyperlinks(tweetList);
             string username = "katyperry";
             //string username = "TestBot_SW709";
             //WordChecker.Instance.CheckTweetForWords(new Tweet());

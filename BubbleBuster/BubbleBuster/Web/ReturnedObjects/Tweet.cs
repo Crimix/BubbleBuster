@@ -27,6 +27,9 @@ namespace BubbleBuster.Web.ReturnedObjects
         private Dictionary<string, int> _NewsHyperlinks = new Dictionary<string, int>();
         public Dictionary<string, int> NewsHyperlinks { get { return _NewsHyperlinks; } set { _NewsHyperlinks = value; } }
 
+        public double Bias { get { return bias; } set { bias = value; } }
+        private double bias = 0;
+
         public override bool Equals(object obj)
         {
             if(obj is Tweet)

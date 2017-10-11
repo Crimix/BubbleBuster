@@ -42,7 +42,7 @@ namespace BubbleBuster.Helper
 
             foreach (var item in endWorkds)
             {
-                if (url.Contains(item))
+                if (url.Contains(item) && !url.EndsWith(item))
                     url = url.Remove(url.IndexOf(item) + item.Length);
             }
 
