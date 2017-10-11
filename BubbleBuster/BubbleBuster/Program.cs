@@ -10,13 +10,17 @@ using BubbleBuster.Web.ReturnedObjects;
 using BubbleBuster.Helper;
 using BubbleBuster.Web.ReturnedObjects.RateLimit;
 using BubbleBuster.Web;
+using BubbleBuster.GUI;
 
 namespace BubbleBuster
 {
     public class Program
     {
+        [STAThread]
         static void Main(string[] args)
-        { 
+        {
+            var application = new System.Windows.Application();
+            UserControl1 user = new UserControl1();
             FileHelper.GenerateDirectoryStructure();
             foreach (string line in FileHelper.GetAnalysisWords().Keys)
             {
