@@ -11,7 +11,7 @@ namespace BubbleBuster.Helper
     public class WordChecker
     {
         private static WordChecker _instance;
-        private Dictionary<string, int> analysisWords = new Dictionary<string, int>();
+        private Dictionary<string, bool> analysisWords = new Dictionary<string, bool>();
         private Dictionary<string, int> newsHyperlinks = new Dictionary<string, int>();
 
         private WordChecker()
@@ -33,17 +33,27 @@ namespace BubbleBuster.Helper
             }
         }
 
-        public bool CheckTweetForWords(Tweet tweet)
+        public void CheckTweetsForWords(List<Tweet> tweetList)
         {
-            foreach(string word in analysisWords.Keys)
+            foreach (Tweet tweet in tweetList)
             {
-                if (tweet.Text.Contains(word))
+                foreach (string word in analysisWords.Keys)
                 {
-                    tweet.ImportantWords.Add(word);
+                    if (tweet.Text.Contains(word))
+                    {
+                        tweet.ImportantWords.Add(word);
+                        if(analysisWords[word] == true)
+                        {
+                            tweet.EmotionValue++;
+                        }
+                        else
+                        {
+                            tweet.EmotionValue--;
+                        }
+                    }
                 }
             }
 
-            return tweet.ImportantWords.Count > 0;
         }
 
         public void CheckTweetsForHyperlinks(List<Tweet> tweetList)

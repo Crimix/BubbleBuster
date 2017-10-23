@@ -27,6 +27,9 @@ namespace BubbleBuster.Web.ReturnedObjects
         private Dictionary<string, int> _NewsHyperlinks = new Dictionary<string, int>();
         public Dictionary<string, int> NewsHyperlinks { get { return _NewsHyperlinks; } set { _NewsHyperlinks = value; } }
 
+        public int EmotionValue { get { return emotionValue; } set { emotionValue = value; } }
+        private int emotionValue = 0;
+
         public double Bias { get { return bias; } set { bias = value; } }
         private double bias = 0;
 

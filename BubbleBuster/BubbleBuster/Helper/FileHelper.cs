@@ -11,9 +11,10 @@ namespace BubbleBuster.Helper
     public static class FileHelper
     {
         static Dictionary<string, int> newsHyperlinks;
-        static Dictionary<string, int> analysisWords;
+        static Dictionary<string, bool> analysisWords; //Value: false=negativeWord, true=positiveWord
         static string hyperlinkFilePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + "news_hyperlinks";
-        static string wordsFilePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + "analysis_words";
+        static string posWordsFilePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + "positive-words";
+        static string negWordsFilePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + "negative-words";
 
         public static Dictionary<string, int> GetHyperlinks()
         {
@@ -39,22 +40,26 @@ namespace BubbleBuster.Helper
             
             return newsHyperlinks;
         }
-
-        public static Dictionary<string, int> GetAnalysisWords()
+        
+        public static Dictionary<string, bool> GetAnalysisWords()
         {
             if (analysisWords != null)
             {
                 return analysisWords;
             }
 
-            analysisWords = new Dictionary<string, int>();
+            analysisWords = new Dictionary<string, bool>();
 
             try
             {
-                foreach (string word in File.ReadAllLines(wordsFilePath))
+                foreach (string word in File.ReadAllLines(posWordsFilePath).Skip(35)) //Skip: Start reading from line 36
                 {
-                    string[] arr = word.Split(';');
-                    analysisWords.Add(arr[0], Convert.ToInt32(arr[1]));
+                    analysisWords.Add(word, true);
+                }
+
+                foreach (string word in File.ReadAllLines(negWordsFilePath).Skip(35))
+                {
+                    analysisWords.Add(word, false);
                 }
             }
             catch (FileNotFoundException e)
@@ -64,7 +69,7 @@ namespace BubbleBuster.Helper
 
             return analysisWords;
         }
-
+        
         public static void GenerateDirectoryStructure()
         {
             if (!Directory.Exists(Constants.PROGRAM_DATA_FILEPATH))
