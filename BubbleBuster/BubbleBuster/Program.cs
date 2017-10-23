@@ -19,13 +19,13 @@ namespace BubbleBuster
         {
             FileHelper.GenerateDirectoryStructure();
 
-            List<Tweet> tweetList = FileHelper.ReadObjectFromFile<List<Tweet>>("BubbleBuster", "multTweets-DonaldTrump");
-            WordChecker.Instance.CheckTweetsForHyperlinks(tweetList);
-            string username = "katyperry";
+            //List<Tweet> tweetList = FileHelper.ReadObjectFromFile<List<Tweet>>("BubbleBuster", "multTweets-DonaldTrump");
+            //WordChecker.Instance.CheckTweetsForHyperlinks(tweetList);
+            string username = "HillaryClinton";
             //string username = "TestBot_SW709";
 
-            WordChecker.Instance.CheckTweetForWords(new Tweet());
-           LimitHelper.Instance.SetLimit(new WebHandler().MakeRequest<Limit>(RequestBuilder.BuildStartupRequest()));
+            //WordChecker.Instance.CheckTweetForWords(new Tweet());
+            LimitHelper.Instance.SetLimit(new WebHandler().MakeRequest<Limit>(RequestBuilder.BuildStartupRequest()));
 
             var returned = FriendsRetriever.Instance.GetFriends(username);
             Console.WriteLine(returned.Users.Count);
