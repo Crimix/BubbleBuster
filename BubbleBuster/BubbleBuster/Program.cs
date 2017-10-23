@@ -10,25 +10,30 @@ using BubbleBuster.Web.ReturnedObjects;
 using BubbleBuster.Helper;
 using BubbleBuster.Web.ReturnedObjects.RateLimit;
 using BubbleBuster.Web;
+using BubbleBuster.GUI;
 
 namespace BubbleBuster
 {
     public class Program
     {
+        [STAThread]
         static void Main(string[] args)
         {
+            var application = new System.Windows.Application();
+            UserControl1 user = new UserControl1();
             FileHelper.GenerateDirectoryStructure();
-
-            //List<Tweet> tweetList = FileHelper.ReadObjectFromFile<List<Tweet>>("BubbleBuster", "multTweets-DonaldTrump");
-            //WordChecker.Instance.CheckTweetsForHyperlinks(tweetList);
-            string username = "HillaryClinton";
+            foreach (string line in FileHelper.GetAnalysisWords().Keys)
+            {
+                Log.Info(line);
+            }
+            string username = "realDonaldTrump";
             //string username = "TestBot_SW709";
 
-            //WordChecker.Instance.CheckTweetForWords(new Tweet());
+            WordChecker.Instance.CheckTweetForWords(new Tweet());
             LimitHelper.Instance.SetLimit(new WebHandler().MakeRequest<Limit>(RequestBuilder.BuildStartupRequest()));
 
             var returned = FriendsRetriever.Instance.GetFriends(username);
-            Console.WriteLine(returned.Users.Count);
+            Log.Info("Following " + returned.Users.Count);
 
             /*List<Tweet> returned2 = TweetRetriever.Instance.GetTweetsFromUser(909688209080242176);
             string temp = "";
@@ -47,7 +52,8 @@ namespace BubbleBuster
             List<Tweet> returned3 = TweetRetriever.Instance.GetTweetsFromFriends(returned);
             FileHelper.WriteObjectToFile("BubbleBuster", "multTweets", returned3);
 
-            Console.WriteLine("Done!!! " + returned3.Count);
+            Log.Info("Done!!! " + returned3.Count);
+            Console.WriteLine("Done!");
 
             Console.ReadLine();
         }

@@ -34,7 +34,7 @@ namespace BubbleBuster.Helper
             }
             catch (FileNotFoundException e)
             {
-                Console.WriteLine("News Source file not loaded: " + e.Message);
+                Log.Error("News Source file not loaded: " + e.Message);
             }
             
             return newsHyperlinks;
@@ -59,7 +59,7 @@ namespace BubbleBuster.Helper
             }
             catch (FileNotFoundException e)
             {
-                Console.WriteLine("Words Source file not loaded: " + e.Message);
+                Log.Error("Words Source file not loaded: " + e.Message);
             }
 
             return analysisWords;

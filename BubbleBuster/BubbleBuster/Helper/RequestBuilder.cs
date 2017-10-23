@@ -46,9 +46,9 @@ namespace BubbleBuster
                 TimeSpan sleepTime = LimitHelper.Instance.GetResetTime(returnType);
                 if (sleepTime.TotalMinutes > 0)
                 {
-                    Console.WriteLine("Sleep at " + DateTime.Now + " until " + LimitHelper.Instance.GetResetDateTime(returnType));
+                    Log.Warn("Sleep at " + DateTime.Now + " until " + LimitHelper.Instance.GetResetDateTime(returnType));
                     Thread.Sleep(sleepTime);
-                    Console.WriteLine("Wakeup at " + DateTime.Now);
+                    Log.Warn("Wakeup at " + DateTime.Now);
                 }
                 LimitHelper.Instance.SetLimit(new WebHandler().MakeRequest<Limit>(BuildStartupRequest()));
                 result = BuildRequest(returnType, parameters);
