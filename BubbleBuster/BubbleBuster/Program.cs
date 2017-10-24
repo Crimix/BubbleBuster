@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using BubbleBuster;
 using BubbleBuster.Web.ReturnedObjects;
 using BubbleBuster.Helper;
@@ -19,8 +20,11 @@ namespace BubbleBuster
         [STAThread]
         static void Main(string[] args)
         {
-            var application = new System.Windows.Application();
+            var application = new Application();
+            Window window = new Window();
             UserControl1 user = new UserControl1();
+            window.Content = user;
+            application.Run(window);
             FileHelper.GenerateDirectoryStructure();
             foreach (string line in FileHelper.GetAnalysisWords().Keys)
             {
