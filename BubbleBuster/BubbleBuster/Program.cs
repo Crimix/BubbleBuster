@@ -33,7 +33,6 @@ namespace BubbleBuster
             string username = "realDonaldTrump";
             //string username = "TestBot_SW709";
 
-            WordChecker.Instance.CheckTweetForWords(new Tweet());
             LimitHelper.Instance.SetLimit(new WebHandler().MakeRequest<Limit>(RequestBuilder.BuildStartupRequest()));
 
             var returned = FriendsRetriever.Instance.GetFriends(username);
