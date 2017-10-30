@@ -39,9 +39,7 @@ namespace QueueServer
                         await RunTaskAsync(taskQueue.Dequeue());
                     }
                 }
-                
-                Thread.Sleep(420); //so it doesn't check all the time.
-                Task.WaitAll(runningTasksList.ToArray());
+                runningTasksList.RemoveAt(Task.WaitAny(runningTasksList.ToArray()));               
             }           
         }
 
@@ -53,7 +51,7 @@ namespace QueueServer
             return newTaskYes;
         }
 
-        private static Task RunTaskAsync(Task task)
+        private static Task RunTaskAsync(Task task) //Wrapper
         {
             return Task.Run(() =>
             {
@@ -64,7 +62,5 @@ namespace QueueServer
         {
             task.Start();
         }
-
-        private void 
     }
 }
