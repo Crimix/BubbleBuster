@@ -9,5 +9,6 @@ namespace RestForQueue.Controllers
 {
     public class QueueController : ApiController
     {
+
     }
 }
