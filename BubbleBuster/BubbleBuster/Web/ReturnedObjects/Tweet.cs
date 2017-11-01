@@ -9,7 +9,7 @@ namespace BubbleBuster.Web.ReturnedObjects
 {
     public class Tweet
     {
-        [JsonProperty("text")]
+        [JsonProperty("full_text")]
         public string Text { get; set; }
 
         [JsonProperty("user")]
