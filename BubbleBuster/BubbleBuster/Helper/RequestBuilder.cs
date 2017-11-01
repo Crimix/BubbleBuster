@@ -70,7 +70,7 @@ namespace BubbleBuster
                     returnString += "friends/list.json?";
                     break;
                 case DataType.tweets:
-                    returnString += "statuses/user_timeline.json?";
+                    returnString += "statuses/user_timeline.json?tweet_mode=extended&";
                     break;
                 case DataType.limit:
                     returnString += "application/rate_limit_status.json?resources=friends,statuses,application";
