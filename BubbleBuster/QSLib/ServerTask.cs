@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace QueueServer.Classes
+namespace QSLib
 {
     class ServerTask
     {
