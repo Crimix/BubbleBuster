@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using QSLib;
 using RestQueueServer.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace RestQueueServer.Controllers
 {
