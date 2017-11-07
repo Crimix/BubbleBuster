@@ -20,6 +20,7 @@ namespace BubbleBuster
         [STAThread]
         static void Main(string[] args)
         {
+            /*
             var application = new Application();
             Window window = new Window();
             UserControl1 user = new UserControl1();
@@ -51,13 +52,23 @@ namespace BubbleBuster
 
             Console.WriteLine("Done!!! " + returned2.Count);
             */
-
+            /*
             List<Tweet> returned3 = TweetRetriever.Instance.GetTweetsFromFriends(returned);
             FileHelper.WriteObjectToFile("BubbleBuster", "multTweets", returned3);
 
             Log.Info("Done!!! " + returned3.Count);
             Console.WriteLine("Done!");
 
+            Console.ReadLine();
+            */
+            User a = new User();
+            a.Id = 939091;
+            a.IsProtected = false;
+            a.Name = "joebiden";
+            List<Tweet> b = TweetRetriever.Instance.GetUserTweets(a);
+            FileHelper.WriteObjectToFile("abc", "Joe Biden", b);
+
+            Console.WriteLine("?");
             Console.ReadLine();
         }
 

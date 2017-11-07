@@ -61,6 +61,7 @@
     <Compile Include="Helper\Constants.cs" />
     <Compile Include="Helper\FileHelper.cs" />
     <Compile Include="Helper\FriendsRetriever.cs" />
+    <Compile Include="Helper\HelperObjects\HashtagObj.cs" />
     <Compile Include="Helper\LimitHelper.cs" />
     <Compile Include="Helper\Log.cs" />
     <Compile Include="Helper\RequestBuilder.cs" />

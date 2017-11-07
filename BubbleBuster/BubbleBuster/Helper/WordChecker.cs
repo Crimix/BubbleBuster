@@ -5,14 +5,16 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BubbleBuster.Helper.HelperObjects;
 
 namespace BubbleBuster.Helper
 {
     public class WordChecker
     {
         private static WordChecker _instance;
-        private Dictionary<string, bool> analysisWords = new Dictionary<string, bool>();
+        private Dictionary<string, int> analysisWords = new Dictionary<string, int>();
         private Dictionary<string, int> newsHyperlinks = new Dictionary<string, int>();
+        private Dictionary<string, HashtagObj> hashtags = new Dictionary<string, HashtagObj>();
 
         private WordChecker()
         {
@@ -28,12 +30,13 @@ namespace BubbleBuster.Helper
                     _instance = new WordChecker();
                     _instance.analysisWords = FileHelper.GetAnalysisWords();
                     _instance.newsHyperlinks = FileHelper.GetHyperlinks();
+                    _instance.hashtags = FileHelper.GetHashtags();
                 }
                 return _instance;
             }
         }
 
-        public void CheckTweetsForWords(List<Tweet> tweetList)
+        public void CalculateSentiment(List<Tweet> tweetList)
         {
             foreach (Tweet tweet in tweetList)
             {
@@ -42,18 +45,28 @@ namespace BubbleBuster.Helper
                     if (tweet.Text.Contains(word))
                     {
                         tweet.ImportantWords.Add(word);
-                        if(analysisWords[word] == true)
-                        {
-                            tweet.EmotionValue++;
-                        }
-                        else
-                        {
-                            tweet.EmotionValue--;
-                        }
+                        tweet.EmotionValue += analysisWords[word];
                     }
                 }
             }
 
+        }
+
+        public void CalculateHashtagSentiment(List<Tweet> tweetList)
+        {
+            foreach (Tweet tweet in tweetList)
+            {
+                foreach (string hashtag in hashtags.Keys)
+                {
+                    if (tweet.Text.Contains(hashtag))
+                    {
+                        if (tweet.EmotionValue > 0)
+                        {
+
+                        }
+                    }
+                }
+            }
         }
 
         public void CheckTweetsForHyperlinks(List<Tweet> tweetList)

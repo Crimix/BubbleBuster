@@ -116,7 +116,7 @@ namespace BubbleBuster.Helper
             return temp;
         }
 
-        private List<Tweet> GetUserTweets(User user)
+        public List<Tweet> GetUserTweets(User user)
         {
             List<Tweet> tweetList = new List<Tweet>();
             List<Tweet> tempList = new List<Tweet>();
