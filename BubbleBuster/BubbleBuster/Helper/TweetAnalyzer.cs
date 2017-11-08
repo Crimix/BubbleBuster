@@ -36,15 +36,26 @@ namespace BubbleBuster.Helper
             }
         }
 
-        public List<Tweet> AnalyzeAndDecorateTweets(List<Tweet> tweetList)
+        public double AnalyzeAndDecorateTweets(List<Tweet> tweetList)
         {
+            double conclusion = 0; //Higher value means more right leaning. Lower value means more left leaning.
+            double sentiment = 0;
+
+
             List<Tweet> returnList = tweetList;
 
             returnList = CalculateSentiment(returnList);
             returnList = CalculateHashtagSentiment(returnList);
             returnList = CalculateUrlSentiment(returnList);
 
-            return returnList;
+
+            foreach(Tweet tweet in returnList)
+            {
+                conclusion += tweet.hashtagBias * Constants.HASHTAG_WEIGHT;
+                conclusion += tweet.mediaBias * Constants.URL_WEIGHT;
+            }
+
+            return conclusion / tweetList.Count;
         }
 
         //Calculates the general sentiment of a tweet. This is done by looking at the positive and negative words.
