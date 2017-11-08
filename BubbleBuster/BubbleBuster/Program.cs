@@ -62,13 +62,13 @@ namespace BubbleBuster
             Console.ReadLine();
             */
             User a = new User();
-            a.Id = 402181258;
+            a.Id = 11134252;
             a.IsProtected = false;
-            a.Name = "RichardBSpencer";
+            a.Name = "GOP";
             List<Tweet> tweetList = TweetRetriever.Instance.GetUserTweets(a);
             double conclusion = TweetAnalyzer.Instance.AnalyzeAndDecorateTweets(tweetList);
             Console.WriteLine("Right/Left= " + conclusion);
-            FileHelper.WriteObjectToFile("abc", "Spencer", tweetList);
+            FileHelper.WriteObjectToFile("abc", "GOP", tweetList);
 
             Console.WriteLine("?");
             Console.ReadLine();

@@ -10,13 +10,13 @@ namespace BubbleBuster.Helper
     {
         public const int REMAINING_OFFSET = 5;
         public const string USER_AGENT = "FilterBubble_SW709";
-        public const int TWEETS_TO_RETRIEVE = 200;
+        public const int TWEETS_TO_RETRIEVE = 3200;
         private static string PROGRAM_DATA = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
 
         public static string PROGRAM_DATA_FILEPATH { get { return PROGRAM_DATA + @"\" + AppDomain.CurrentDomain.FriendlyName.Replace(".exe",""); } }
 
         //Constants used for tweet analysis
-        public const int HASHTAG_WEIGHT = 100; //Factor. 1 = base. Do not use negative values.
-        public const int URL_WEIGHT = 70; //Factor. 1 = base. Do not use negative values.
+        public const int HASHTAG_WEIGHT = 1; //Factor. 1 = base. Do not use negative values.
+        public const int URL_WEIGHT = 1; //Factor. 1 = base. Do not use negative values.
     }
 }

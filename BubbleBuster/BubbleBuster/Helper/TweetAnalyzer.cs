@@ -39,8 +39,6 @@ namespace BubbleBuster.Helper
         public double AnalyzeAndDecorateTweets(List<Tweet> tweetList)
         {
             double conclusion = 0; //Higher value means more right leaning. Lower value means more left leaning.
-            double sentiment = 0;
-
 
             List<Tweet> returnList = tweetList;
 
@@ -67,13 +65,26 @@ namespace BubbleBuster.Helper
             {
                 foreach (string word in analysisWords.Keys)
                 {
-                    if (tweet.Text.Contains(word))
+                    var puncturation = tweet.Text.Where(Char.IsPunctuation).Distinct().ToArray();
+                    List<String> wordList = tweet.Text.Split(' ').Select(x => x.Trim(puncturation)).ToList<String>();
+
+                    foreach (string iWord in wordList)
                     {
-                        if (analysisWords[word] == 1)
-                            tweet.positiveValue++;
-                        else
-                            tweet.negativeValue++;
-                    }
+                        if (iWord.Equals(word, StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            if (analysisWords[word] == 1)
+                            {
+                                tweet.posList.Add(word);
+                                tweet.positiveValue++;
+                            }
+
+                            else if (analysisWords[word] == -1)
+                            {
+                                tweet.negList.Add(word);
+                                tweet.negativeValue++;
+                            }
+                        }
+                    }                    
                 }
             }
             return returnList;
@@ -88,17 +99,26 @@ namespace BubbleBuster.Helper
             {
                 foreach (string hashtag in hashtags.Keys)
                 {
-                    if (tweet.Text.Contains(hashtag))
-                    {
-                        int sentiment = tweet.getSentiment();
+                    var puncturation = tweet.Text.Where(Char.IsPunctuation).Distinct().ToArray();
+                    List<String> wordList = tweet.Text.Split(' ').Select(x => x.Trim(puncturation)).ToList<String>();
 
-                        if (sentiment > 1)
-                            tweet.hashtagBias += hashtags[hashtag].pos;
-                        else if (sentiment == 1)
-                            tweet.hashtagBias += hashtags[hashtag].bas;
-                        else if (sentiment < 1)
-                            tweet.hashtagBias += hashtags[hashtag].neg;
+                    foreach(string iWord in wordList)
+                    {
+                        if(iWord.Equals(hashtag, StringComparison.InvariantCultureIgnoreCase) && !tweet.tagList.Contains(hashtag))
+                        {
+                            tweet.tagList.Add(hashtag);
+
+                            int sentiment = tweet.getSentiment();
+
+                            if (sentiment > 0)
+                                tweet.hashtagBias += hashtags[hashtag].pos;
+                            else if (sentiment == 0)
+                                tweet.hashtagBias += hashtags[hashtag].bas;
+                            else if (sentiment < 0)
+                                tweet.hashtagBias += hashtags[hashtag].neg;
+                        }
                     }
+                    
                 }
             }
 
@@ -122,6 +142,11 @@ namespace BubbleBuster.Helper
             }
 
             return returnList;
+        }
+
+        private bool InsensitiveContains(string source, string toCheck)
+        {
+            return source != null && toCheck != null && source.IndexOf(toCheck, StringComparison.OrdinalIgnoreCase) >= 0;
         }
     }
 }
