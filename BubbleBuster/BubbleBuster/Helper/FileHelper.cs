@@ -57,12 +57,14 @@ namespace BubbleBuster.Helper
             {
                 foreach (string word in File.ReadAllLines(posWordsFilePath).Skip(35)) //Skip: Start reading from line 36
                 {
-                    analysisWords.Add(word, 1);
+                    if(!analysisWords.ContainsKey(word))
+                        analysisWords.Add(word, 1);
                 }
 
                 foreach (string word in File.ReadAllLines(negWordsFilePath).Skip(35))
                 {
-                    analysisWords.Add(word, -1);
+                    if (!analysisWords.ContainsKey(word))
+                        analysisWords.Add(word, -1);
                 }
             }
             catch (FileNotFoundException e)
@@ -84,7 +86,9 @@ namespace BubbleBuster.Helper
 
             try
             {
-                foreach (string hashtag in File.ReadAllLines(posWordsFilePath).Skip(7)) //Skip: Start reading from line 7
+                List<String> temp = File.ReadAllLines(hashtagsFilePath).Skip(7).ToList<String>();
+
+                foreach (string hashtag in temp)
                 {
                     string[] tempArray = hashtag.Split(';'); 
                     hashtags.Add(tempArray[0], new HashtagObj(hashtag, int.Parse(tempArray[1]), int.Parse(tempArray[2]), int.Parse(tempArray[3])));
