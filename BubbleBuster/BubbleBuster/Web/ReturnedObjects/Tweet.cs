@@ -21,17 +21,20 @@ namespace BubbleBuster.Web.ReturnedObjects
         [JsonProperty("entities")]
         public Entities Entities { get; set; }
 
-        private List<string> _ImportantWords = new List<string>();
-        public List<string> ImportantWords { get { return _ImportantWords; } set { _ImportantWords = value; } }
+        public Dictionary<string, int> NewsHyperlinks = new Dictionary<string, int>();
 
-        private Dictionary<string, int> _NewsHyperlinks = new Dictionary<string, int>();
-        public Dictionary<string, int> NewsHyperlinks { get { return _NewsHyperlinks; } set { _NewsHyperlinks = value; } }
+        public int hashtagBias = 1;
+        public int positiveValue = 1;
+        public int negativeValue = 1;
+        public double mediaBias = 1;
 
-        public int EmotionValue { get { return emotionValue; } set { emotionValue = value; } }
-        private int emotionValue = 0;
+        //
+        public int analysisConclusion = 0;
 
-        public double Bias { get { return bias; } set { bias = value; } }
-        private double bias = 0;
+        public int getSentiment()
+        {
+            return positiveValue + negativeValue;
+        }
 
         public override bool Equals(object obj)
         {

@@ -5,16 +5,19 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BubbleBuster.Helper.HelperObjects;
 
 namespace BubbleBuster.Helper
 {
     public static class FileHelper
     {
         static Dictionary<string, int> newsHyperlinks;
-        static Dictionary<string, bool> analysisWords; //Value: false=negativeWord, true=positiveWord
+        static Dictionary<string, HashtagObj> hashtags;
+        static Dictionary<string, int> analysisWords; //Value: -1=negativeWord, 1=positiveWord
         static string hyperlinkFilePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + "news_hyperlinks";
         static string posWordsFilePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + "positive-words";
         static string negWordsFilePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + "negative-words";
+        static string hashtagsFilePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + "hashtags";
 
         public static Dictionary<string, int> GetHyperlinks()
         {
@@ -41,25 +44,25 @@ namespace BubbleBuster.Helper
             return newsHyperlinks;
         }
         
-        public static Dictionary<string, bool> GetAnalysisWords()
+        public static Dictionary<string, int> GetAnalysisWords()
         {
             if (analysisWords != null)
             {
                 return analysisWords;
             }
 
-            analysisWords = new Dictionary<string, bool>();
+            analysisWords = new Dictionary<string, int>();
 
             try
             {
                 foreach (string word in File.ReadAllLines(posWordsFilePath).Skip(35)) //Skip: Start reading from line 36
                 {
-                    analysisWords.Add(word, true);
+                    analysisWords.Add(word, 1);
                 }
 
                 foreach (string word in File.ReadAllLines(negWordsFilePath).Skip(35))
                 {
-                    analysisWords.Add(word, false);
+                    analysisWords.Add(word, -1);
                 }
             }
             catch (FileNotFoundException e)
@@ -69,7 +72,32 @@ namespace BubbleBuster.Helper
 
             return analysisWords;
         }
-        
+
+        public static Dictionary<string, HashtagObj> GetHashtags()
+        {
+            if (hashtags != null)
+            {
+                return hashtags;
+            }
+
+            hashtags = new Dictionary<string, HashtagObj>();
+
+            try
+            {
+                foreach (string hashtag in File.ReadAllLines(posWordsFilePath).Skip(7)) //Skip: Start reading from line 7
+                {
+                    string[] tempArray = hashtag.Split(';'); 
+                    hashtags.Add(tempArray[0], new HashtagObj(hashtag, int.Parse(tempArray[1]), int.Parse(tempArray[2]), int.Parse(tempArray[3])));
+                }
+            }
+            catch (FileNotFoundException e)
+            {
+                Log.Error("Words Source file not loaded: " + e.Message);
+            }
+
+            return hashtags;
+        }
+
         public static void GenerateDirectoryStructure()
         {
             if (!Directory.Exists(Constants.PROGRAM_DATA_FILEPATH))

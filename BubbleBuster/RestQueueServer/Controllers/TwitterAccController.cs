@@ -12,13 +12,21 @@ namespace RestQueueServer.Controllers
 {
     public class TwitterAccController : ApiController
     {
-        public Response Post([FromForm] TwitterAcc tAcc)
+        public Response Post([Microsoft.AspNetCore.Mvc.FromBody] TwitterAcc tAcc)
         {
-            QSLib.QueueServerInstance.Instance.AddTask(tAcc);
+            bool wasSuccessful = QSLib.QueueServerInstance.Instance.AddTask(tAcc);
 
+            if (wasSuccessful)
+            {
+                return new Response("Job successfully created.");
+            }
 
+            else
+            {
+                return new Response("Job failed to create.");
+            }
 
-            return new Response("hej");
+            
         }
     }
 }
