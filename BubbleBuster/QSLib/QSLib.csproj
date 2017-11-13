@@ -8,4 +8,8 @@
     <PackageReference Include="Microsoft.Tpl.Dataflow" Version="4.5.24" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BubbleBuster\BubbleBuster.csproj" />
+  </ItemGroup>
+
 </Project>

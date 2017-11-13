@@ -11,6 +11,11 @@ namespace RestQueueServer
 {
     public class WebApiApplication : System.Web.HttpApplication
     {
+        public void start()
+        {
+            Application_Start();
+        }
+
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();

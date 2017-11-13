@@ -18,7 +18,7 @@ namespace QSLib
 
         public void Run ()
         {
-            BubbleBuster.Worker(twitterApiKey, twitterName);
+            new BubbleBuster.Worker(twitterApiKey, twitterName);
         }
     }
 }

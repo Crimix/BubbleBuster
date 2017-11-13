@@ -35,10 +35,10 @@ namespace QSLib
             {
                 while (ThereIsNewTask())
                 {
-                    Task newTask = Task.Factory.StartNew(() =>
+                    Task newTask = new Task(() =>
                     {
-                        ServerTask st = new ServerTask();
-
+                        ServerTask st = new ServerTask(nonAddedRequests.Peek());
+                        st.Run();
                     });
                     taskQueue.Enqueue(newTask);
                     nonAddedRequests.Dequeue();
@@ -46,7 +46,7 @@ namespace QSLib
 
                 while (runningTasksList.Count < taskLimit)
                 {
-                    if (taskQueue.Count != 0)
+                    if (taskQueue.Count > 0)
                     {
                         runningTasksList.Add(taskQueue.Peek());
                         await RunTaskAsync(taskQueue.Dequeue());
@@ -55,7 +55,10 @@ namespace QSLib
                     else
                         break; 
                 }
-                runningTasksList.RemoveAt(Task.WaitAny(runningTasksList.ToArray()));
+                if(runningTasksList.Count > 0)
+                {
+                    runningTasksList.RemoveAt(Task.WaitAny(runningTasksList.ToArray()));
+                }
             }
         }
 
@@ -82,6 +85,7 @@ namespace QSLib
             try
             {
                 nonAddedRequests.Enqueue(tAcc);
+                Console.WriteLine("fsdaæjk");
             }
             catch (Exception) //It does not matter what the exception is.
             {
