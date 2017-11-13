@@ -52,6 +52,8 @@ namespace QSLib
                         await RunTaskAsync(taskQueue.Dequeue());
 
                     }
+                    else
+                        break; 
                 }
                 runningTasksList.RemoveAt(Task.WaitAny(runningTasksList.ToArray()));
             }
