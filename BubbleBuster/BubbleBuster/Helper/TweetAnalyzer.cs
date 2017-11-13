@@ -36,9 +36,11 @@ namespace BubbleBuster.Helper
             }
         }
 
-        public double AnalyzeAndDecorateTweets(List<Tweet> tweetList)
+        public double[] AnalyzeAndDecorateTweets(List<Tweet> tweetList)
         {
-            double conclusion = 0; //Higher value means more right leaning. Lower value means more left leaning.
+            //double conclusion = 0; //Higher value means more right leaning. Lower value means more left leaning.
+
+            double[] output = { 0.0, 0.0, 0.0, 0.0, 0.0}; //hashtag, media, count, pos, neg
 
             List<Tweet> returnList = tweetList;
 
@@ -49,11 +51,15 @@ namespace BubbleBuster.Helper
 
             foreach(Tweet tweet in returnList)
             {
-                conclusion += tweet.hashtagBias * Constants.HASHTAG_WEIGHT;
-                conclusion += tweet.mediaBias * Constants.URL_WEIGHT;
+                output[0] += tweet.hashtagBias * Constants.HASHTAG_WEIGHT;
+                output[1] += tweet.mediaBias * Constants.URL_WEIGHT;
+                output[3] += tweet.negativeValue;
+                output[4] += tweet.positiveValue;
             }
 
-            return conclusion / tweetList.Count;
+            output[2] = tweetList.Count;
+
+            return output;
         }
 
         //Calculates the general sentiment of a tweet. This is done by looking at the positive and negative words.
@@ -72,13 +78,13 @@ namespace BubbleBuster.Helper
                     {
                         if (iWord.Equals(word, StringComparison.InvariantCultureIgnoreCase))
                         {
-                            if (analysisWords[word] == 1)
+                            if (!tweet.posList.Contains(word) && analysisWords[word] == 1)
                             {
                                 tweet.posList.Add(word);
                                 tweet.positiveValue++;
                             }
 
-                            else if (analysisWords[word] == -1)
+                            else if (!tweet.negList.Contains(word) && analysisWords[word] == -1)
                             {
                                 tweet.negList.Add(word);
                                 tweet.negativeValue++;
@@ -110,12 +116,12 @@ namespace BubbleBuster.Helper
 
                             int sentiment = tweet.getSentiment();
 
-                            if (sentiment > 0)
+                            if (sentiment > 1)
                                 tweet.hashtagBias += hashtags[hashtag].pos;
-                            else if (sentiment == 0)
-                                tweet.hashtagBias += hashtags[hashtag].bas;
-                            else if (sentiment < 0)
+                            else if (sentiment < -1)
                                 tweet.hashtagBias += hashtags[hashtag].neg;
+                            else
+                                tweet.hashtagBias += hashtags[hashtag].bas;
                         }
                     }
                     

@@ -62,13 +62,18 @@ namespace BubbleBuster
             Console.ReadLine();
             */
             User a = new User();
-            a.Id = 11134252;
+            a.Id = 85583894;
             a.IsProtected = false;
-            a.Name = "GOP";
+            a.Name = "MuslimIQ";
             List<Tweet> tweetList = TweetRetriever.Instance.GetUserTweets(a);
-            double conclusion = TweetAnalyzer.Instance.AnalyzeAndDecorateTweets(tweetList);
-            Console.WriteLine("Right/Left= " + conclusion);
-            FileHelper.WriteObjectToFile("abc", "GOP", tweetList);
+            double[] conclusion = TweetAnalyzer.Instance.AnalyzeAndDecorateTweets(tweetList);
+            Console.WriteLine("HashtagBias= " + conclusion[0]);
+            Console.WriteLine("MediaBias= " + conclusion[1]);
+            Console.WriteLine("TweetCount= " + conclusion[2]);
+            Console.WriteLine("Positivity= " + conclusion[3] / conclusion[2]);
+            Console.WriteLine("Negativity= " + conclusion[4]/conclusion[2]);
+            Console.WriteLine("Conclusion left/right= " + (conclusion[0] + conclusion[1])/conclusion[2]);
+            FileHelper.WriteObjectToFile("abc", a.Name, tweetList);
 
             Console.WriteLine("?");
             Console.ReadLine();
