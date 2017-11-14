@@ -14,7 +14,9 @@ namespace BubbleBuster.Helper
         static Dictionary<string, int> newsHyperlinks;
         static Dictionary<string, HashtagObj> hashtags;
         static Dictionary<string, int> analysisWords; //Value: -1=negativeWord, 1=positiveWord
+        static List<string> commonWords;
         static string hyperlinkFilePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + "news_hyperlinks";
+        static string commonWordsFilePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + "commonWords";
         static string posWordsFilePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + "positive-words";
         static string negWordsFilePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + "negative-words";
         static string hashtagsFilePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + "hashtags";
@@ -163,6 +165,27 @@ namespace BubbleBuster.Helper
             {
                 return input + ".txt";
             }
+        }
+
+        public static List<string> GetCommonWords()
+        {
+            if (commonWords != null)
+            {
+                return commonWords;
+            }
+
+            commonWords = new List<string>();
+
+            try
+            {
+                commonWords = File.ReadAllLines(commonWordsFilePath).ToList<String>();
+            }
+            catch (FileNotFoundException e)
+            {
+                Log.Error("Words Source file not loaded: " + e.Message);
+            }
+
+            return commonWords;
         }
     }
 }

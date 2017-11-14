@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{1557DE94-80CF-4DDC-97A0-0F853FFA3BBB}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <RootNamespace>BubbleBuster</RootNamespace>
     <AssemblyName>BubbleBuster</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
@@ -84,6 +84,9 @@
     <Compile Include="Web\ReturnedObjects\Url.cs" />
     <Compile Include="Web\ReturnedObjects\User.cs" />
     <Compile Include="Web\WebHandler.cs" />
+    <Compile Include="WordUpdater\PolUserObj.cs" />
+    <Compile Include="WordUpdater\UncommonWordObj.cs" />
+    <Compile Include="WordUpdater\WordUpdater.cs" />
     <Compile Include="Worker.cs" />
   </ItemGroup>
   <ItemGroup>
