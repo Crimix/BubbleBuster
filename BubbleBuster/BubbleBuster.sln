@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2006
+VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BubbleBuster", "BubbleBuster\BubbleBuster.csproj", "{1557DE94-80CF-4DDC-97A0-0F853FFA3BBB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestQueueServer", "RestQueueServer\RestQueueServer.csproj", "{2C0F5ABF-8651-4DD5-9B01-9C9311BF5C45}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QSLib", "QSLib\QSLib.csproj", "{E2592DB0-504F-464C-8082-F10131D87CC0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextProcesserLib", "TextProcesserLib\TextProcesserLib.csproj", "{5266299D-25E8-4775-8241-669C46F3A074}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{E2592DB0-504F-464C-8082-F10131D87CC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E2592DB0-504F-464C-8082-F10131D87CC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E2592DB0-504F-464C-8082-F10131D87CC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5266299D-25E8-4775-8241-669C46F3A074}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5266299D-25E8-4775-8241-669C46F3A074}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5266299D-25E8-4775-8241-669C46F3A074}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5266299D-25E8-4775-8241-669C46F3A074}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

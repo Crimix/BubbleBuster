@@ -11,25 +11,25 @@ namespace BubbleBuster.Helper
     public class LimitHelper
     {
 
-        private static LimitHelper _instance;
+        private static Dictionary<string, LimitHelper> limitsByApiKey = new Dictionary<string, LimitHelper>();
 
         private LimitHelper()
         {
 
         }
 
-        public static LimitHelper Instance
+        public static LimitHelper Instance(string apiKey)
         {
-            get
+            if (limitsByApiKey.ContainsKey(apiKey))
             {
-                if (_instance == null)
-                {
-                    _instance = new LimitHelper();
-                }
-                return _instance;
+                return limitsByApiKey[apiKey];
+            }
+            else
+            {
+                limitsByApiKey.Add(apiKey, new LimitHelper());
+                return limitsByApiKey[apiKey];
             }
         }
-
 
         private int _FriendsIdsCallsRemaining = 0;
         private int _FriendsObjectCallsRemaining = 0;
