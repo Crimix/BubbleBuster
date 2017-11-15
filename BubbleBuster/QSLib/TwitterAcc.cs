@@ -4,7 +4,7 @@ using System.Text;
 
 namespace QSLib
 {
-    public class TwitterAcc
+    public class TwitterAcc //Class of all information needed about a Twitter account
     {
         public TwitterAcc()
         {

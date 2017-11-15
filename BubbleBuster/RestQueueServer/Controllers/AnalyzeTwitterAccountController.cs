@@ -10,9 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace RestQueueServer.Controllers
 {
-    public class TwitterAccController : ApiController
+    public class AnalyzeTwitterAccountController : ApiController
     {
-        public Response Post([Microsoft.AspNetCore.Mvc.FromBody] TwitterAcc tAcc)
+        public Response Post([Microsoft.AspNetCore.Mvc.FromBody] TwitterAcc tAcc) //handles the request and adds it to the queue of requests.
         {
             bool wasSuccessful = QSLib.QueueServerInstance.Instance.AddTask(tAcc);
 

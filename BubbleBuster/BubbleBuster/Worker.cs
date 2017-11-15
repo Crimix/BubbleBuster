@@ -12,7 +12,7 @@ namespace BubbleBuster
 {
     public class Worker
     {
-        public Worker (string twitterApiKey, string twitterName)
+        public Worker (string twitterApiKey, string twitterName) //Executes the task parsed by the ServerTask class
         {
             string username = twitterName;
 

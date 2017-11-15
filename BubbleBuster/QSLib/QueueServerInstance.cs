@@ -26,18 +26,18 @@ namespace QSLib
             }
         }
 
-        Queue<TwitterAcc> nonAddedRequests = new Queue<TwitterAcc>();
+        Queue<TwitterAcc> nonAddedRequests = new Queue<TwitterAcc>(); //Requests from the browser goes into here
         public async void TaskQueue()
         {
             const int taskLimit = 5;
             Log.Info("test");
-            Queue<Task> taskQueue = new Queue<Task>();
-            List<Task> runningTasksList = new List<Task>();
+            Queue<Task> taskQueue = new Queue<Task>(); //Queue of tasks that are not started yet
+            List<Task> runningTasksList = new List<Task>(); //List of currently running tasks.
             while (true)
             {
                 while (ThereIsNewTask())
                 {
-                    if (nonAddedRequests.Count != 0)
+                    if (nonAddedRequests.Count > 0) // Adds all requests to the queue
                     {
                         TwitterAcc input = nonAddedRequests.Peek();
 
@@ -51,7 +51,7 @@ namespace QSLib
                     }
                 }
 
-                while (runningTasksList.Count < taskLimit)
+                while (runningTasksList.Count < taskLimit) //Starts tasks from the queue until there are none left or the limit is reached.
                 {
                     if (taskQueue.Count > 0)
                     {
@@ -63,7 +63,7 @@ namespace QSLib
                     else
                         break; 
                 }
-                if(runningTasksList.Count > 0)
+                if(runningTasksList.Count > 0) // If any tasks are running, it removes the completed ones from the list.
                 {
                     foreach (var task in runningTasksList)
                     {
@@ -77,7 +77,7 @@ namespace QSLib
             }
         }
 
-        private bool ThereIsNewTask()
+        private bool ThereIsNewTask() //Checks if there are any requests
         {
             return nonAddedRequests.Count > 0;
         }
@@ -94,7 +94,7 @@ namespace QSLib
             task.Start();
         }
 
-        public bool AddTask (TwitterAcc tAcc)
+        public bool AddTask (TwitterAcc tAcc) //The method used by the server to add requests to the request queue.
         {
             bool wasSuccesful = true;
             Log.Info("Added task");
