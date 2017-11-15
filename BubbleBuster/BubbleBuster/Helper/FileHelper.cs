@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BubbleBuster.Helper.HelperObjects;
+using BubbleBuster.Helper.Objects;
 
 namespace BubbleBuster.Helper
 {
@@ -113,7 +113,7 @@ namespace BubbleBuster.Helper
         }
 
 
-        public static void WriteStringToFile(string folderName, string fileName, string data)
+        public static void WriteStringToFile(string fileName, string data)
         {
             fileName = CheckFileName(fileName);
             string filePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + fileName;
@@ -121,14 +121,14 @@ namespace BubbleBuster.Helper
             File.WriteAllText(filePath, data);
         }
 
-        public static string ReadStringFromFile(string folderName, string fileName)
+        public static string ReadStringFromFile(string fileName)
         {
             fileName = CheckFileName(fileName);
             string filePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + fileName;
             return File.ReadAllText(filePath);
         }
 
-        public static void WriteObjectToFile(string folderName, string fileName, Object data)
+        public static void WriteObjectToFile(string fileName, Object data)
         {
             fileName = CheckFileName(fileName);
             string filePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + fileName;
@@ -137,7 +137,7 @@ namespace BubbleBuster.Helper
             data = null;
         }
 
-        public static T ReadObjectFromFile<T>(string folderName, string fileName)
+        public static T ReadObjectFromFile<T>(string fileName)
         {
             fileName = CheckFileName(fileName);
             string filePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + fileName;

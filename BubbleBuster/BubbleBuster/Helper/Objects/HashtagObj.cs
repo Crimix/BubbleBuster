@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BubbleBuster.Helper.HelperObjects
+namespace BubbleBuster.Helper.Objects
 {
     public class HashtagObj
     {
