@@ -14,6 +14,11 @@ namespace BubbleBuster.Web
         private static string _cred = "Bearer AAAAAAAAAAAAAAAAAAAAAPRw2QAAAAAAsXqGsVRPgYFVjSScMX3ZVa9YifA%3DkPvipEcLJj3QooYO7aVke3vZ9ruSJp9CgkTlKKtvlmSsGqLUdG";
 
 
+        public WebHandler(string apiKey) : base()
+        {
+
+        }
+
         public WebHandler()
         {
             ServicePointManager.DefaultConnectionLimit = 4; //Because at normal operation at most 3 threads should be running
