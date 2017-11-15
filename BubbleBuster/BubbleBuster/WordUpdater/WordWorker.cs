@@ -36,7 +36,7 @@ namespace BubbleBuster.WordUpdater
 
             foreach (PolUserObj polUser in userList)
             {
-                List<Tweet> tweetList = TweetRetriever.Instance.GetTweetsFromUser(polUser.twitterId);
+                List<Tweet> tweetList = TweetRetriever.Instance.GetTweetsFromUser(polUser.twitterId,"minapikey");
                 returnObj.Add(polUser, tweetList);
             }
 

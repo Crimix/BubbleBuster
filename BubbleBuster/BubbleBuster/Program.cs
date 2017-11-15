@@ -80,9 +80,31 @@ namespace BubbleBuster
             List<PolUserObj> polusers = new List<PolUserObj>();
             polusers.Add(new PolUserObj(61734492, -1)); //fahrenthold, leftwing
             polusers.Add(new PolUserObj(15893354, -1)); //wpjenna
+            polusers.Add(new PolUserObj(15689503, -1)); //cbellatoni
+            polusers.Add(new PolUserObj(15691197, -1));//Atrios
+            polusers.Add(new PolUserObj(14129299, -1));//Nicopitney
+            polusers.Add(new PolUserObj(16076032, -1));//ggreenwald
+            polusers.Add(new PolUserObj(3586084752, -1));//wonkroom
+            polusers.Add(new PolUserObj(27511061, -1));//stevebenen
+            polusers.Add(new PolUserObj(14924233, -1));//AlanColmes
+            polusers.Add(new PolUserObj(85583894, -1));//MuslimIQ
+            polusers.Add(new PolUserObj(93069110, -1));//MaggieNYT
+            polusers.Add(new PolUserObj(16303106, -1));//StephenAtHome
+            polusers.Add(new PolUserObj(46335511, -1));//TrevorNoah
+
             polusers.Add(new PolUserObj(147580943, 1)); //
             polusers.Add(new PolUserObj(18643437, 1));  //
-
+            polusers.Add(new PolUserObj(640893, 1)); //Ewerickson
+            polusers.Add(new PolUserObj(4248211, 1)); //mindyflynn
+            polusers.Add(new PolUserObj(14197312, 1)); //dmataconis
+            polusers.Add(new PolUserObj(16068266, 1)); //TPCarney
+            polusers.Add(new PolUserObj(16244449, 1)); //jbarro
+            polusers.Add(new PolUserObj(14347972, 1)); //heminator
+            polusers.Add(new PolUserObj(366618441, 1)); //reihansalam
+            polusers.Add(new PolUserObj(15976697, 1)); //michellemalkin
+            polusers.Add(new PolUserObj(65493023, 1)); //sarahpalinUSA
+            polusers.Add(new PolUserObj(17454769, 1)); //glennbeck
+            polusers.Add(new PolUserObj(17980523, 1)); //mitchellvii
             WordWorker.Instance.UpdateWords(polusers);
 
 
