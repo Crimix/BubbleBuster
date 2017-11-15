@@ -55,6 +55,7 @@ namespace QSLib
                 {
                     if (taskQueue.Count > 0)
                     {
+                        Log.Info("Start one task");
                         runningTasksList.Add(taskQueue.Peek());
                         await RunTaskAsync(taskQueue.Dequeue());
 
