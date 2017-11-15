@@ -116,32 +116,23 @@ namespace BubbleBuster.Helper
         public static void WriteStringToFile(string folderName, string fileName, string data)
         {
             fileName = CheckFileName(fileName);
-            string folderPath = Path.GetTempPath() + folderName;
-            string filePath = Path.GetTempPath() + folderName + @"\" + fileName;
-            if (!Directory.Exists(folderPath))
-            {
-                Directory.CreateDirectory(folderPath);
-            }
+            string filePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + fileName;
+            GenerateDirectoryStructure();
             File.WriteAllText(filePath, data);
         }
 
         public static string ReadStringFromFile(string folderName, string fileName)
         {
             fileName = CheckFileName(fileName);
-            string folderPath = Path.GetTempPath() + folderName;
-            string filePath = Path.GetTempPath() + folderName + @"\" + fileName;
+            string filePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + fileName;
             return File.ReadAllText(filePath);
         }
 
         public static void WriteObjectToFile(string folderName, string fileName, Object data)
         {
             fileName = CheckFileName(fileName);
-            string folderPath = Path.GetTempPath() + folderName;
-            string filePath = Path.GetTempPath() + folderName + @"\" + fileName;
-            if (!Directory.Exists(folderPath))
-            {
-                Directory.CreateDirectory(folderPath);
-            }
+            string filePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + fileName;
+            GenerateDirectoryStructure();
             File.WriteAllText(filePath, JsonConvert.SerializeObject(data));
             data = null;
         }
@@ -149,8 +140,7 @@ namespace BubbleBuster.Helper
         public static T ReadObjectFromFile<T>(string folderName, string fileName)
         {
             fileName = CheckFileName(fileName);
-            string folderPath = Path.GetTempPath() + folderName;
-            string filePath = Path.GetTempPath() + folderName + @"\" + fileName;
+            string filePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + fileName;
             return JsonConvert.DeserializeObject<T>(File.ReadAllText(filePath));
         }
 

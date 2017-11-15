@@ -26,9 +26,6 @@ namespace QSLib
             }
         }
 
-        [DllImport("kernel32")]
-        static extern bool AllocConsole();
-
         Queue<TwitterAcc> nonAddedRequests = new Queue<TwitterAcc>();
         public async void TaskQueue()
         {
@@ -40,13 +37,18 @@ namespace QSLib
             {
                 while (ThereIsNewTask())
                 {
-                    Task newTask = new Task(() =>
+                    if (nonAddedRequests.Count != 0)
                     {
-                        ServerTask st = new ServerTask(nonAddedRequests.Peek());
-                        st.Run();
-                    });
-                    taskQueue.Enqueue(newTask);
-                    nonAddedRequests.Dequeue();
+                        TwitterAcc input = nonAddedRequests.Peek();
+
+                        Task newTask = new Task(() =>
+                        {
+                            ServerTask st = new ServerTask(input);
+                            st.Run();
+                        });
+                        taskQueue.Enqueue(newTask);
+                        nonAddedRequests.Dequeue();
+                    }
                 }
 
                 while (runningTasksList.Count < taskLimit)
@@ -91,7 +93,6 @@ namespace QSLib
             try
             {
                 nonAddedRequests.Enqueue(tAcc);
-                Console.WriteLine("fsdaæjk");
             }
             catch (Exception) //It does not matter what the exception is.
             {
