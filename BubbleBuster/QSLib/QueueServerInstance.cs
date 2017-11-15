@@ -65,7 +65,14 @@ namespace QSLib
                 }
                 if(runningTasksList.Count > 0)
                 {
-                    runningTasksList.RemoveAt(Task.WaitAny(runningTasksList.ToArray()));
+                    foreach (var task in runningTasksList)
+                    {
+                        if (task.IsCompleted)
+                        {
+                            runningTasksList.Remove(task);
+                        }
+                    }
+                    //runningTasksList.RemoveAt(Task.WaitAny(runningTasksList.ToArray()));
                 }
             }
         }
