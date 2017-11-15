@@ -6,6 +6,9 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using System.Threading;
+using QSLib;
+using System.Runtime.InteropServices;
 
 namespace RestQueueServer
 {
@@ -18,6 +21,15 @@ namespace RestQueueServer
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            Thread QueueServer = new Thread(new ThreadStart(Run));
+            QueueServer.Start();
         }
+
+        private void Run()
+        {
+            QueueServerInstance.Instance.TaskQueue();
+        }
+
+
     }
 }

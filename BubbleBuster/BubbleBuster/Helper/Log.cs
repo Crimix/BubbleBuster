@@ -37,7 +37,7 @@ namespace BubbleBuster.Helper
 
         private static void Append(string text)
         {
-            File.AppendAllText(Path.GetTempPath() + @"BubbleBuster\log.txt", text + Environment.NewLine);
+            File.AppendAllText(Constants.PROGRAM_DATA_FILEPATH+@"\log.txt", text + Environment.NewLine);
         }
 
     }

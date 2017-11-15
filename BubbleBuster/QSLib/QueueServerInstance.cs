@@ -5,6 +5,8 @@ using System.Threading;
 using System.IO;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
+using System.Runtime.InteropServices;
+using BubbleBuster.Helper;
 
 namespace QSLib
 {
@@ -24,11 +26,14 @@ namespace QSLib
             }
         }
 
+        [DllImport("kernel32")]
+        static extern bool AllocConsole();
+
         Queue<TwitterAcc> nonAddedRequests = new Queue<TwitterAcc>();
         public async void TaskQueue()
         {
             const int taskLimit = 5;
-
+            Log.Info("test");
             Queue<Task> taskQueue = new Queue<Task>();
             List<Task> runningTasksList = new List<Task>();
             while (true)
@@ -77,6 +82,7 @@ namespace QSLib
         public bool AddTask (TwitterAcc tAcc)
         {
             bool wasSuccesful = true;
+            Log.Info("Added task");
             try
             {
                 nonAddedRequests.Enqueue(tAcc);
