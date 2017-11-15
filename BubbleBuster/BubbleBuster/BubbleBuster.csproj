@@ -86,7 +86,7 @@
     <Compile Include="Web\WebHandler.cs" />
     <Compile Include="WordUpdater\PolUserObj.cs" />
     <Compile Include="WordUpdater\UncommonWordObj.cs" />
-    <Compile Include="WordUpdater\WordUpdater.cs" />
+    <Compile Include="WordUpdater\WordWorker.cs" />
     <Compile Include="Worker.cs" />
   </ItemGroup>
   <ItemGroup>
