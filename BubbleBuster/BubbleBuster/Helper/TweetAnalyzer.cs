@@ -63,7 +63,7 @@ namespace BubbleBuster.Helper
         }
 
         //Calculates the general sentiment of a tweet. This is done by looking at the positive and negative words.
-        private List<Tweet> CalculateSentiment(List<Tweet> tweetList)
+        public List<Tweet> CalculateSentiment(List<Tweet> tweetList)
         {
             List<Tweet> returnList = tweetList;
 

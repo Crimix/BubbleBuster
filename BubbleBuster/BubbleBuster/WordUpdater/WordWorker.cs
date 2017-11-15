@@ -44,13 +44,15 @@ namespace BubbleBuster.WordUpdater
 
         }
 
-        private List<string> IdentifyUncommonWords(List<Tweet> tweetList)
+        private Dictionary<string, double> IdentifyUncommonWords(List<Tweet> tweetList)
         {
             List<string> commonWords = FileHelper.GetCommonWords();
-            List<string> uncommonWords = new List<string>();
+            Dictionary<string, double> uncommonWords = new Dictionary<string, double>();
 
             foreach (Tweet tweet in tweetList)
             {
+                double sentiment = tweet.getSentiment();
+
                 var puncturation = tweet.Text.Where(Char.IsPunctuation).Distinct().ToArray();
                 List<String> wordList = tweet.Text.Split(' ').Select(x => x.Trim(puncturation)).ToList<String>();
 
@@ -58,12 +60,12 @@ namespace BubbleBuster.WordUpdater
                 {
                     if (!commonWords.Contains(listWord, StringComparer.InvariantCultureIgnoreCase))
                     {
-                        if (!uncommonWords.Contains(listWord, StringComparer.InvariantCultureIgnoreCase))
+                        if (!uncommonWords.Keys.Contains(listWord, StringComparer.InvariantCultureIgnoreCase))
                         {
                             if (!listWord.StartsWith("https://"))
                             {
                                 Console.WriteLine(listWord);
-                                uncommonWords.Add(listWord);
+                                uncommonWords.Add(listWord, sentiment);
                             }
                             
                         }
@@ -76,15 +78,13 @@ namespace BubbleBuster.WordUpdater
 
         private Dictionary<string, UncommonWordObj> DetermineWords(Dictionary<PolUserObj, List<Tweet>> dic)
         {
-            Dictionary<string, UncommonWordObj> returnObj = new Dictionary<string, UncommonWordObj>();
-            
+            Dictionary<string, UncommonWordObj> returnObj = new Dictionary<string, UncommonWordObj>();            
 
             foreach(PolUserObj user in dic.Keys)
             {
-                List<string> tempWordList = new List<string>();
-                tempWordList.AddRange(IdentifyUncommonWords(dic[user]));
+                Dictionary<string, double> tempWordList = IdentifyUncommonWords(dic[user]);
 
-                foreach(string word in tempWordList)
+                foreach(string word in tempWordList.Keys)
                 {
                     if (!returnObj.ContainsKey(word))
                     {
@@ -94,13 +94,28 @@ namespace BubbleBuster.WordUpdater
                     switch (user.affiliation)
                     {
                         case -1:
-                            returnObj[word].LeftCount++;
+                            if(tempWordList[word] > 1)
+                                returnObj[word].LeftPosCount++;
+                            else if (tempWordList[word] < -1)
+                                returnObj[word].LeftNegCount++;
+                            else 
+                                returnObj[word].LeftNeuCount++;
                             break;
                         case 0:
-                            returnObj[word].CenterCount++;
+                            if (tempWordList[word] > 1)
+                                returnObj[word].CenterPosCount++;
+                            else if (tempWordList[word] < -1)
+                                returnObj[word].CenterNegCount++;
+                            else
+                                returnObj[word].CenterNeuCount++;
                             break;
                         case 1:
-                            returnObj[word].RightCount++;
+                            if (tempWordList[word] > 1)
+                                returnObj[word].RightPosCount++;
+                            else if (tempWordList[word] < -1)
+                                returnObj[word].RightNegCount++;
+                            else
+                                returnObj[word].RightNeuCount++;
                             break;
                         default:
                             break;
