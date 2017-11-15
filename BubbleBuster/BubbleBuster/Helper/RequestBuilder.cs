@@ -22,36 +22,36 @@ namespace BubbleBuster
         }
 
         
-        public static string BuildRequest(DataType returnType, params string[] parameters)
+        public static string BuildRequest(DataType returnType, string apiKey, params string[] parameters)
         {
             string result = Build(returnType, parameters);
 
-            if(CheckIfAllowedToMakeRequestOrSleep(returnType, ref result, parameters))
+            if(CheckIfAllowedToMakeRequestOrSleep(returnType, ref result, apiKey, parameters))
             {
                 /*Because we need to make sure after wakeup that we have a new request pool and thus we recursly call build.
                 Then when we have the result, we can just return it, if we do not then the request would subtract 2 from the pool*/
                 return result;   
             }
 
-            LimitHelper.Instance.SubtractFrom(returnType);
+            LimitHelper.Instance(apiKey).SubtractFrom(returnType);
 
             return result;
         }
 
 
-        private static bool CheckIfAllowedToMakeRequestOrSleep(DataType returnType, ref string result, params string[] parameters)
+        private static bool CheckIfAllowedToMakeRequestOrSleep(DataType returnType, ref string result, string apiKey, params string[] parameters)
         {
-            if (!LimitHelper.Instance.AllowedToMakeRequest(returnType))
+            if (!LimitHelper.Instance(apiKey).AllowedToMakeRequest(returnType))
             {
-                TimeSpan sleepTime = LimitHelper.Instance.GetResetTime(returnType);
+                TimeSpan sleepTime = LimitHelper.Instance(apiKey).GetResetTime(returnType);
                 if (sleepTime.TotalMinutes > 0)
                 {
-                    Log.Warn("Sleep at " + DateTime.Now + " until " + LimitHelper.Instance.GetResetDateTime(returnType));
+                    Log.Warn("Sleep at " + DateTime.Now + " until " + LimitHelper.Instance(apiKey).GetResetDateTime(returnType));
                     Thread.Sleep(sleepTime);
                     Log.Warn("Wakeup at " + DateTime.Now);
                 }
-                LimitHelper.Instance.SetLimit(new WebHandler().MakeRequest<Limit>(BuildStartupRequest()));
-                result = BuildRequest(returnType, parameters);
+                LimitHelper.Instance(apiKey).SetLimit(new WebHandler().MakeRequest<Limit>(BuildStartupRequest()));
+                result = BuildRequest(returnType, apiKey, parameters);
                 return true;
             }
             return false;

@@ -32,12 +32,12 @@ namespace BubbleBuster.Helper
             }
         }
 
-        public List<Tweet> GetTweetsFromUser(long userId)
+        public List<Tweet> GetTweetsFromUser(long userId, string apiKey)
         {
             List<Tweet> tweetList = new List<Tweet>();
             User user = new User();
             user.Id = userId;
-            Task<List<Tweet>> task = new Task<List<Tweet>>(() => TweetThreadMethod(user));
+            Task<List<Tweet>> task = new Task<List<Tweet>>(() => TweetThreadMethod(user, apiKey));
             task.Start();
             task.Wait();
 
@@ -46,7 +46,7 @@ namespace BubbleBuster.Helper
             return tweetList;
         }
 
-        public List<Tweet> GetTweetsFromFriends(Friends friends)
+        public List<Tweet> GetTweetsFromFriends(Friends friends, string apiKey)
         {
             List<Tweet> tweetList = new List<Tweet>();
             List<Task<List<Tweet>>> runningTasks = new List<Task<List<Tweet>>>();
@@ -55,7 +55,7 @@ namespace BubbleBuster.Helper
             Log.Info(String.Format("{0,5}: {1,-20} {2,-20} {3,-11}", "Count", "User name", "User id", "Tweet count"));
             foreach (User user in friends.Users)
             {
-                Task<List<Tweet>> task = new Task<List<Tweet>>(() => TweetThreadMethod(user));
+                Task<List<Tweet>> task = new Task<List<Tweet>>(() => TweetThreadMethod(user, apiKey));
                 taskQueue.Enqueue(task);
                 task = null;
             }
@@ -101,9 +101,9 @@ namespace BubbleBuster.Helper
             return tweetList;
         }
 
-        private List<Tweet> TweetThreadMethod(User user)
+        private List<Tweet> TweetThreadMethod(User user, string apiKey)
         {
-            List<Tweet> temp = GetUserTweets(user);
+            List<Tweet> temp = GetUserTweets(user, apiKey);
             if (user.IsProtected)
             {
                 Log.Info(String.Format("{0,5}: {1,-20} {2,-20} {3,-11}", userTweetCount, user.Name, user.Id, "Protected"));
@@ -116,7 +116,7 @@ namespace BubbleBuster.Helper
             return temp;
         }
 
-        public List<Tweet> GetUserTweets(User user)
+        public List<Tweet> GetUserTweets(User user, string apiKey)
         {
             List<Tweet> tweetList = new List<Tweet>();
             List<Tweet> tempList = new List<Tweet>();
@@ -124,7 +124,7 @@ namespace BubbleBuster.Helper
             if (!user.IsProtected)
             {
                 long lastTweetID = 0;
-                tempList.AddRange(new WebHandler().MakeRequest<List<Tweet>>(RequestBuilder.BuildRequest(DataType.tweets, "user_id=" + user.Id, "count=200")));
+                tempList.AddRange(new WebHandler().MakeRequest<List<Tweet>>(RequestBuilder.BuildRequest(DataType.tweets, apiKey, "user_id=" + user.Id, "count=200")));
                 if (tempList.Count != 0)
                 {
                     lastTweetID = tempList.ElementAt(tempList.Count - 1).Id;
@@ -133,7 +133,7 @@ namespace BubbleBuster.Helper
 
                     while (tweetList.Count < Constants.TWEETS_TO_RETRIEVE)
                     {
-                        tempList.AddRange(new WebHandler().MakeRequest<List<Tweet>>(RequestBuilder.BuildRequest(DataType.tweets, "user_id=" + user.Id, "count=200", "max_id=" + lastTweetID)));
+                        tempList.AddRange(new WebHandler().MakeRequest<List<Tweet>>(RequestBuilder.BuildRequest(DataType.tweets, apiKey, "user_id=" + user.Id, "count=200", "max_id=" + lastTweetID)));
                         if (tempList.Count == 0 || tempList.ElementAt(tempList.Count - 1).Id == lastTweetID)
                         {
                             break;
