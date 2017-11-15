@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace QSLib
 {
-    class ServerTask
+    class ServerTask // Class that parses the data from its input to the worker when run.
     {
         string twitterApiKey;
         string twitterName;
