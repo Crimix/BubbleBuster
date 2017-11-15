@@ -12,6 +12,7 @@ using BubbleBuster.Helper;
 using BubbleBuster.Web.ReturnedObjects.RateLimit;
 using BubbleBuster.Web;
 using BubbleBuster.GUI;
+using BubbleBuster.WordUpdater;
 
 namespace BubbleBuster
 {
@@ -61,7 +62,7 @@ namespace BubbleBuster
 
             Console.ReadLine();
             */
-            User a = new User();
+            /*User a = new User();
             a.Id = 85583894;
             a.IsProtected = false;
             a.Name = "MuslimIQ";
@@ -74,6 +75,16 @@ namespace BubbleBuster
             Console.WriteLine("Negativity= " + conclusion[4]/conclusion[2]);
             Console.WriteLine("Conclusion left/right= " + (conclusion[0] + conclusion[1])/conclusion[2]);
             FileHelper.WriteObjectToFile("abc", a.Name, tweetList);
+            */
+
+            List<PolUserObj> polusers = new List<PolUserObj>();
+            polusers.Add(new PolUserObj(61734492, -1)); //fahrenthold, leftwing
+            polusers.Add(new PolUserObj(15893354, -1)); //wpjenna
+            polusers.Add(new PolUserObj(147580943, 1)); //
+            polusers.Add(new PolUserObj(18643437, 1)); //
+
+            WordWorker.Instance.UpdateWords(polusers);
+
 
             Console.WriteLine("?");
             Console.ReadLine();

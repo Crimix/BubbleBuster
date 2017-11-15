@@ -8,8 +8,28 @@ using System.Threading.Tasks;
 
 namespace BubbleBuster.WordUpdater
 {
-    public class WordUpdater
+    public class WordWorker
     {
+        private static WordWorker _instance;
+
+        private WordWorker()
+        {
+
+        }
+
+        public static WordWorker Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new WordWorker();
+                }
+                return _instance;
+            }
+        }
+
+
         private Dictionary<PolUserObj, List<Tweet>> GetTweets(List<PolUserObj> userList)
         {
             Dictionary<PolUserObj, List<Tweet>> returnObj = new Dictionary<PolUserObj, List<Tweet>>();
@@ -69,13 +89,13 @@ namespace BubbleBuster.WordUpdater
                     switch (user.affiliation)
                     {
                         case -1:
-                            returnObj[word].leftCount++;
+                            returnObj[word].LeftCount++;
                             break;
                         case 0:
-                            returnObj[word].centerCount++;
+                            returnObj[word].CenterCount++;
                             break;
                         case 1:
-                            returnObj[word].rightCount++;
+                            returnObj[word].RightCount++;
                             break;
                         default:
                             break;
@@ -86,12 +106,12 @@ namespace BubbleBuster.WordUpdater
             return returnObj;
         } 
 
-        public Dictionary<string, UncommonWordObj> UpdateWords(List<PolUserObj> users)
+        public void UpdateWords(List<PolUserObj> users)
         {
             Dictionary<PolUserObj, List<Tweet>> usersAndTweets = GetTweets(users);
             Dictionary<string, UncommonWordObj> returnList = DetermineWords(usersAndTweets);
 
-            return returnList;
+            FileHelper.WriteObjectToFile("abc", "WordsTest", returnList.Values);
         }
     }
 }
