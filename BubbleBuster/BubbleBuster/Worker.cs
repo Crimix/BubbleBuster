@@ -22,7 +22,7 @@ namespace BubbleBuster
             Log.Info("Following " + returned.Users.Count);
 
             List<Tweet> returned3 = TweetRetriever.Instance.GetTweetsFromFriends(returned);
-            FileHelper.WriteObjectToFile("BubbleBuster", "multTweets", returned3);
+            FileHelper.WriteObjectToFile("multTweets", returned3);
 
             Log.Info("Done!!! " + returned3.Count);
             Console.WriteLine("Done!");

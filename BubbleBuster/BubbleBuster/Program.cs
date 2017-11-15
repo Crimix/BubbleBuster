@@ -81,7 +81,7 @@ namespace BubbleBuster
             polusers.Add(new PolUserObj(61734492, -1)); //fahrenthold, leftwing
             polusers.Add(new PolUserObj(15893354, -1)); //wpjenna
             polusers.Add(new PolUserObj(147580943, 1)); //
-            polusers.Add(new PolUserObj(18643437, 1)); //
+            polusers.Add(new PolUserObj(18643437, 1));  //
 
             WordWorker.Instance.UpdateWords(polusers);
 

@@ -60,7 +60,12 @@ namespace BubbleBuster.WordUpdater
                     {
                         if (!uncommonWords.Contains(listWord, StringComparer.InvariantCultureIgnoreCase))
                         {
-                            uncommonWords.Add(listWord);
+                            if (!listWord.StartsWith("https://"))
+                            {
+                                Console.WriteLine(listWord);
+                                uncommonWords.Add(listWord);
+                            }
+                            
                         }
                     }
                 }
@@ -111,7 +116,7 @@ namespace BubbleBuster.WordUpdater
             Dictionary<PolUserObj, List<Tweet>> usersAndTweets = GetTweets(users);
             Dictionary<string, UncommonWordObj> returnList = DetermineWords(usersAndTweets);
 
-            FileHelper.WriteObjectToFile("abc", "WordsTest", returnList.Values);
+            FileHelper.WriteObjectToFile("WordsTest", returnList.Values);
         }
     }
 }
