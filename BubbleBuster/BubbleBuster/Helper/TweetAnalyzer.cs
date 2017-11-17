@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BubbleBuster.Helper.Objects;
+using System.Text.RegularExpressions;
 
 namespace BubbleBuster.Helper
 {
@@ -49,17 +50,35 @@ namespace BubbleBuster.Helper
             returnList = CalculateUrlSentiment(returnList);
 
 
-            foreach(Tweet tweet in returnList)
+            foreach (Tweet tweet in returnList)
             {
-                output[0] += tweet.hashtagBias * Constants.HASHTAG_WEIGHT;
-                output[1] += tweet.mediaBias * Constants.URL_WEIGHT;
-                output[3] += tweet.negativeValue;
-                output[4] += tweet.positiveValue;
+                if (!CheckForQuotes(tweet))
+                {
+                    output[0] += tweet.hashtagBias * Constants.HASHTAG_WEIGHT;
+                    output[1] += tweet.mediaBias * Constants.URL_WEIGHT;
+                    output[3] += tweet.negativeValue;
+                    output[4] += tweet.positiveValue;
+                }
             }
 
             output[2] = tweetList.Count;
 
             return output;
+        }
+
+        public bool CheckForQuotes(Tweet tweet)
+        {
+            Regex regex = new Regex("\"(.*?)\"");
+
+            if (regex.IsMatch(tweet.Text))
+            {
+                tweet.quotes = regex.Matches(tweet.Text)
+                               .Cast<Match>()
+                               .Select(m => m.Value)
+                               .ToArray();
+                return true;
+            }
+            return false;
         }
 
         //Calculates the general sentiment of a tweet. This is done by looking at the positive and negative words.

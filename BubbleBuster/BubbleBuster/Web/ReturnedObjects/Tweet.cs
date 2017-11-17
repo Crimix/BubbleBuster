@@ -28,6 +28,8 @@ namespace BubbleBuster.Web.ReturnedObjects
         public int negativeValue = 0;
         public double mediaBias = 0;
 
+        public string[] quotes;
+
         public List<String> posList = new List<string>();
         public List<String> negList = new List<string>();
         public List<String> tagList = new List<string>();
