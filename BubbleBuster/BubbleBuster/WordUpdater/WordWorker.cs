@@ -6,6 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+/// <summary>
+/// This class is used to scan the tweets of a number of twitter users, and determine what words they use 
+/// that are not part of the 1000(0) most common. (We should know the political affiliation of each of these users before hand).
+/// In addition we count each time a specific word is encountered, and note the contex of the person (affiliation, positive/negative).
+/// Can theoretically be used to dynamically update the list of keywords used for our political classification.
+/// </summary>
 namespace BubbleBuster.WordUpdater
 {
     public class WordWorker

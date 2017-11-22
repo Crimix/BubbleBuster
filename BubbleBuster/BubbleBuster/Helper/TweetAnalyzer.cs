@@ -7,7 +7,15 @@ using System.Text;
 using System.Threading.Tasks;
 using BubbleBuster.Helper.Objects;
 using System.Text.RegularExpressions;
-
+/// <summary>
+/// This class is used to classify the political leaning of a user, based on the content of the tweets they post.
+/// This is done by looking at the media they share (political leaning of different news outlets. This info is stored in a file, 
+/// and is gathered fro the site: Allsides.com).
+/// We also determine this by looking at the words a user use, and the context in which they are used.
+/// This is done using a sentiment analysis to determine if the user is happy/angry/passive, and a list of contextual keywords.
+/// The keywords has a value (negative for left leaning and positive for right.). Each word has a distinct such value for each context:
+/// positive/negative/passive.
+/// </summary>
 namespace BubbleBuster.Helper
 {
     public class TweetAnalyzer
