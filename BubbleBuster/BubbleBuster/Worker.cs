@@ -22,11 +22,10 @@ namespace BubbleBuster
             User user = new WebHandler(apiKey).MakeRequest<User>(RequestBuilder.BuildRequest(DataType.user, apiKey, "screen_name=" + username));
 
             var userTweets = TweetRetriever.Instance.GetTweetsFromUser(user.Id, apiKey);
-            var returned = FriendsRetriever.Instance.GetFriends(username,apiKey);
-            Log.Info("Following " + returned.Users.Count);
+            var friends = FriendsRetriever.Instance.GetFriends(username,apiKey);
+            Log.Info("Following " + friends.Users.Count + "users");
 
-            List<Tweet> ownTweets = TweetRetriever.Instance.GetUserTweets(, apiKey);
-            List<Tweet> filterBubble = TweetRetriever.Instance.GetTweetsFromFriends(returned,apiKey);
+            List<Tweet> filterBubble = TweetRetriever.Instance.GetTweetsFromFriends(friends,apiKey);
             FileHelper.WriteObjectToFile("multTweets", filterBubble);
 
 
