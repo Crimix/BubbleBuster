@@ -19,7 +19,9 @@ namespace BubbleBuster
 
             //Sets the limits such that we do not excced the limts
             LimitHelper.Instance(apiKey).SetLimit(new WebHandler().MakeRequest<Limit>(RequestBuilder.BuildStartupRequest()));
+            User user = new WebHandler(apiKey).MakeRequest<User>(RequestBuilder.BuildRequest(DataType.user, apiKey, "screen_name=" + username));
 
+            var userTweets = TweetRetriever.Instance.GetTweetsFromUser(user.Id, apiKey);
             var returned = FriendsRetriever.Instance.GetFriends(username,apiKey);
             Log.Info("Following " + returned.Users.Count);
 

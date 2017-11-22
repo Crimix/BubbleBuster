@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BubbleBuster
 {
-    public enum DataType { friendsId, friendsObj, tweets, limit }; //Expand based on what data is needed
+    public enum DataType { friendsId, friendsObj, tweets, limit, user }; //Expand based on what data is needed
 
     public static class RequestBuilder
     {
@@ -74,6 +74,9 @@ namespace BubbleBuster
                     break;
                 case DataType.limit:
                     returnString += "application/rate_limit_status.json?resources=friends,statuses,application";
+                    break;
+                case DataType.user:
+                    returnString += "users/show.json?";
                     break;
                 default:
                     break;
