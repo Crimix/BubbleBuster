@@ -21,15 +21,26 @@ namespace BubbleBuster.Helper
     public class TweetAnalyzer
     {
         private static TweetAnalyzer _instance;
-        private Dictionary<string, int> analysisWords = new Dictionary<string, int>();
-        private Dictionary<string, int> newsHyperlinks = new Dictionary<string, int>();
+
+        //"Hashtags" are key-words used in analysis. Each has a number of fields determining their political value in a given positive/negative sentimental context.
         private Dictionary<string, HashtagObj> hashtags = new Dictionary<string, HashtagObj>();
+
+        //Words from file. Has an emotional value used in sentimental analysis.
+        private Dictionary<string, int> analysisWords = new Dictionary<string, int>();
+
+        //Formatted URLs from a numer of news media. Each has a politcal value 1-5.
+        private Dictionary<string, int> newsHyperlinks = new Dictionary<string, int>(); 
+       
+        
 
         private TweetAnalyzer()
         {
 
         }
 
+        /// <summary>
+        /// Returns a static instance of the class. This works as a singleton.
+        /// </summary>
         public static TweetAnalyzer Instance
         {
             get
@@ -45,6 +56,16 @@ namespace BubbleBuster.Helper
             }
         }
 
+        /// <summary>
+        /// Analyzes a list of Tweets, and returns the following values as a double-array:
+        /// Hashtag-Bias: Determined political value of the words used in the tweets
+        /// Media-Bias: Determined political value of news media linked to in the tweets
+        /// Count: Number of tweets analtyzed
+        /// Pos: Number of positive words found
+        /// Neg: Number of negative words found
+        /// </summary>
+        /// <param name="tweetList"></param>
+        /// <returns></returns>
         public double[] AnalyzeAndDecorateTweets(List<Tweet> tweetList)
         {
             //double conclusion = 0; //Higher value means more right leaning. Lower value means more left leaning.
@@ -53,9 +74,9 @@ namespace BubbleBuster.Helper
 
             List<Tweet> returnList = tweetList;
 
-            returnList = CalculateSentiment(returnList);
-            returnList = CalculateHashtagSentiment(returnList);
-            returnList = CalculateUrlSentiment(returnList);
+            returnList = CalculateSentiment(returnList);        //Calculate the sentiment of each tweet. Positive/negative sentiment.
+            returnList = CalculateHashtagSentiment(returnList); //Calculate a political value based on key-words and sentimental context. E.g. "Hate Trump": Negative sentiment, Trump-keyword.
+            returnList = CalculateUrlSentiment(returnList);     //
 
 
             foreach (Tweet tweet in returnList)

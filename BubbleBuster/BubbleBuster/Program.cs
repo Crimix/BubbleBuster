@@ -107,6 +107,10 @@ namespace BubbleBuster
             polusers.Add(new PolUserObj(17980523, 1)); //mitchellvii
             WordWorker.Instance.UpdateWords(polusers);*/
 
+           
+
+            //new TwitterApi(ConsumerKey, ConsumerKeySecret, AccessToken, AccessTokenSecret);
+
             Console.WriteLine("?");
             Console.ReadLine();
         }
