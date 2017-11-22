@@ -19,5 +19,8 @@ namespace BubbleBuster.Web.ReturnedObjects.RateLimit
         [JsonProperty("application")]
         public ResourceApplication Application { get; set; }
 
+        [JsonProperty("users")]
+        public ResourceUsers Users { get; set; }
+
     }
 }

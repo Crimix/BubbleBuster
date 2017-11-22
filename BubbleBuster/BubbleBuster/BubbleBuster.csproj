@@ -77,6 +77,7 @@
     <Compile Include="Web\ReturnedObjects\Hashtag.cs" />
     <Compile Include="Web\ReturnedObjects\RateLimit\Limit.cs" />
     <Compile Include="Web\ReturnedObjects\RateLimit\Rate.cs" />
+    <Compile Include="Web\ReturnedObjects\RateLimit\ResourceUsers.cs" />
     <Compile Include="Web\ReturnedObjects\RateLimit\ResourceApplication.cs" />
     <Compile Include="Web\ReturnedObjects\RateLimit\ResourceFriends.cs" />
     <Compile Include="Web\ReturnedObjects\RateLimit\Resources.cs" />

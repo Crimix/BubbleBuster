@@ -17,16 +17,21 @@ namespace BubbleBuster
             string username = twitterName;
             string apiKey = twitterApiKey;
 
-            //Sets the limits such that we do not excced the limts
+            //Sets the limits such that we do not exceed the limits
             LimitHelper.Instance(apiKey).SetLimit(new WebHandler().MakeRequest<Limit>(RequestBuilder.BuildStartupRequest()));
+            User user = new WebHandler(apiKey).MakeRequest<User>(RequestBuilder.BuildRequest(DataType.user, apiKey, "screen_name=" + username));
 
-            var returned = FriendsRetriever.Instance.GetFriends(username,apiKey);
-            Log.Info("Following " + returned.Users.Count);
+            var userTweets = TweetRetriever.Instance.GetTweetsFromUser(user.Id, apiKey);
+            var friends = FriendsRetriever.Instance.GetFriends(username,apiKey);
+            Log.Info("Following " + friends.Users.Count + "users");
 
-            List<Tweet> returned3 = TweetRetriever.Instance.GetTweetsFromFriends(returned,apiKey);
-            FileHelper.WriteObjectToFile("multTweets", returned3);
+            List<Tweet> filterBubble = TweetRetriever.Instance.GetTweetsFromFriends(friends,apiKey);
+            FileHelper.WriteObjectToFile("multTweets", filterBubble);
 
-            Log.Info("Done!!! " + returned3.Count);
+
+            double[] filterBubbleResults = TweetAnalyzer.Instance.AnalyzeAndDecorateTweets(filterBubble);
+
+            Log.Info("Done!!! " + filterBubble.Count);
         }
     }
 }
