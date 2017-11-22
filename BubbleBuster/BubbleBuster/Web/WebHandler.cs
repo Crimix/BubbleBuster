@@ -69,10 +69,6 @@ namespace BubbleBuster.Web
             return res;
         }
 
-
-
-
-
         public T MakeRequest<T>(string requestString) where T : new()
         {
             T res = default(T);
@@ -100,6 +96,46 @@ namespace BubbleBuster.Web
             }
 
             return res;
+        }
+
+        public string PostRequest (string requestString) //Does not work pls halp i duno anything am dum
+        {
+            string res = "";
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestString);
+            request.Headers[HttpRequestHeader.Authorization] = _cred;
+            request.UserAgent = Constants.USER_AGENT;
+            request.Method = "POST";
+            request.Timeout = 1800000;
+
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                Stream receiveStream = response.GetResponseStream();
+                StreamWriter writeStream = null;
+
+                if (response.CharacterSet == null)
+                {
+                    writeStream = new StreamWriter(receiveStream);
+                }
+                else
+                {
+                    writeStream = new StreamWriter(receiveStream, Encoding.GetEncoding(response.CharacterSet));
+                }
+
+                try
+                {
+                    res = writeStream.wr(); //yesnomaybe
+                }
+                catch (IOException)
+                {
+
+                }
+
+                response.Close();
+                readStream.Close();
+            }
+                return "";
         }
     }
 }

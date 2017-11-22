@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace BubbleBuster
 {
@@ -30,7 +31,7 @@ namespace BubbleBuster
 
 
             double[] filterBubbleResults = TweetAnalyzer.Instance.AnalyzeAndDecorateTweets(filterBubble);
-
+            
             Log.Info("Done!!! " + filterBubble.Count);
         }
     }
