@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BubbleBuster
 {
-    public enum DataType { friendsId, friendsObj, tweets, limit, user }; //Expand based on what data is needed
+    public enum DataType { friendsId, friendsObj, tweets, limit, user, database }; //Expand based on what data is needed
 
     public static class RequestBuilder
     {
@@ -59,24 +59,27 @@ namespace BubbleBuster
 
         private static string Build(DataType returnType, params string[] parameters)
         {
-            string returnString = baseUrl;
+            string returnString = "";
 
             switch (returnType)
             {
                 case DataType.friendsId:
-                    returnString += "friends/ids.json?";
+                    returnString += baseUrl+"friends/ids.json?";
                     break;
                 case DataType.friendsObj:
-                    returnString += "friends/list.json?";
+                    returnString += baseUrl + "friends/list.json?";
                     break;
                 case DataType.tweets:
-                    returnString += "statuses/user_timeline.json?include_rts=false&tweet_mode=extended&";
+                    returnString += baseUrl + "statuses/user_timeline.json?include_rts=false&tweet_mode=extended&";
                     break;
                 case DataType.limit:
-                    returnString += "application/rate_limit_status.json?resources=friends,statuses,application";
+                    returnString += baseUrl + "application/rate_limit_status.json?resources=friends,statuses,application";
                     break;
                 case DataType.user:
-                    returnString += "users/show.json?";
+                    returnString += baseUrl + "users/show.json?";
+                    break;
+                case DataType.database:
+                    returnString += baseUrl + "users/show.json?";
                     break;
                 default:
                     break;

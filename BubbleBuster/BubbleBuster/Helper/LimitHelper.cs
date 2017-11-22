@@ -35,17 +35,19 @@ namespace BubbleBuster.Helper
         private int _FriendsObjectCallsRemaining = 0;
         private int _TweetCallsRemaining = 0;
         private int _LimitCallsRemaining = 0;
+        private int _UserCallsRemaining = 0;
 
         public int FriendsIdsCallsRemaining { get { return _FriendsIdsCallsRemaining; } private set { _FriendsIdsCallsRemaining = value; } }
         public int FriendsObjectCallsRemaining { get { return _FriendsObjectCallsRemaining; } private set { _FriendsObjectCallsRemaining = value; } }
         public int TweetCallsRemaining { get { return _TweetCallsRemaining; } private set { _TweetCallsRemaining = value; } }
         public int LimitCallsRemaining { get { return _LimitCallsRemaining; } private set { _LimitCallsRemaining = value; } }
-
+        public int UserCallsRemaining { get { return _UserCallsRemaining; } private set { _UserCallsRemaining = value; } }
 
         public long FriendsIdsCallsReset { get; private set; }
         public long FriendsObjectCallsReset { get; private set; }
         public long TweetCallsReset { get; private set; }
         public long LimitCallsReset { get; private set; }
+        public long UserCallsReset { get; private set; }
 
         private Limit Limit { get; set; }
 
@@ -62,11 +64,13 @@ namespace BubbleBuster.Helper
             FriendsIdsCallsRemaining = Limit.Resources.Friends.Ids.Remaining;
             FriendsObjectCallsRemaining = Limit.Resources.Friends.List.Remaining;
             LimitCallsRemaining = Limit.Resources.Application.Status.Remaining;
+            UserCallsRemaining = Limit.Resources.Users.Status.Remaining;
 
             TweetCallsReset = Limit.Resources.Statuses.UserTimeLine.Reset;
             FriendsIdsCallsReset = Limit.Resources.Friends.Ids.Reset;
             FriendsObjectCallsReset = Limit.Resources.Friends.List.Reset;
             LimitCallsReset = Limit.Resources.Application.Status.Reset;
+            UserCallsReset = Limit.Resources.Users.Status.Reset;
         }
 
         public bool AllowedToMakeRequest(DataType type)
@@ -81,6 +85,10 @@ namespace BubbleBuster.Helper
                     return (0 + Constants.REMAINING_OFFSET) < TweetCallsRemaining;
                 case DataType.limit:
                     return (0 + Constants.REMAINING_OFFSET) < LimitCallsRemaining;
+                case DataType.user:
+                    return (0 + Constants.REMAINING_OFFSET) < UserCallsRemaining;
+                case DataType.database:
+                    return true;
                 default:
                     return false;
             }
@@ -102,6 +110,9 @@ namespace BubbleBuster.Helper
                     break;
                 case DataType.limit:
                     resetTime = LimitCallsReset;
+                    break;
+                case DataType.user:
+                    resetTime = UserCallsReset;
                     break;
             }
 
@@ -127,6 +138,9 @@ namespace BubbleBuster.Helper
                 case DataType.limit:
                     resetTime = LimitCallsReset;
                     break;
+                case DataType.user:
+                    resetTime = UserCallsReset;
+                    break;
             }
 
             return DateTimeOffset.FromUnixTimeSeconds(resetTime).DateTime.ToLocalTime();
@@ -147,6 +161,9 @@ namespace BubbleBuster.Helper
                     break;
                 case DataType.limit:
                     Interlocked.Decrement(ref _LimitCallsRemaining);
+                    break;
+                case DataType.user:
+                    Interlocked.Decrement(ref _UserCallsRemaining);
                     break;
             }
         }
