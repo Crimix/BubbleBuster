@@ -125,7 +125,7 @@ namespace BubbleBuster.Web
 
                 try
                 {
-                    res = writeStream.wr(); //yesnomaybe
+                    res = writeStream.skrivnogetHerDonf //yesnomaybe
                 }
                 catch (IOException)
                 {

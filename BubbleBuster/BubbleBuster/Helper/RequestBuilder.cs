@@ -79,7 +79,7 @@ namespace BubbleBuster
                     returnString += baseUrl + "users/show.json?";
                     break;
                 case DataType.database:
-                    returnString += baseUrl + "users/show.json?";
+                    returnString += "http://localhost:62020/api/user?";
                     break;
                 default:
                     break;
