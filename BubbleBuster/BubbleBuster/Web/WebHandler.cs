@@ -69,10 +69,6 @@ namespace BubbleBuster.Web
             return res;
         }
 
-
-
-
-
         public T MakeRequest<T>(string requestString) where T : new()
         {
             T res = default(T);
@@ -100,6 +96,25 @@ namespace BubbleBuster.Web
             }
 
             return res;
+        }
+
+        public bool DBPostRequest (string requestString)
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestString);
+            request.Headers[HttpRequestHeader.Authorization] = "Bearer " + Constants.DB_CREDS;
+            request.Method = "POST";
+            request.Timeout = 1800000;
+
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+            if(response.StatusCode == HttpStatusCode.OK)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace BubbleBuster
 {
@@ -19,9 +20,9 @@ namespace BubbleBuster
 
             //Sets the limits such that we do not exceed the limits
             LimitHelper.Instance(apiKey).SetLimit(new WebHandler().MakeRequest<Limit>(RequestBuilder.BuildStartupRequest()));
-            User user = new WebHandler(apiKey).MakeRequest<User>(RequestBuilder.BuildRequest(DataType.user, apiKey, "screen_name=" + username));
+            User user = new WebHandler(apiKey).MakeRequest<User>(RequestBuilder.BuildRequest(DataType.user, apiKey, "screen_name=" + username)); //Used for getting the users political value
 
-            var userTweets = TweetRetriever.Instance.GetTweetsFromUser(user.Id, apiKey);
+            var userTweets = TweetRetriever.Instance.GetTweetsFromUser(user.Id, apiKey); 
             var friends = FriendsRetriever.Instance.GetFriends(username,apiKey);
             Log.Info("Following " + friends.Users.Count + "users");
 
@@ -30,8 +31,14 @@ namespace BubbleBuster
 
 
             double[] filterBubbleResults = TweetAnalyzer.Instance.AnalyzeAndDecorateTweets(filterBubble);
+            double[] userResults = TweetAnalyzer.Instance.AnalyzeAndDecorateTweets(userTweets);
+            double userpol = userResults[0] + userResults[1];
+            double filterPol = filterBubbleResults[0] + filterBubbleResults[1];
 
-            Log.Info("Done!!! " + filterBubble.Count);
+
+            bool post = new WebHandler(apiKey).DBPostRequest(RequestBuilder.BuildRequest(DataType.database, apiKey, "name=" + user.Name, "twitterID=" + user.Id, "pol_var=" + userpol, "lib_var=" + 0, "fpol_var=" + filterPol, "flib_var=" + 0, "protect=" + Convert.ToInt32(user.IsProtected)));
+
+            Log.Info("Done!!! " + filterBubble.Count + " success " + post);
         }
     }
 }
