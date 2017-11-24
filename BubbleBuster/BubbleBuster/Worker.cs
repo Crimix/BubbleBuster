@@ -36,9 +36,9 @@ namespace BubbleBuster
             double filterPol = filterBubbleResults[0] + filterBubbleResults[1];
 
 
-            new WebHandler(apiKey).DBPostRequest(RequestBuilder.BuildRequest(DataType.database, apiKey, "name=" + user.Name, "twitterID=" + user.Id, "pol_var=" + userpol, "lib_var=" + 0, "fpol_var=" + filterPol, "flib_var=" + 0, "protect=" + Convert.ToInt32(user.IsProtected)));
+            bool post = new WebHandler(apiKey).DBPostRequest(RequestBuilder.BuildRequest(DataType.database, apiKey, "name=" + user.Name, "twitterID=" + user.Id, "pol_var=" + userpol, "lib_var=" + 0, "fpol_var=" + filterPol, "flib_var=" + 0, "protect=" + Convert.ToInt32(user.IsProtected)));
 
-            Log.Info("Done!!! " + filterBubble.Count);
+            Log.Info("Done!!! " + filterBubble.Count + " success " + post);
         }
     }
 }
