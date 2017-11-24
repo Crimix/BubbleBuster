@@ -98,44 +98,23 @@ namespace BubbleBuster.Web
             return res;
         }
 
-        public string PostRequest (string requestString) //Does not work pls halp i duno anything am dum
+        public bool DBPostRequest (string requestString)
         {
-            string res = "";
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestString);
-            request.Headers[HttpRequestHeader.Authorization] = _cred;
-            request.UserAgent = Constants.USER_AGENT;
+            request.Headers[HttpRequestHeader.Authorization] = "Bearer " + Constants.DB_CREDS;
             request.Method = "POST";
             request.Timeout = 1800000;
 
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
-            if (response.StatusCode == HttpStatusCode.OK)
+            if(response.StatusCode == HttpStatusCode.OK)
             {
-                Stream receiveStream = response.GetResponseStream();
-                StreamWriter writeStream = null;
-
-                if (response.CharacterSet == null)
-                {
-                    writeStream = new StreamWriter(receiveStream);
-                }
-                else
-                {
-                    writeStream = new StreamWriter(receiveStream, Encoding.GetEncoding(response.CharacterSet));
-                }
-
-                try
-                {
-                    res = writeStream.skrivnogetHerDonf //yesnomaybe
-                }
-                catch (IOException)
-                {
-
-                }
-
-                response.Close();
-                readStream.Close();
+                return true;
             }
-                return "";
+            else
+            {
+                return false;
+            }
         }
     }
 }
