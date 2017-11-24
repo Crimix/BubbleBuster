@@ -114,9 +114,13 @@ namespace BubbleBuster.Helper
         public List<Tweet> CalculateSentiment(List<Tweet> tweetList)
         {
             List<Tweet> returnList = tweetList;
+            string length = Convert.ToString(returnList.Count);
+            int currentProgress = 0;
 
             foreach (Tweet tweet in returnList)
             {
+                currentProgress++;
+                Log.Info("Calculate Sentiment (" + currentProgress + "/" + length + ")");
                 foreach (string word in analysisWords.Keys)
                 {
                     var puncturation = tweet.Text.Where(Char.IsPunctuation).Distinct().ToArray();
@@ -148,9 +152,14 @@ namespace BubbleBuster.Helper
         private List<Tweet> CalculateHashtagSentiment(List<Tweet> tweetList)
         {
             List<Tweet> returnList = tweetList;
+            string length = Convert.ToString(returnList.Count);
+            int currentProgress = 0;
 
             foreach (Tweet tweet in returnList)
             {
+                currentProgress++;
+                Log.Info("Calculate Hashtag (" + currentProgress + "/" + length + ")");
+
                 foreach (string hashtag in hashtags.Keys)
                 {
                     var puncturation = tweet.Text.Where(Char.IsPunctuation).Distinct().ToArray();
@@ -182,9 +191,14 @@ namespace BubbleBuster.Helper
         private List<Tweet> CalculateUrlSentiment(List<Tweet> tweetList)
         {
             List<Tweet> returnList = tweetList;
+            string length = Convert.ToString(returnList.Count);
+            int currentProgress = 0;
 
-            foreach (Tweet tweet in tweetList)
+            foreach (Tweet tweet in returnList)
             {
+                currentProgress++;
+                Log.Info("Calculate Hashtag (" + currentProgress + "/" + length + ")");
+
                 foreach (Url link in tweet.Entities.Urls)
                 {
                     string shortenedUrl = UrlHelper.Instance.ShortenUrl(link.ExpandedUrl);
