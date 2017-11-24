@@ -73,13 +73,13 @@ namespace BubbleBuster
                     returnString += baseUrl + "statuses/user_timeline.json?include_rts=false&tweet_mode=extended&";
                     break;
                 case DataType.limit:
-                    returnString += baseUrl + "application/rate_limit_status.json?resources=friends,statuses,application";
+                    returnString += baseUrl + "application/rate_limit_status.json?resources=friends,statuses,application,users";
                     break;
                 case DataType.user:
                     returnString += baseUrl + "users/show.json?";
                     break;
                 case DataType.database:
-                    returnString += "http://localhost:62020/api/user?";
+                    returnString += "http://localhost:8000/api/twitter/?";
                     break;
                 default:
                     break;

@@ -20,9 +20,9 @@ namespace BubbleBuster
 
             //Sets the limits such that we do not exceed the limits
             LimitHelper.Instance(apiKey).SetLimit(new WebHandler().MakeRequest<Limit>(RequestBuilder.BuildStartupRequest()));
-            User user = new WebHandler(apiKey).MakeRequest<User>(RequestBuilder.BuildRequest(DataType.user, apiKey, "screen_name=" + username));
+            User user = new WebHandler(apiKey).MakeRequest<User>(RequestBuilder.BuildRequest(DataType.user, apiKey, "screen_name=" + username)); //Used for getting the users political value
 
-            var userTweets = TweetRetriever.Instance.GetTweetsFromUser(user.Id, apiKey);
+            var userTweets = TweetRetriever.Instance.GetTweetsFromUser(user.Id, apiKey); 
             var friends = FriendsRetriever.Instance.GetFriends(username,apiKey);
             Log.Info("Following " + friends.Users.Count + "users");
 
