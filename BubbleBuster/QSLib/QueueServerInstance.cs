@@ -64,7 +64,8 @@ namespace QSLib
                 }
                 if(runningTasksList.Count > 0) // If any tasks are running, it removes the completed ones from the list.
                 {
-                    foreach (var task in runningTasksList) //ToDo Fik en exception her, omkring samling blev ændret
+                    List<Task> runningTasksListInstance = runningTasksList;
+                    foreach (var task in runningTasksListInstance) //ToDo Fik en exception her, omkring samling blev ændret
                     {
                         if (task.IsCompleted)
                         {
