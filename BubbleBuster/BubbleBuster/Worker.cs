@@ -30,8 +30,8 @@ namespace BubbleBuster
             FileHelper.WriteObjectToFile("multTweets", filterBubble);
 
 
-            double[] filterBubbleResults = TweetAnalyzer.Instance.AnalyzeAndDecorateTweets(filterBubble);
-            double[] userResults = TweetAnalyzer.Instance.AnalyzeAndDecorateTweets(userTweets);
+            double[] filterBubbleResults = TweetAnalyzer.Instance.AnalyzeAndDecorateTweetsThreaded(filterBubble);
+            double[] userResults = TweetAnalyzer.Instance.AnalyzeAndDecorateTweetsThreaded(userTweets);
             double userpol = userResults[0] + userResults[1];
             double filterPol = filterBubbleResults[0] + filterBubbleResults[1];
 

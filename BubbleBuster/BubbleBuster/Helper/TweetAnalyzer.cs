@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BubbleBuster.Helper.Objects;
 using System.Text.RegularExpressions;
+using System.Globalization;
 /// <summary>
 /// This class is used to classify the political leaning of a user, based on the content of the tweets they post.
 /// This is done by looking at the media they share (political leaning of different news outlets. This info is stored in a file, 
@@ -29,9 +30,7 @@ namespace BubbleBuster.Helper
         private Dictionary<string, int> analysisWords = new Dictionary<string, int>();
 
         //Formatted URLs from a numer of news media. Each has a politcal value 1-5.
-        private Dictionary<string, int> newsHyperlinks = new Dictionary<string, int>(); 
-       
-        
+        private Dictionary<string, int> newsHyperlinks = new Dictionary<string, int>();
 
         private TweetAnalyzer()
         {
@@ -58,7 +57,35 @@ namespace BubbleBuster.Helper
 
         public double[] AnalyzeAndDecorateTweetsThreaded(List<Tweet> tweetList)
         {
-            List<Task> tasks = new List<Task>();
+            List<Task<double[]>> tasks = new List<Task<double[]>>();
+            var temp = tweetList;
+            int e = tweetList.Count / Constants.TWEET_LIST_AMOUNT;
+            List<List<Tweet>> list = new List<List<Tweet>>();
+            for (int i =0; i < 4; i++)
+            {
+                list[i] = temp.Take(e).ToList();
+                temp = temp.Skip(e).ToList();
+            }
+
+            foreach(var item in list)
+            {
+                Task<double[]> t = new Task<double[]>(() => AnalyzeAndDecorateTweets(item));
+                t.Start();
+                tasks.Add(t);
+            }
+
+            Task.WaitAll(tasks.ToArray());
+            double[] res = { 0.0, 0.0, 0.0, 0.0, 0.0 };
+
+            foreach (var task in tasks)
+            {
+                res[1] += task.Result[1];
+                res[2] += task.Result[2];
+                res[3] += task.Result[3];
+                res[4] += task.Result[4];
+                res[5] += task.Result[5];
+            }
+
 
             return null;
         }
