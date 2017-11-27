@@ -97,6 +97,7 @@ namespace QSLib
         {
             bool wasSuccesful = true;
             Log.Info("Added task");
+
             try
             {
                 //If the twitter acc does not exist or any of the two keys does not contain proper information

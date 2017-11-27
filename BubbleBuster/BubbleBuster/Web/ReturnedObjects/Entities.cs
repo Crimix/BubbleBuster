@@ -14,6 +14,5 @@ namespace BubbleBuster.Web.ReturnedObjects
 
         [JsonProperty("urls")]
         public List<Url> Urls { get; set; }
-
     }
 }

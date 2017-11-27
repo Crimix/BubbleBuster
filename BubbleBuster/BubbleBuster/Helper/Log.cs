@@ -9,7 +9,6 @@ namespace BubbleBuster.Helper
 {
     public static class Log
     {
-
         public static void Debug(object obj)
         {
             Append("Debug~ " + obj.ToString());
@@ -39,6 +38,5 @@ namespace BubbleBuster.Helper
         {
             File.AppendAllText(Constants.PROGRAM_DATA_FILEPATH+@"\log.txt", text + Environment.NewLine);
         }
-
     }
 }

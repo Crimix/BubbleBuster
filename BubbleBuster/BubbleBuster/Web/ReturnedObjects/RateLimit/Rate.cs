@@ -17,6 +17,5 @@ namespace BubbleBuster.Web.ReturnedObjects.RateLimit
 
         [JsonProperty("reset")]
         public long Reset { get; set; }
-
     }
 }

@@ -29,12 +29,10 @@ namespace BubbleBuster
             List<Tweet> filterBubble = TweetRetriever.Instance.GetTweetsFromFriends(friends,apiKey);
             FileHelper.WriteObjectToFile("multTweets", filterBubble);
 
-
             double[] filterBubbleResults = TweetAnalyzer.Instance.AnalyzeAndDecorateTweets(filterBubble);
             double[] userResults = TweetAnalyzer.Instance.AnalyzeAndDecorateTweets(userTweets);
             double userpol = userResults[0] + userResults[1];
             double filterPol = filterBubbleResults[0] + filterBubbleResults[1];
-
 
             bool post = new WebHandler(apiKey).DBPostRequest(RequestBuilder.BuildRequest(DataType.database, apiKey, "name=" + user.Name, "twitterID=" + user.Id, "pol_var=" + userpol, "lib_var=" + 0, "fpol_var=" + filterPol, "flib_var=" + 0, "protect=" + Convert.ToInt32(user.IsProtected)));
 

@@ -31,11 +31,8 @@ namespace BubbleBuster.Helper
         //Formatted URLs from a numer of news media. Each has a politcal value 1-5.
         private Dictionary<string, int> newsHyperlinks = new Dictionary<string, int>(); 
        
-        
-
         private TweetAnalyzer()
         {
-
         }
 
         /// <summary>
@@ -69,7 +66,6 @@ namespace BubbleBuster.Helper
         public double[] AnalyzeAndDecorateTweets(List<Tweet> tweetList)
         {
             //double conclusion = 0; //Higher value means more right leaning. Lower value means more left leaning.
-
             double[] output = DoEverything(tweetList); //hashtag, media, count, pos, neg
             /*
             List<Tweet> returnList = tweetList;
@@ -156,7 +152,6 @@ namespace BubbleBuster.Helper
                                     tweet.hashtagBias += hashtags[hashtag].bas;
                             }
                         }
-
                     }
 
                     //Media Analysis
@@ -175,14 +170,9 @@ namespace BubbleBuster.Helper
                     output[3] += tweet.negativeValue;
                     output[4] += tweet.positiveValue;
                 }
-
             }
             return output;
         }
-
-
-
-
 
         private bool CheckForQuotationMarks(Tweet tweet)
         {
@@ -240,7 +230,6 @@ namespace BubbleBuster.Helper
                 }
             }
             return returnList;
-
         }
 
         private List<Tweet> CalculateHashtagSentiment(List<Tweet> tweetList)
@@ -274,8 +263,7 @@ namespace BubbleBuster.Helper
                             else
                                 tweet.hashtagBias += hashtags[hashtag].bas;
                         }
-                    }
-                    
+                    }                   
                 }
             }
 

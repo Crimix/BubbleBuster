@@ -30,12 +30,12 @@ namespace TextProcesserLib
         // Quicker to use to rebuilding strings each time a change is made.
         private char[] wordArray;
 
-
         /// <summary>
         ///     Stem the passed in word.
         /// </summary>
         /// <param name="word">Word to evaluate</param>
         /// <returns></returns>
+
         public string StemWord(string word)
         {
             // Do nothing for empty strings or short words.
