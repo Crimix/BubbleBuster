@@ -21,5 +21,9 @@ namespace BubbleBuster.Helper
         //Constants used for tweet analysis
         public const int HASHTAG_WEIGHT = 1; //Factor. 1 = base. Do not use negative values.
         public const int URL_WEIGHT = 1; //Factor. 1 = base. Do not use negative values.
+
+        //Application keys
+        public const string CONSUMER_KEY = "fIbIn9yMl0F7dpWUoihhwAD3N";
+        public const string CONSUMER_SECRET = "qZOQqOia1XnGuWbfDKmuxxykTCAzLbmVbdZie40w6AFuuFHy4F";
     }
 }
