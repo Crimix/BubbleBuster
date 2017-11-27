@@ -21,6 +21,6 @@ namespace BubbleBuster.Helper
         //Constants used for tweet analysis
         public const int HASHTAG_WEIGHT = 1; //Factor. 1 = base. Do not use negative values.
         public const int URL_WEIGHT = 1; //Factor. 1 = base. Do not use negative values.
-        public const int TWEET_LIST_AMOUNT = 4; //How many theads should the tweet list be split to 
+        public const int TWEET_LIST_AMOUNT = 8; //How many theads should the tweet list be split to 
     }
 }

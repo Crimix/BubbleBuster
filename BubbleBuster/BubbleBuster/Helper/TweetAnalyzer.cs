@@ -56,11 +56,12 @@ namespace BubbleBuster.Helper
 
         public double[] AnalyzeAndDecorateTweetsThreaded(List<Tweet> tweetList)
         {
+            Log.Info("Spliting " + tweetList.Count + " tweets");
             List<Task<double[]>> tasks = new List<Task<double[]>>();
             var copyTweetList = tweetList;
             int e = tweetList.Count / Constants.TWEET_LIST_AMOUNT;
             List<List<Tweet>> splittedList = new List<List<Tweet>>();
-            for (int i =0; i < 4; i++)
+            for (int i =0; i < Constants.TWEET_LIST_AMOUNT; i++)
             {
                 splittedList.Add(copyTweetList.Take(e).ToList());
                 copyTweetList = copyTweetList.Skip(e).ToList();
@@ -76,15 +77,19 @@ namespace BubbleBuster.Helper
             Task.WaitAll(tasks.ToArray());
             double[] res = { 0.0, 0.0, 0.0, 0.0, 0.0 };
 
+            double count = 0;
+
             foreach (var task in tasks)
             {
                 res[1] += task.Result[1];
                 res[2] += task.Result[2];
                 res[3] += task.Result[3];
+                count += task.Result[3];
                 res[4] += task.Result[4];
                 res[5] += task.Result[5];
             }
 
+            Log.Info("Fusing " + count + " tweets");
 
             return null;
         }
