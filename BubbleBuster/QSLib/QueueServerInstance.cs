@@ -28,7 +28,7 @@ namespace QSLib
         Queue<TwitterAcc> nonAddedRequests = new Queue<TwitterAcc>(); //Requests from the browser goes into here
         public async void TaskQueue()
         {
-            const int taskLimit = 5;
+            const int TASKLIMIT = 5;
             Log.Info("test");
             Queue<Task> taskQueue = new Queue<Task>(); //Queue of tasks that are not started yet
             List<Task> runningTasksList = new List<Task>(); //List of currently running tasks.
@@ -50,14 +50,13 @@ namespace QSLib
                     }
                 }
 
-                while (runningTasksList.Count < taskLimit) //Starts tasks from the queue until there are none left or the limit is reached.
+                while (runningTasksList.Count < TASKLIMIT) //Starts tasks from the queue until there are none left or the limit is reached.
                 {
                     if (taskQueue.Count > 0)
                     {
                         Log.Info("Start one task");
                         runningTasksList.Add(taskQueue.Peek());
                         await RunTaskAsync(taskQueue.Dequeue());
-
                     }
                     else
                         break; 
