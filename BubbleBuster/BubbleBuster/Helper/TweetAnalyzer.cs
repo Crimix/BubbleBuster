@@ -56,6 +56,14 @@ namespace BubbleBuster.Helper
             }
         }
 
+        public double[] AnalyzeAndDecorateTweetsThreaded(List<Tweet> tweetList)
+        {
+            List<Task> tasks = new List<Task>();
+
+            return null;
+        }
+
+
         /// <summary>
         /// Analyzes a list of Tweets, and returns the following values as a double-array:
         /// Hashtag-Bias: Determined political value of the words used in the tweets
