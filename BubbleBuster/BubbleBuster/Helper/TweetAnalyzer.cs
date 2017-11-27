@@ -57,16 +57,16 @@ namespace BubbleBuster.Helper
         public double[] AnalyzeAndDecorateTweetsThreaded(List<Tweet> tweetList)
         {
             List<Task<double[]>> tasks = new List<Task<double[]>>();
-            var temp = tweetList;
+            var copyTweetList = tweetList;
             int e = tweetList.Count / Constants.TWEET_LIST_AMOUNT;
-            List<List<Tweet>> list = new List<List<Tweet>>();
+            List<List<Tweet>> splittedList = new List<List<Tweet>>();
             for (int i =0; i < 4; i++)
             {
-                list.Add(temp.Take(e).ToList());
-                temp = temp.Skip(e).ToList();
+                splittedList.Add(copyTweetList.Take(e).ToList());
+                copyTweetList = copyTweetList.Skip(e).ToList();
             }
 
-            foreach(var item in list)
+            foreach(var item in splittedList)
             {
                 Task<double[]> t = new Task<double[]>(() => AnalyzeAndDecorateTweets(item));
                 t.Start();
