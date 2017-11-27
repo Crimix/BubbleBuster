@@ -57,14 +57,23 @@ namespace BubbleBuster.Helper
         public double[] AnalyzeAndDecorateTweetsThreaded(List<Tweet> tweetList)
         {
             Log.Info("Spliting " + tweetList.Count + " tweets");
+            int tweets = tweetList.Count;
             List<Task<double[]>> tasks = new List<Task<double[]>>();
             var copyTweetList = tweetList;
             int e = tweetList.Count / Constants.TWEET_LIST_AMOUNT;
             List<List<Tweet>> splittedList = new List<List<Tweet>>();
+            int tweetsSplitted = 0;
             for (int i =0; i < Constants.TWEET_LIST_AMOUNT; i++)
             {
+                tweetsSplitted += e;
                 splittedList.Add(copyTweetList.Take(e).ToList());
                 copyTweetList = copyTweetList.Skip(e).ToList();
+
+            }
+
+            if(tweetsSplitted < tweets)
+            {
+                splittedList.Add(copyTweetList);
             }
 
             foreach(var item in splittedList)
@@ -81,17 +90,17 @@ namespace BubbleBuster.Helper
 
             foreach (var task in tasks)
             {
+                res[0] += task.Result[0];
                 res[1] += task.Result[1];
                 res[2] += task.Result[2];
+                count += task.Result[2];
                 res[3] += task.Result[3];
-                count += task.Result[3];
                 res[4] += task.Result[4];
-                res[5] += task.Result[5];
             }
 
             Log.Info("Fusing " + count + " tweets");
 
-            return null;
+            return res;
         }
 
 
@@ -139,14 +148,10 @@ namespace BubbleBuster.Helper
         {
             double[] output = { 0.0, 0.0, 0.0, 0.0, 0.0 }; //hashtag, media, count, pos, neg
             List<Tweet> returnList = tweetList;
-            string length = Convert.ToString(returnList.Count);
-            int currentProgress = 0;
 
             foreach (Tweet tweet in returnList)
             {
                 tweet.hasQuotes = CheckForQuotationMarks(tweet);
-                currentProgress++;
-                Log.Info("Analysis Progress (" + currentProgress + "/" + length + ")");
                 var puncturation = tweet.Text.Where(Char.IsPunctuation).Distinct().ToArray();
 
                 if (!tweet.hasQuotes)
@@ -240,13 +245,9 @@ namespace BubbleBuster.Helper
         public List<Tweet> CalculateSentiment(List<Tweet> tweetList)
         {
             List<Tweet> returnList = tweetList;
-            string length = Convert.ToString(returnList.Count);
-            int currentProgress = 0;
 
             foreach (Tweet tweet in returnList)
             {
-                currentProgress++;
-                Log.Info("Calculate Sentiment (" + currentProgress + "/" + length + ")");
                 foreach (string word in analysisWords.Keys)
                 {
                     var puncturation = tweet.Text.Where(Char.IsPunctuation).Distinct().ToArray();
@@ -277,13 +278,9 @@ namespace BubbleBuster.Helper
         private List<Tweet> CalculateHashtagSentiment(List<Tweet> tweetList)
         {
             List<Tweet> returnList = tweetList;
-            string length = Convert.ToString(returnList.Count);
-            int currentProgress = 0;
 
             foreach (Tweet tweet in returnList)
             {
-                currentProgress++;
-                Log.Info("Calculate Hashtag (" + currentProgress + "/" + length + ")");
 
                 foreach (string hashtag in hashtags.Keys)
                 {
@@ -315,13 +312,9 @@ namespace BubbleBuster.Helper
         private List<Tweet> CalculateUrlSentiment(List<Tweet> tweetList)
         {
             List<Tweet> returnList = tweetList;
-            string length = Convert.ToString(returnList.Count);
-            int currentProgress = 0;
 
             foreach (Tweet tweet in returnList)
             {
-                currentProgress++;
-                Log.Info("Calculate Hashtag (" + currentProgress + "/" + length + ")");
 
                 foreach (Url link in tweet.Entities.Urls)
                 {

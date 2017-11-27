@@ -34,16 +34,9 @@ namespace BubbleBuster.Helper
             File.Delete(Path.GetTempPath() + @"BubbleBuster\log.txt");
         }
 
-        async private static Task  Append(string text)
+        private static void Append(string text)
         {
-            byte[] encodedText = Encoding.Unicode.GetBytes(text);
-
-            using (FileStream sourceStream = new FileStream(Constants.PROGRAM_DATA_FILEPATH + @"\log.txt",
-                FileMode.Append, FileAccess.Write, FileShare.None,
-                bufferSize: 4096, useAsync: true))
-            {
-                await sourceStream.WriteAsync(encodedText, 0, encodedText.Length);
-            };
+            File.AppendAllText(Constants.PROGRAM_DATA_FILEPATH+@"\log.txt", text + Environment.NewLine);
         }
     }
 }
