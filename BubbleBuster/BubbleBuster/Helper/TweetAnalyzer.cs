@@ -70,29 +70,123 @@ namespace BubbleBuster.Helper
         {
             //double conclusion = 0; //Higher value means more right leaning. Lower value means more left leaning.
 
-            double[] output = { 0.0, 0.0, 0.0, 0.0, 0.0}; //hashtag, media, count, pos, neg
-
+            double[] output = DoEverything(tweetList); //hashtag, media, count, pos, neg
+            /*
             List<Tweet> returnList = tweetList;
+
+            
 
             returnList = CalculateSentiment(returnList);        //Calculate the sentiment of each tweet. Positive/negative sentiment.
             returnList = CalculateHashtagSentiment(returnList); //Calculate a political value based on key-words and sentimental context. E.g. "Hate Trump": Negative sentiment, Trump-keyword.
             returnList = CalculateUrlSentiment(returnList);     //
 
+            */
 
-            foreach (Tweet tweet in returnList)
+            //List<Tweet> returnList = DoEverything(tweetList);
+
+           /* foreach (Tweet tweet in returnList)
             {
-                if (!CheckForQuotes(tweet))
-                {
-                    output[0] += tweet.hashtagBias * Constants.HASHTAG_WEIGHT;
-                    output[1] += tweet.mediaBias * Constants.URL_WEIGHT;
-                    output[3] += tweet.negativeValue;
-                    output[4] += tweet.positiveValue;
-                }
+                output[0] += tweet.hashtagBias * Constants.HASHTAG_WEIGHT;
+                output[1] += tweet.mediaBias * Constants.URL_WEIGHT;
+                output[3] += tweet.negativeValue;
+                output[4] += tweet.positiveValue;
             }
 
             output[2] = tweetList.Count;
-
+            */
             return output;
+        }
+
+        private double[] DoEverything(List<Tweet> tweetList)
+        {
+            double[] output = { 0.0, 0.0, 0.0, 0.0, 0.0 }; //hashtag, media, count, pos, neg
+            List<Tweet> returnList = tweetList;
+            string length = Convert.ToString(returnList.Count);
+            int currentProgress = 0;
+
+            foreach (Tweet tweet in returnList)
+            {
+                tweet.hasQuotes = CheckForQuotationMarks(tweet);
+                currentProgress++;
+                Log.Info("Analysis Progress (" + currentProgress + "/" + length + ")");
+                var puncturation = tweet.Text.Where(Char.IsPunctuation).Distinct().ToArray();
+
+                if (!tweet.hasQuotes)
+                {
+                    List<String> wordList = tweet.Text.Split(' ').Select(x => x.Trim(puncturation)).ToList<String>();
+
+                    //Sentiment Analysis
+                    foreach (string word in analysisWords.Keys)
+                    {
+                        foreach (string iWord in wordList)
+                        {
+                            if (iWord.Equals(word, StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                if (!tweet.posList.Contains(word) && analysisWords[word] == 1)
+                                {
+                                    tweet.posList.Add(word);
+                                    tweet.positiveValue++;
+                                }
+
+                                else if (!tweet.negList.Contains(word) && analysisWords[word] == -1)
+                                {
+                                    tweet.negList.Add(word);
+                                    tweet.negativeValue++;
+                                }
+                            }
+                        }
+                    }
+
+                    //Hashtag Analysis
+                    foreach (string hashtag in hashtags.Keys)
+                    {
+                        foreach (string iWord in wordList)
+                        {
+                            if (iWord.Equals(hashtag, StringComparison.InvariantCultureIgnoreCase) && !tweet.tagList.Contains(hashtag))
+                            {
+                                tweet.tagList.Add(hashtag);
+
+                                int sentiment = tweet.getSentiment();
+
+                                if (sentiment > 1)
+                                    tweet.hashtagBias += hashtags[hashtag].pos;
+                                else if (sentiment < -1)
+                                    tweet.hashtagBias += hashtags[hashtag].neg;
+                                else
+                                    tweet.hashtagBias += hashtags[hashtag].bas;
+                            }
+                        }
+
+                    }
+
+                    //Media Analysis
+                    foreach (Url link in tweet.Entities.Urls)
+                    {
+                        string shortenedUrl = UrlHelper.Instance.ShortenUrl(link.ExpandedUrl);
+                        if (newsHyperlinks.Keys.Contains(shortenedUrl))
+                        {
+                            tweet.mediaBias += newsHyperlinks[shortenedUrl];
+                        }
+                    }
+
+                    output[0] += tweet.hashtagBias * Constants.HASHTAG_WEIGHT;
+                    output[1] += tweet.mediaBias * Constants.URL_WEIGHT;
+                    output[2] = returnList.Count;
+                    output[3] += tweet.negativeValue;
+                    output[4] += tweet.positiveValue;
+                }
+
+            }
+            return output;
+        }
+
+
+
+
+
+        private bool CheckForQuotationMarks(Tweet tweet)
+        {
+            return tweet.Text.Contains("\"");
         }
 
         public bool CheckForQuotes(Tweet tweet)

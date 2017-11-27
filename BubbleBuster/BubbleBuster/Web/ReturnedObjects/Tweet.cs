@@ -27,6 +27,7 @@ namespace BubbleBuster.Web.ReturnedObjects
         public int positiveValue = 0;
         public int negativeValue = 0;
         public double mediaBias = 0;
+        public bool hasQuotes = false;
 
         public string[] quotes;
 
