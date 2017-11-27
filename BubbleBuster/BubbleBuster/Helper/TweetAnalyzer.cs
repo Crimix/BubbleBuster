@@ -54,15 +54,22 @@ namespace BubbleBuster.Helper
             }
         }
 
+        /// <summary>
+        /// Splits the tweets int sub lists and analyzes them using tasks
+        /// </summary>
+        /// <param name="tweetList"></param>
+        /// <returns></returns>
         public double[] AnalyzeAndDecorateTweetsThreaded(List<Tweet> tweetList)
         {
             Log.Info("Spliting " + tweetList.Count + " tweets");
-            int tweets = tweetList.Count;
+            int tweets = tweetList.Count; 
             List<Task<double[]>> tasks = new List<Task<double[]>>();
             var copyTweetList = tweetList;
             int e = tweetList.Count / Constants.TWEET_LIST_AMOUNT;
             List<List<Tweet>> splittedList = new List<List<Tweet>>();
             int tweetsSplitted = 0;
+
+            // Splits to the max number of lists
             for (int i =0; i < Constants.TWEET_LIST_AMOUNT; i++)
             {
                 tweetsSplitted += e;
@@ -71,11 +78,13 @@ namespace BubbleBuster.Helper
 
             }
 
+            //If some tweets are not covered, adds another list such that all tweets are analyzed
             if(tweetsSplitted < tweets)
             {
                 splittedList.Add(copyTweetList);
             }
 
+            //Starts the tasks
             foreach(var item in splittedList)
             {
                 Task<double[]> t = new Task<double[]>(() => AnalyzeAndDecorateTweets(item));
@@ -88,6 +97,7 @@ namespace BubbleBuster.Helper
 
             double count = 0;
 
+            //Combines the result 
             foreach (var task in tasks)
             {
                 res[0] += task.Result[0];
@@ -98,7 +108,7 @@ namespace BubbleBuster.Helper
                 res[4] += task.Result[4];
             }
 
-            Log.Info("Fusing " + count + " tweets");
+            Log.Info("Combining " + count + " tweets");
 
             return res;
         }
