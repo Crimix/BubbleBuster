@@ -37,7 +37,7 @@ namespace BubbleBuster.Helper
         }
 
         /// <summary>
-        /// Returns a static instance of the class. This works as a singleton.
+        /// Returns a static instance of the class. This works a    s a singleton.
         /// </summary>
         public static TweetAnalyzer Instance
         {
