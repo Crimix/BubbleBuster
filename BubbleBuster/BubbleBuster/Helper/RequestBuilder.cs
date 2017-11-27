@@ -20,8 +20,7 @@ namespace BubbleBuster
         {
             return Build(DataType.limit);
         }
-
-        
+     
         public static string BuildRequest(DataType returnType, string apiKey, params string[] parameters)
         {
             string result = Build(returnType, parameters);

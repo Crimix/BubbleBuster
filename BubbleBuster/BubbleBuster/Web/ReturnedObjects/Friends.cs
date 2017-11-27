@@ -14,6 +14,5 @@ namespace BubbleBuster.Web.ReturnedObjects
 
         [JsonProperty("next_cursor")]
         public long NextCursor { get; set; }
-
     }
 }

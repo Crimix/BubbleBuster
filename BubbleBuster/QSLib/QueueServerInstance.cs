@@ -28,7 +28,7 @@ namespace QSLib
         Queue<TwitterAcc> nonAddedRequests = new Queue<TwitterAcc>(); //Requests from the browser goes into here
         public async void TaskQueue()
         {
-            const int taskLimit = 5;
+            const int TASKLIMIT = 5;
             Log.Info("test");
             Queue<Task> taskQueue = new Queue<Task>(); //Queue of tasks that are not started yet
             List<Task> runningTasksList = new List<Task>(); //List of currently running tasks.
@@ -50,21 +50,21 @@ namespace QSLib
                     }
                 }
 
-                while (runningTasksList.Count < taskLimit) //Starts tasks from the queue until there are none left or the limit is reached.
+                while (runningTasksList.Count < TASKLIMIT) //Starts tasks from the queue until there are none left or the limit is reached.
                 {
                     if (taskQueue.Count > 0)
                     {
                         Log.Info("Start one task");
                         runningTasksList.Add(taskQueue.Peek());
                         await RunTaskAsync(taskQueue.Dequeue());
-
                     }
                     else
                         break; 
                 }
                 if(runningTasksList.Count > 0) // If any tasks are running, it removes the completed ones from the list.
                 {
-                    foreach (var task in runningTasksList) //ToDo Fik en exception her, omkring samling blev ændret
+                    List<Task> runningTasksListInstance = runningTasksList;
+                    foreach (var task in runningTasksListInstance) //ToDo Fik en exception her, omkring samling blev ændret
                     {
                         if (task.IsCompleted)
                         {
@@ -97,6 +97,7 @@ namespace QSLib
         {
             bool wasSuccesful = true;
             Log.Info("Added task");
+
             try
             {
                 //If the twitter acc does not exist or any of the two keys does not contain proper information

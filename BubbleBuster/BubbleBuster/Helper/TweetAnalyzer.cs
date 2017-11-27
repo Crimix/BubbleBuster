@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BubbleBuster.Helper.Objects;
 using System.Text.RegularExpressions;
+using System.Globalization;
 /// <summary>
 /// This class is used to classify the political leaning of a user, based on the content of the tweets they post.
 /// This is done by looking at the media they share (political leaning of different news outlets. This info is stored in a file, 
@@ -29,17 +30,14 @@ namespace BubbleBuster.Helper
         private Dictionary<string, int> analysisWords = new Dictionary<string, int>();
 
         //Formatted URLs from a numer of news media. Each has a politcal value 1-5.
-        private Dictionary<string, int> newsHyperlinks = new Dictionary<string, int>(); 
-       
-        
+        private Dictionary<string, int> newsHyperlinks = new Dictionary<string, int>();
 
         private TweetAnalyzer()
         {
-
         }
 
         /// <summary>
-        /// Returns a static instance of the class. This works as a singleton.
+        /// Returns a static instance of the class. This works a    s a singleton.
         /// </summary>
         public static TweetAnalyzer Instance
         {
@@ -57,6 +55,66 @@ namespace BubbleBuster.Helper
         }
 
         /// <summary>
+        /// Splits the tweets int sub lists and analyzes them using tasks
+        /// </summary>
+        /// <param name="tweetList"></param>
+        /// <returns></returns>
+        public double[] AnalyzeAndDecorateTweetsThreaded(List<Tweet> tweetList)
+        {
+            Log.Info("Spliting " + tweetList.Count + " tweets");
+            int tweets = tweetList.Count; 
+            List<Task<double[]>> tasks = new List<Task<double[]>>();
+            var copyTweetList = tweetList;
+            int e = tweetList.Count / Constants.TWEET_LIST_AMOUNT;
+            List<List<Tweet>> splittedList = new List<List<Tweet>>();
+            int tweetsSplitted = 0;
+
+            // Splits to the max number of lists
+            for (int i =0; i < Constants.TWEET_LIST_AMOUNT; i++)
+            {
+                tweetsSplitted += e;
+                splittedList.Add(copyTweetList.Take(e).ToList());
+                copyTweetList = copyTweetList.Skip(e).ToList();
+
+            }
+
+            //If some tweets are not covered, adds another list such that all tweets are analyzed
+            if(tweetsSplitted < tweets)
+            {
+                splittedList.Add(copyTweetList);
+            }
+
+            //Starts the tasks
+            foreach(var item in splittedList)
+            {
+                Task<double[]> t = new Task<double[]>(() => AnalyzeAndDecorateTweets(item));
+                t.Start();
+                tasks.Add(t);
+            }
+
+            Task.WaitAll(tasks.ToArray());
+            double[] res = { 0.0, 0.0, 0.0, 0.0, 0.0 };
+
+            double count = 0;
+
+            //Combines the result 
+            foreach (var task in tasks)
+            {
+                res[0] += task.Result[0];
+                res[1] += task.Result[1];
+                res[2] += task.Result[2];
+                count += task.Result[2];
+                res[3] += task.Result[3];
+                res[4] += task.Result[4];
+            }
+
+            Log.Info("Combining " + count + " tweets");
+
+            return res;
+        }
+
+
+        /// <summary>
         /// Analyzes a list of Tweets, and returns the following values as a double-array:
         /// Hashtag-Bias: Determined political value of the words used in the tweets
         /// Media-Bias: Determined political value of news media linked to in the tweets
@@ -69,7 +127,6 @@ namespace BubbleBuster.Helper
         public double[] AnalyzeAndDecorateTweets(List<Tweet> tweetList)
         {
             //double conclusion = 0; //Higher value means more right leaning. Lower value means more left leaning.
-
             double[] output = DoEverything(tweetList); //hashtag, media, count, pos, neg
             /*
             List<Tweet> returnList = tweetList;
@@ -101,14 +158,10 @@ namespace BubbleBuster.Helper
         {
             double[] output = { 0.0, 0.0, 0.0, 0.0, 0.0 }; //hashtag, media, count, pos, neg
             List<Tweet> returnList = tweetList;
-            string length = Convert.ToString(returnList.Count);
-            int currentProgress = 0;
 
             foreach (Tweet tweet in returnList)
             {
                 tweet.hasQuotes = CheckForQuotationMarks(tweet);
-                currentProgress++;
-                Log.Info("Analysis Progress (" + currentProgress + "/" + length + ")");
                 var puncturation = tweet.Text.Where(Char.IsPunctuation).Distinct().ToArray();
 
                 if (!tweet.hasQuotes)
@@ -156,7 +209,6 @@ namespace BubbleBuster.Helper
                                     tweet.hashtagBias += hashtags[hashtag].bas;
                             }
                         }
-
                     }
 
                     //Media Analysis
@@ -175,14 +227,9 @@ namespace BubbleBuster.Helper
                     output[3] += tweet.negativeValue;
                     output[4] += tweet.positiveValue;
                 }
-
             }
             return output;
         }
-
-
-
-
 
         private bool CheckForQuotationMarks(Tweet tweet)
         {
@@ -208,13 +255,9 @@ namespace BubbleBuster.Helper
         public List<Tweet> CalculateSentiment(List<Tweet> tweetList)
         {
             List<Tweet> returnList = tweetList;
-            string length = Convert.ToString(returnList.Count);
-            int currentProgress = 0;
 
             foreach (Tweet tweet in returnList)
             {
-                currentProgress++;
-                Log.Info("Calculate Sentiment (" + currentProgress + "/" + length + ")");
                 foreach (string word in analysisWords.Keys)
                 {
                     var puncturation = tweet.Text.Where(Char.IsPunctuation).Distinct().ToArray();
@@ -240,19 +283,14 @@ namespace BubbleBuster.Helper
                 }
             }
             return returnList;
-
         }
 
         private List<Tweet> CalculateHashtagSentiment(List<Tweet> tweetList)
         {
             List<Tweet> returnList = tweetList;
-            string length = Convert.ToString(returnList.Count);
-            int currentProgress = 0;
 
             foreach (Tweet tweet in returnList)
             {
-                currentProgress++;
-                Log.Info("Calculate Hashtag (" + currentProgress + "/" + length + ")");
 
                 foreach (string hashtag in hashtags.Keys)
                 {
@@ -274,8 +312,7 @@ namespace BubbleBuster.Helper
                             else
                                 tweet.hashtagBias += hashtags[hashtag].bas;
                         }
-                    }
-                    
+                    }                   
                 }
             }
 
@@ -285,13 +322,9 @@ namespace BubbleBuster.Helper
         private List<Tweet> CalculateUrlSentiment(List<Tweet> tweetList)
         {
             List<Tweet> returnList = tweetList;
-            string length = Convert.ToString(returnList.Count);
-            int currentProgress = 0;
 
             foreach (Tweet tweet in returnList)
             {
-                currentProgress++;
-                Log.Info("Calculate Hashtag (" + currentProgress + "/" + length + ")");
 
                 foreach (Url link in tweet.Entities.Urls)
                 {

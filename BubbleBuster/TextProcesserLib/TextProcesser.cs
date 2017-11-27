@@ -5,8 +5,6 @@ using Newtonsoft.Json;
 using System.IO;
 using BubbleBuster.Web.ReturnedObjects;
 
-
-
 namespace TextProcesserLib
 {
     class TextProcesser
@@ -167,7 +165,6 @@ namespace TextProcesserLib
                     }
                     else
                     {
-
                         int nrOfWords = wordBag.Count;
                         wordBag.Add(stemmedWord, nrOfWords);
                         termFrequency.Add(nrOfWords, 1);

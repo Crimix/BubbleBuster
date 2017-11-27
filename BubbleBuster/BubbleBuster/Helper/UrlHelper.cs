@@ -13,7 +13,6 @@ namespace BubbleBuster.Helper
 
         private UrlHelper()
         {
-
         }
 
         public static UrlHelper Instance
@@ -30,7 +29,6 @@ namespace BubbleBuster.Helper
 
         public string ShortenUrl(string url)
         {
-
             string[] words = { "www.", "http://", "https://", "www1." };
             string[] endWorkds = { ".com/", ".org/", ".co.uk/", ".net/", ".mit.edu/", ".ca/", ".org.il/", ".edu/", ".us/" };
 
@@ -47,7 +45,6 @@ namespace BubbleBuster.Helper
             }
 
             return url;
-
         }
     }
 }

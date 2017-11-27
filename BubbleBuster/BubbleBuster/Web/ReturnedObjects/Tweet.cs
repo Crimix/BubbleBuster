@@ -35,7 +35,6 @@ namespace BubbleBuster.Web.ReturnedObjects
         public List<String> negList = new List<string>();
         public List<String> tagList = new List<string>();
 
-        //
         public int analysisConclusion = 0;
 
         public int getSentiment()
@@ -52,14 +51,12 @@ namespace BubbleBuster.Web.ReturnedObjects
             else
             {
                 return false;
-            }
-            
+            }           
         }
 
         public override int GetHashCode()
         {
             return Id.GetHashCode();
         }
-
     }
 }

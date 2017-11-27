@@ -11,13 +11,11 @@ namespace BubbleBuster.Helper
 {
     public class TweetRetriever
     {
-
         private static TweetRetriever _instance;
         private static int userTweetCount = 1;
 
         private TweetRetriever()
         {
-
         }
 
         public static TweetRetriever Instance
@@ -40,7 +38,6 @@ namespace BubbleBuster.Helper
             Task<List<Tweet>> task = new Task<List<Tweet>>(() => TweetThreadMethod(user, apiKey));
             task.Start();
             task.Wait();
-
             tweetList.AddRange(task.Result);
 
             return tweetList;
@@ -53,12 +50,14 @@ namespace BubbleBuster.Helper
             List<Task<List<Tweet>>> taskList = new List<Task<List<Tweet>>>();
             Queue<Task<List<Tweet>>> taskQueue = new Queue<Task<List<Tweet>>>();
             Log.Info(String.Format("{0,5}: {1,-20} {2,-20} {3,-11}", "Count", "User name", "User id", "Tweet count"));
+
             foreach (User user in friends.Users)
             {
                 Task<List<Tweet>> task = new Task<List<Tweet>>(() => TweetThreadMethod(user, apiKey));
                 taskQueue.Enqueue(task);
                 task = null;
             }
+
             friends = null;
 
             while(taskQueue.Count != 0)
@@ -112,11 +111,13 @@ namespace BubbleBuster.Helper
             {
                 Log.Info(String.Format("{0,5}: {1,-20} {2,-20} {3,-11}", userTweetCount, user.Name, user.Id, temp.Count));
             }
+
             Interlocked.Increment(ref userTweetCount);
+
             return temp;
         }
 
-        public List<Tweet> GetUserTweets(User user, string apiKey)
+        private List<Tweet> GetUserTweets(User user, string apiKey)
         {
             List<Tweet> tweetList = new List<Tweet>();
             List<Tweet> tempList = new List<Tweet>();
@@ -130,21 +131,23 @@ namespace BubbleBuster.Helper
                     lastTweetID = tempList.ElementAt(tempList.Count - 1).Id;
                     tweetList.AddRange(tempList.Where(x => !tweetList.Contains(x)));
 
-
                     while (tweetList.Count < Constants.TWEETS_TO_RETRIEVE)
                     {
                         tempList.AddRange(new WebHandler(apiKey).MakeRequest<List<Tweet>>(RequestBuilder.BuildRequest(DataType.tweets, apiKey, "user_id=" + user.Id, "count=200", "max_id=" + lastTweetID)));
+
                         if (tempList.Count == 0 || tempList.ElementAt(tempList.Count - 1).Id == lastTweetID)
                         {
                             break;
                         }
+
                         lastTweetID = tempList.ElementAt(tempList.Count - 1).Id;
                         tweetList.AddRange(tempList.Where(x => !tweetList.Contains(x)));
-
                     }
                 }
             }
+
             tempList = null;
+
             return tweetList;
         }
     }

@@ -10,7 +10,7 @@ namespace BubbleBuster.Helper
     {
         public const int REMAINING_OFFSET = 5;
         public const string USER_AGENT = "FilterBubble_SW709";
-        public const int TWEETS_TO_RETRIEVE = 3200;
+        public const int TWEETS_TO_RETRIEVE = 1500;
         private static string PROGRAM_DATA = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
 
         //Auth string for DB server on Christoffer's pc
@@ -25,5 +25,6 @@ namespace BubbleBuster.Helper
         //Application keys
         public const string CONSUMER_KEY = "fIbIn9yMl0F7dpWUoihhwAD3N";
         public const string CONSUMER_SECRET = "qZOQqOia1XnGuWbfDKmuxxykTCAzLbmVbdZie40w6AFuuFHy4F";
+        public const int TWEET_LIST_AMOUNT = 8; //How many theads should the tweet list be split to 
     }
 }
