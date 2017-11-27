@@ -62,7 +62,7 @@ namespace BubbleBuster.Helper
             List<List<Tweet>> list = new List<List<Tweet>>();
             for (int i =0; i < 4; i++)
             {
-                list[i] = temp.Take(e).ToList();
+                list.Add(temp.Take(e).ToList());
                 temp = temp.Skip(e).ToList();
             }
 

@@ -111,7 +111,7 @@ namespace BubbleBuster
 
             //new TwitterApi(ConsumerKey, ConsumerKeySecret, AccessToken, AccessTokenSecret);
 
-            OAuthHelper a = new OAuthHelper();
+            //OAuthHelper a = new OAuthHelper();
             //Console.WriteLine(a.BuildAuthHeader("fIbIn9yMl0F7dpWUoihhwAD3N", "909688209080242176-Cn539yzlRe4ivRFKKmJZLj2HwFPbI9j"));
             Console.WriteLine(Uri.EscapeDataString("1.0"));
             Console.WriteLine("?");
