@@ -110,7 +110,6 @@ namespace BubbleBuster.Helper
             }
         }
 
-
         public static void WriteStringToFile(string fileName, string data)
         {
             fileName = CheckFileName(fileName);
@@ -141,7 +140,6 @@ namespace BubbleBuster.Helper
             string filePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + fileName;
             return JsonConvert.DeserializeObject<T>(File.ReadAllText(filePath));
         }
-
 
         private static string CheckFileName(string input)
         {

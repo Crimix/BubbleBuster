@@ -20,7 +20,6 @@ namespace BubbleBuster.WordUpdater
 
         private WordWorker()
         {
-
         }
 
         public static WordWorker Instance
@@ -35,7 +34,6 @@ namespace BubbleBuster.WordUpdater
             }
         }
 
-
         private Dictionary<PolUserObj, List<Tweet>> GetTweets(List<PolUserObj> userList)
         {
             Dictionary<PolUserObj, List<Tweet>> returnObj = new Dictionary<PolUserObj, List<Tweet>>();
@@ -47,7 +45,6 @@ namespace BubbleBuster.WordUpdater
             }
 
             return returnObj;
-
         }
 
         private Dictionary<string, double> IdentifyUncommonWords(List<Tweet> tweetList)
@@ -72,8 +69,7 @@ namespace BubbleBuster.WordUpdater
                             {
                                 Console.WriteLine(listWord);
                                 uncommonWords.Add(listWord, sentiment);
-                            }
-                            
+                            }                          
                         }
                     }
                 }
@@ -136,7 +132,6 @@ namespace BubbleBuster.WordUpdater
         {
             Dictionary<PolUserObj, List<Tweet>> usersAndTweets = GetTweets(users);
             Dictionary<string, UncommonWordObj> returnList = DetermineWords(usersAndTweets);
-
             FileHelper.WriteObjectToFile("WordsTest", returnList.Values);
         }
     }

@@ -34,28 +34,11 @@ namespace BubbleBuster.Helper
                 DST += ", ";
             }
 
-
             DST = DST.TrimEnd(' ');
             DST = DST.TrimEnd(',');
 
-            return DST;
-            
+            return DST;            
         }
-        
-        
-            /*
-        data["oauth_signature_method"] = "HMAC-SHA1";
-        data["oauth_timestamp"] = timestamp.toString();
-        data["oauth_nonce"] = "a"; // Required, but Twitter doesn't appear to use it
-        data["oauth_token"] = accessToken;
-        data["oauth_version"] = "1.0";*/
-        private bool include_entities = true;
-        private string oauth_consumer_key = "";
-        private string oauth_nonce = "";
-        private string oauth_signature_method = "HMAC-SHA1";
-        private string oauth_timestamp = "";
-        private string oauth_token = "";
-        private string oauth_version = "1.0";
     }
 }
 

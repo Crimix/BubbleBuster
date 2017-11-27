@@ -13,17 +13,14 @@ namespace BubbleBuster.Web
     {
         private static string _cred = "Bearer AAAAAAAAAAAAAAAAAAAAAPRw2QAAAAAAsXqGsVRPgYFVjSScMX3ZVa9YifA%3DkPvipEcLJj3QooYO7aVke3vZ9ruSJp9CgkTlKKtvlmSsGqLUdG";
 
-
         public WebHandler(string apiKey) : base()
         {
-
         }
 
         public WebHandler()
         {
-            ServicePointManager.DefaultConnectionLimit = 4; //Because at normal operation at most 3 threads should be running
+            ServicePointManager.DefaultConnectionLimit = 4; //Because at normal operation at most 4 threads should be running
         }
-
 
         public string MakeRequest(string requestString)
         {
@@ -56,14 +53,10 @@ namespace BubbleBuster.Web
                 }
                 catch (IOException)
                 {
-
                 }
-                    
-                
-
+                                    
                 response.Close();
                 readStream.Close();
-
             }
 
             return res;
@@ -72,6 +65,7 @@ namespace BubbleBuster.Web
         public T MakeRequest<T>(string requestString) where T : new()
         {
             T res = default(T);
+
             if (typeof(IEnumerable).IsAssignableFrom(typeof(T)))
             {
                 res = new T();
@@ -82,7 +76,6 @@ namespace BubbleBuster.Web
             try
             {
                 string data = MakeRequest(requestString);
-
                 tempRes = JsonConvert.DeserializeObject<T>(data);
             }
             catch (JsonException e)

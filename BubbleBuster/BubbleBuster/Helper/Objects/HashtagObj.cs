@@ -13,9 +13,9 @@ namespace BubbleBuster.Helper.Objects
         public int pos = 0;
         public int bas = 0;
 
-        public HashtagObj(string nam, int negVal, int baseVal, int posVal)
+        public HashtagObj(string nameVal, int negVal, int baseVal, int posVal)
         {
-            name = nam;
+            name = nameVal;
             neg = negVal;
             bas = baseVal;
             pos = posVal;

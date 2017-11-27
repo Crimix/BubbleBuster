@@ -46,6 +46,5 @@ namespace BubbleBuster.Helper
             tempList = null;
             return result;
         }
-
     }
 }

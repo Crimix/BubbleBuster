@@ -7,7 +7,6 @@ namespace RestQueueServer.Models
 {
     public class Response
     {
-
         public Response(string message)
         {
             Message = message;

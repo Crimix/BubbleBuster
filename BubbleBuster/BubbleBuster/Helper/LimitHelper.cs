@@ -10,7 +10,6 @@ namespace BubbleBuster.Helper
 {
     public class LimitHelper
     {
-
         private static Dictionary<string, LimitHelper> limitsByApiKey = new Dictionary<string, LimitHelper>();
 
         private LimitHelper()
@@ -56,7 +55,6 @@ namespace BubbleBuster.Helper
             Limit = limit;
             InitPropertises();
         }
-
 
         private void InitPropertises()
         {
@@ -167,6 +165,5 @@ namespace BubbleBuster.Helper
                     break;
             }
         }
-
     }
 }
