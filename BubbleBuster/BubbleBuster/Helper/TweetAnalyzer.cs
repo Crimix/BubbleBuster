@@ -24,13 +24,13 @@ namespace BubbleBuster.Helper
         private static TweetAnalyzer _instance;
 
         //"Hashtags" are key-words used in analysis. Each has a number of fields determining their political value in a given positive/negative sentimental context.
-        private Dictionary<string, HashtagObj> hashtags = new Dictionary<string, HashtagObj>();
+        private Dictionary<string, HashtagObj> hashtags = new Dictionary<string, HashtagObj>(StringComparer.InvariantCultureIgnoreCase);
 
         //Words from file. Has an emotional value used in sentimental analysis.
-        private Dictionary<string, int> analysisWords = new Dictionary<string, int>();
+        private Dictionary<string, int> analysisWords = new Dictionary<string, int>(StringComparer.InvariantCultureIgnoreCase);
 
         //Formatted URLs from a numer of news media. Each has a politcal value 1-5.
-        private Dictionary<string, int> newsHyperlinks = new Dictionary<string, int>();
+        private Dictionary<string, int> newsHyperlinks = new Dictionary<string, int>(StringComparer.InvariantCultureIgnoreCase);
 
         private TweetAnalyzer()
         {
@@ -62,7 +62,7 @@ namespace BubbleBuster.Helper
         public double[] AnalyzeAndDecorateTweetsThreaded(List<Tweet> tweetList)
         {
             Log.Info("Spliting " + tweetList.Count + " tweets");
-            int tweets = tweetList.Count; 
+            int tweets = tweetList.Count;
             List<Task<double[]>> tasks = new List<Task<double[]>>();
             var copyTweetList = tweetList;
             int e = tweetList.Count / Constants.TWEET_LIST_AMOUNT;
@@ -70,7 +70,7 @@ namespace BubbleBuster.Helper
             int tweetsSplitted = 0;
 
             // Splits to the max number of lists
-            for (int i =0; i < Constants.TWEET_LIST_AMOUNT; i++)
+            for (int i = 0; i < Constants.TWEET_LIST_AMOUNT; i++)
             {
                 tweetsSplitted += e;
                 splittedList.Add(copyTweetList.Take(e).ToList());
@@ -79,13 +79,13 @@ namespace BubbleBuster.Helper
             }
 
             //If some tweets are not covered, adds another list such that all tweets are analyzed
-            if(tweetsSplitted < tweets)
+            if (tweetsSplitted < tweets)
             {
                 splittedList.Add(copyTweetList);
             }
 
             //Starts the tasks
-            foreach(var item in splittedList)
+            foreach (var item in splittedList)
             {
                 Task<double[]> t = new Task<double[]>(() => AnalyzeAndDecorateTweets(item));
                 t.Start();
@@ -95,20 +95,18 @@ namespace BubbleBuster.Helper
             Task.WaitAll(tasks.ToArray());
             double[] res = { 0.0, 0.0, 0.0, 0.0, 0.0 };
 
-            double count = 0;
-
             //Combines the result 
             foreach (var task in tasks)
             {
                 res[0] += task.Result[0];
                 res[1] += task.Result[1];
                 res[2] += task.Result[2];
-                count += task.Result[2];
                 res[3] += task.Result[3];
                 res[4] += task.Result[4];
             }
-
-            Log.Info("Combining " + count + " tweets");
+            Log.Info("Combining tweets");
+            Log.Info("Res " + (res[0] + res[1]));
+            
 
             return res;
         }
@@ -128,29 +126,29 @@ namespace BubbleBuster.Helper
         {
             //double conclusion = 0; //Higher value means more right leaning. Lower value means more left leaning.
             double[] output = DoEverything(tweetList); //hashtag, media, count, pos, neg
-            /*
-            List<Tweet> returnList = tweetList;
+                                                       /*
+                                                       List<Tweet> returnList = tweetList;
 
-            
 
-            returnList = CalculateSentiment(returnList);        //Calculate the sentiment of each tweet. Positive/negative sentiment.
-            returnList = CalculateHashtagSentiment(returnList); //Calculate a political value based on key-words and sentimental context. E.g. "Hate Trump": Negative sentiment, Trump-keyword.
-            returnList = CalculateUrlSentiment(returnList);     //
 
-            */
+                                                       returnList = CalculateSentiment(returnList);        //Calculate the sentiment of each tweet. Positive/negative sentiment.
+                                                       returnList = CalculateHashtagSentiment(returnList); //Calculate a political value based on key-words and sentimental context. E.g. "Hate Trump": Negative sentiment, Trump-keyword.
+                                                       returnList = CalculateUrlSentiment(returnList);     //
+
+                                                       */
 
             //List<Tweet> returnList = DoEverything(tweetList);
 
-           /* foreach (Tweet tweet in returnList)
-            {
-                output[0] += tweet.hashtagBias * Constants.HASHTAG_WEIGHT;
-                output[1] += tweet.mediaBias * Constants.URL_WEIGHT;
-                output[3] += tweet.negativeValue;
-                output[4] += tweet.positiveValue;
-            }
+            /* foreach (Tweet tweet in returnList)
+             {
+                 output[0] += tweet.hashtagBias * Constants.HASHTAG_WEIGHT;
+                 output[1] += tweet.mediaBias * Constants.URL_WEIGHT;
+                 output[3] += tweet.negativeValue;
+                 output[4] += tweet.positiveValue;
+             }
 
-            output[2] = tweetList.Count;
-            */
+             output[2] = tweetList.Count;
+             */
             return output;
         }
 
@@ -162,51 +160,53 @@ namespace BubbleBuster.Helper
             foreach (Tweet tweet in returnList)
             {
                 tweet.hasQuotes = CheckForQuotationMarks(tweet);
-                var puncturation = tweet.Text.Where(Char.IsPunctuation).Distinct().ToArray();
 
                 if (!tweet.hasQuotes)
                 {
+                    var puncturation = tweet.Text.Where(Char.IsPunctuation).Distinct().ToArray();
                     List<String> wordList = tweet.Text.Split(' ').Select(x => x.Trim(puncturation)).ToList<String>();
 
-                    //Sentiment Analysis
-                    foreach (string word in analysisWords.Keys)
+                    
+                    foreach (string word in wordList)
                     {
-                        foreach (string iWord in wordList)
+                        //Sentiment Analysis
+                        if (analysisWords.Keys.Contains(word, StringComparer.InvariantCultureIgnoreCase))
                         {
-                            if (iWord.Equals(word, StringComparison.InvariantCultureIgnoreCase))
+                            int wordValue;
+
+                            if (analysisWords.TryGetValue(word, out wordValue))
                             {
-                                if (!tweet.posList.Contains(word) && analysisWords[word] == 1)
+                                if (!tweet.posList.Contains(word) && wordValue == 1)
                                 {
                                     tweet.posList.Add(word);
                                     tweet.positiveValue++;
                                 }
 
-                                else if (!tweet.negList.Contains(word) && analysisWords[word] == -1)
+                                else if (!tweet.negList.Contains(word) && wordValue == -1)
                                 {
                                     tweet.negList.Add(word);
                                     tweet.negativeValue++;
                                 }
                             }
                         }
-                    }
 
-                    //Hashtag Analysis
-                    foreach (string hashtag in hashtags.Keys)
-                    {
-                        foreach (string iWord in wordList)
+                        //Hashtag Analysis
+                        if (hashtags.Keys.Contains(word, StringComparer.InvariantCultureIgnoreCase) && !tweet.tagList.Contains(word, StringComparer.InvariantCultureIgnoreCase))
                         {
-                            if (iWord.Equals(hashtag, StringComparison.InvariantCultureIgnoreCase) && !tweet.tagList.Contains(hashtag))
+                            HashtagObj hashtagObj;
+
+                            if (hashtags.TryGetValue(word, out hashtagObj))
                             {
-                                tweet.tagList.Add(hashtag);
+                                tweet.tagList.Add(word);
 
                                 int sentiment = tweet.getSentiment();
 
                                 if (sentiment > 1)
-                                    tweet.hashtagBias += hashtags[hashtag].pos;
+                                    tweet.hashtagBias += hashtagObj.pos;
                                 else if (sentiment < -1)
-                                    tweet.hashtagBias += hashtags[hashtag].neg;
+                                    tweet.hashtagBias += hashtagObj.neg;
                                 else
-                                    tweet.hashtagBias += hashtags[hashtag].bas;
+                                    tweet.hashtagBias += hashtagObj.bas;
                             }
                         }
                     }
@@ -249,99 +249,6 @@ namespace BubbleBuster.Helper
                 return true;
             }
             return false;
-        }
-
-        //Calculates the general sentiment of a tweet. This is done by looking at the positive and negative words.
-        public List<Tweet> CalculateSentiment(List<Tweet> tweetList)
-        {
-            List<Tweet> returnList = tweetList;
-
-            foreach (Tweet tweet in returnList)
-            {
-                foreach (string word in analysisWords.Keys)
-                {
-                    var puncturation = tweet.Text.Where(Char.IsPunctuation).Distinct().ToArray();
-                    List<String> wordList = tweet.Text.Split(' ').Select(x => x.Trim(puncturation)).ToList<String>();
-
-                    foreach (string iWord in wordList)
-                    {
-                        if (iWord.Equals(word, StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            if (!tweet.posList.Contains(word) && analysisWords[word] == 1)
-                            {
-                                tweet.posList.Add(word);
-                                tweet.positiveValue++;
-                            }
-
-                            else if (!tweet.negList.Contains(word) && analysisWords[word] == -1)
-                            {
-                                tweet.negList.Add(word);
-                                tweet.negativeValue++;
-                            }
-                        }
-                    }                    
-                }
-            }
-            return returnList;
-        }
-
-        private List<Tweet> CalculateHashtagSentiment(List<Tweet> tweetList)
-        {
-            List<Tweet> returnList = tweetList;
-
-            foreach (Tweet tweet in returnList)
-            {
-
-                foreach (string hashtag in hashtags.Keys)
-                {
-                    var puncturation = tweet.Text.Where(Char.IsPunctuation).Distinct().ToArray();
-                    List<String> wordList = tweet.Text.Split(' ').Select(x => x.Trim(puncturation)).ToList<String>();
-
-                    foreach(string iWord in wordList)
-                    {
-                        if(iWord.Equals(hashtag, StringComparison.InvariantCultureIgnoreCase) && !tweet.tagList.Contains(hashtag))
-                        {
-                            tweet.tagList.Add(hashtag);
-
-                            int sentiment = tweet.getSentiment();
-
-                            if (sentiment > 1)
-                                tweet.hashtagBias += hashtags[hashtag].pos;
-                            else if (sentiment < -1)
-                                tweet.hashtagBias += hashtags[hashtag].neg;
-                            else
-                                tweet.hashtagBias += hashtags[hashtag].bas;
-                        }
-                    }                   
-                }
-            }
-
-            return returnList;
-        }
-
-        private List<Tweet> CalculateUrlSentiment(List<Tweet> tweetList)
-        {
-            List<Tweet> returnList = tweetList;
-
-            foreach (Tweet tweet in returnList)
-            {
-
-                foreach (Url link in tweet.Entities.Urls)
-                {
-                    string shortenedUrl = UrlHelper.Instance.ShortenUrl(link.ExpandedUrl);
-                    if (newsHyperlinks.Keys.Contains(shortenedUrl))
-                    {
-                        tweet.mediaBias += newsHyperlinks[shortenedUrl];
-                    }
-                }
-            }
-
-            return returnList;
-        }
-
-        private bool InsensitiveContains(string source, string toCheck)
-        {
-            return source != null && toCheck != null && source.IndexOf(toCheck, StringComparison.OrdinalIgnoreCase) >= 0;
         }
     }
 }

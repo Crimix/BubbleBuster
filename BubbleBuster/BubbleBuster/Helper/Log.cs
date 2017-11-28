@@ -9,6 +9,9 @@ namespace BubbleBuster.Helper
 {
     public static class Log
     {
+
+        public static string LOCK = "_LogLock";
+
         public static void Debug(object obj)
         {
             Append("Debug~ " + obj.ToString());

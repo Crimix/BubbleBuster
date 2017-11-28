@@ -103,13 +103,16 @@ namespace BubbleBuster.Helper
         private List<Tweet> TweetThreadMethod(User user, string apiKey)
         {
             List<Tweet> temp = GetUserTweets(user, apiKey);
-            if (user.IsProtected)
+            lock (Log.LOCK)
             {
-                Log.Info(String.Format("{0,5}: {1,-20} {2,-20} {3,-11}", userTweetCount, user.Name, user.Id, "Protected"));
-            }
-            else
-            {
-                Log.Info(String.Format("{0,5}: {1,-20} {2,-20} {3,-11}", userTweetCount, user.Name, user.Id, temp.Count));
+                if (user.IsProtected)
+                {
+                    Log.Info(String.Format("{0,5}: {1,-20} {2,-20} {3,-11}", userTweetCount, user.Name, user.Id, "Protected"));
+                }
+                else
+                {
+                    Log.Info(String.Format("{0,5}: {1,-20} {2,-20} {3,-11}", userTweetCount, user.Name, user.Id, temp.Count));
+                }
             }
 
             Interlocked.Increment(ref userTweetCount);
