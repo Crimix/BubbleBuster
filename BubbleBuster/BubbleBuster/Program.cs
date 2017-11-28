@@ -116,14 +116,20 @@ namespace BubbleBuster
             //Console.WriteLine(a.BuildAuthHeader(OAuthHelper.DataType.POST, "ExampleUser", "xvz1evFS4wEEPTGEFPHBog", "kAcSOqF21Fu85e7zjz7ZN2U4ZRhfV3WpwPAoE3Z7kBw", "370773112-GmHxMAgYyLbNEtIKZeRNFsMKPR9EyMZeS9weJAEb", "LswwdoUaIvS8ltyTt5jkRh4J50vUPVVHtR2YPi5kE"));
 
             string name = "FilterBubble";
-            string cKey = "fIbIn9yMl0F7dpWUoihhwAD3N";
-            string cSecret = "qZOQqOia1XnGuWbfDKmuxxykTCAzLbmVbdZie40w6AFuuFHy4F";
-            string accToken = "909688209080242176-Cn539yzlRe4ivRFKKmJZLj2HwFPbI9j";
-            string tokenSec = "wiqX081yTEGUIaYAxNFZxNIYVItKvSk0v9WZWgL5HGviA";
+            string consumerKey = "fIbIn9yMl0F7dpWUoihhwAD3N";
+            string consumerSecret = "qZOQqOia1XnGuWbfDKmuxxykTCAzLbmVbdZie40w6AFuuFHy4F";
+            string accessToken = "14594669-CUFTDY6oMmC6FIu3IwHY65G26cQHmmuc9XhHuQFaL";
+            string tokenSecret = "uzV2suIyfoTaHDgbZERCsxBlqjMaFFCfGJ0yNDbra5b5K";
+            string baseUrl = "https://api.twitter.com/1.1/statuses/update.json";
+
+            Dictionary<string, string> extraParams = new Dictionary<string, string>();
+            extraParams.Add("status", "Hello Ladies + Gentlemen, a signed OAuth request!");
+            extraParams.Add("include_entities", "true");
 
 
-            Console.WriteLine(a.BuildAuthHeader(OAuthHelper.DataType.POST, name, cKey, cSecret, accToken, tokenSec));
 
+            Console.WriteLine(a.BuildAuthHeader(OAuthHelper.DataType.POST, name, consumerKey, consumerSecret, accessToken, tokenSecret, baseUrl, extraParams));
+            Console.WriteLine(Uri.EscapeDataString("_"));
             Console.WriteLine(Uri.EscapeDataString("1.0"));
             Console.WriteLine("?");
             Console.ReadLine();
