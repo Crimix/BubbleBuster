@@ -120,15 +120,15 @@ namespace BubbleBuster
             string consumerSecret = "qZOQqOia1XnGuWbfDKmuxxykTCAzLbmVbdZie40w6AFuuFHy4F";
             string accessToken = "14594669-CUFTDY6oMmC6FIu3IwHY65G26cQHmmuc9XhHuQFaL";
             string tokenSecret = "uzV2suIyfoTaHDgbZERCsxBlqjMaFFCfGJ0yNDbra5b5K";
-            string baseUrl = "https://api.twitter.com/1.1/statuses/update.json";
+            string baseUrl = "https://api.twitter.com/1.1/friends/ids.json";
 
             Dictionary<string, string> extraParams = new Dictionary<string, string>();
-            extraParams.Add("status", "Hello Ladies + Gentlemen, a signed OAuth request!");
-            extraParams.Add("include_entities", "true");
+            //extraParams.Add("status", "Hello Ladies + Gentlemen, a signed OAuth request!");
+            //extraParams.Add("include_entities", "true");
 
 
 
-            Console.WriteLine(a.BuildAuthHeader(OAuthHelper.DataType.POST, name, consumerKey, consumerSecret, accessToken, tokenSecret, baseUrl, extraParams));
+            Console.WriteLine(a.BuildAuthHeader(OAuthHelper.DataType.GET, name, consumerKey, consumerSecret, accessToken, tokenSecret, baseUrl, extraParams));
             Console.WriteLine(Uri.EscapeDataString("_"));
             Console.WriteLine(Uri.EscapeDataString("1.0"));
             Console.WriteLine("?");

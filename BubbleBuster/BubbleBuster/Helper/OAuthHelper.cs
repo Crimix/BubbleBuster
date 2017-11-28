@@ -16,12 +16,12 @@ namespace BubbleBuster.Helper
             string accessToken, string tokenSecret, string url, Dictionary<string, string> extraParameters)
         {
             HMACSHA1 hmac = new HMACSHA1();
-            string timestamp = Convert.ToString((Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds);
-            //string timestamp = "1318622958"; /* TEST VALUE */
+            //string timestamp = Convert.ToString((Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds);
+            string timestamp = "1511873198"; /* TEST VALUE */
             string signingKey = Uri.EscapeDataString(consumerSecret) + "&" + Uri.EscapeDataString(tokenSecret);
             string requestType = Enum.GetName(typeof(DataType), type);
-            string nonce = requestType + twitterName + timestamp;
-            //string nonce = "kYjzVBB8Y0ZFabxSWbWovY3uYSQ2pTgmZeNu2VS4cg"; /* TEST VALUE */
+            //string nonce = requestType + twitterName + timestamp;
+            string nonce = "POSTFilterBubble1511870689aaaaaaa"; /* TEST VALUE */
             string signature_method = "HMAC-SHA1";
             string oauth_version = "1.0";
 
