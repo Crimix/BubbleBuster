@@ -78,7 +78,7 @@ namespace TextProcesserLib
 
             if (isNeg && !String.IsNullOrWhiteSpace(procToken))
             {
-                procToken = String.Concat("NEG_", procToken);
+                //procToken = String.Concat("NEG_", procToken);
             }
 
             if (KeyWords.NotWordsList.Contains(procToken))
