@@ -1,0 +1,54 @@
+﻿using Accord.IO;
+using Accord.MachineLearning.Bayes;
+using Accord.Statistics.Distributions.Univariate;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using BubbleBuster.Web.ReturnedObjects;
+using Accord.MachineLearning;
+using TextProcesserLib;
+
+namespace BubbleBuster.Helper
+{
+    class Classifier
+    {
+        BagOfWords bagOfWords;
+        TextProcessor tp;
+
+        public Classifier()
+        {
+            tp = new TextProcessor();
+        }
+
+        public void RunNaiveBayes(List<Tweet> tweets)
+        {
+            var model = FileHelper.ReadModelFromFile<NaiveBayes<NormalDistribution>>(@"my_NB.accord");
+
+            double[][] inputs = FormatTweets(tweets);
+
+            int[] answers = model.Decide(inputs);
+        }
+
+        public double[][] FormatTweets (List<Tweet> tweets)
+        {
+            List<string> _tweets = new List<string>();
+            foreach (Tweet item in tweets)
+            {
+                _tweets.Add(item.Text);
+            }
+            
+            //Load a trained Bag of Words
+            //bagOfWords = ...
+
+            //string[][] tokens = tweets.ToArray().Tokenize();
+            string[][] tokens = tp.Tokenizer(_tweets);
+            
+            double[][] input = bagOfWords.Transform(tokens);
+
+            return input;
+        }
+    }
+}
+

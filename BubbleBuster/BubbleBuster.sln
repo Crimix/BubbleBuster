@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestQueueServer", "RestQueu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QSLib", "QSLib\QSLib.csproj", "{E2592DB0-504F-464C-8082-F10131D87CC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextProcesserLib", "TextProcesserLib\TextProcesserLib.csproj", "{5266299D-25E8-4775-8241-669C46F3A074}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TextProcessorLib", "TextProcesserLib\TextProcessorLib.csproj", "{5266299D-25E8-4775-8241-669C46F3A074}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

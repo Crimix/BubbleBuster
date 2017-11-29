@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using BubbleBuster.Helper.Objects;
+using Accord.IO;
+using Accord.MachineLearning.Bayes;
+using Accord.Statistics.Distributions.Univariate;
 
 namespace BubbleBuster.Helper
 {
@@ -139,6 +142,14 @@ namespace BubbleBuster.Helper
             fileName = CheckFileName(fileName);
             string filePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + fileName;
             return JsonConvert.DeserializeObject<T>(File.ReadAllText(filePath));
+        }
+
+        public static T ReadModelFromFile<T>(string filename)
+        {
+            string filePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + filename;
+            Serializer.Load(filePath, out T model);
+
+            return model;
         }
 
         private static string CheckFileName(string input)
