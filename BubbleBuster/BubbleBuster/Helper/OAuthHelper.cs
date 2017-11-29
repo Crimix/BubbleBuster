@@ -80,6 +80,8 @@ namespace BubbleBuster.Helper
             string baseString = requestType + "&";
             baseString += Uri.EscapeDataString(url) + "&";
             baseString += Uri.EscapeDataString(parameterString);
+            Console.WriteLine(url);
+            Console.WriteLine(parameterString);
 
             //Console.WriteLine(baseString);
 
