@@ -115,15 +115,18 @@ namespace BubbleBuster
             //Console.WriteLine(a.BuildAuthHeader(OAuthHelper.DataType.POST, "ExampleUser", "xvz1evFS4wEEPTGEFPHBog", "kAcSOqF21Fu85e7zjz7ZN2U4ZRhfV3WpwPAoE3Z7kBw", "370773112-GmHxMAgYyLbNEtIKZeRNFsMKPR9EyMZeS9weJAEb", "LswwdoUaIvS8ltyTt5jkRh4J50vUPVVHtR2YPi5kE"));
 
             string name = "FilterBubble";
-            string consumerKey = "fIbIn9yMl0F7dpWUoihhwAD3N";
-            string consumerSecret = "qZOQqOia1XnGuWbfDKmuxxykTCAzLbmVbdZie40w6AFuuFHy4F";
             string accessToken = "14594669-CUFTDY6oMmC6FIu3IwHY65G26cQHmmuc9XhHuQFaL";
             string tokenSecret = "uzV2suIyfoTaHDgbZERCsxBlqjMaFFCfGJ0yNDbra5b5K";
-            string baseUrl = "https://api.twitter.com/1.1/friends/ids.json";
+            string baseUrl = "https://api.twitter.com/1.1/application/rate_limit_status.json";
 
             Dictionary<string, string> extraParams = new Dictionary<string, string>();
             //extraParams.Add("status", "Hello Ladies + Gentlemen, a signed OAuth request!");
-            //extraParams.Add("include_entities", "true");
+            //extraParams.Add("resources", "friends,statuses,application,users");
+            //&&
+            extraParams.Add("resources", "friends,statuses,application,users");
+            //extraParams.Add("cursor", "-1");
+            //extraParams.Add("screen_name", "twitterapi");
+            //extraParams.Add("count", "5000");
 
 
 

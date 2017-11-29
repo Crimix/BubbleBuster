@@ -24,21 +24,13 @@ namespace BubbleBuster.Web
             ServicePointManager.DefaultConnectionLimit = 4; //Because at normal operation at most 4 threads should be running
         }
 
-        public string MakeRequest(string requestString)
+        public string MakeRequest(UrlObject requestObject)
         {
             string res = "";
-            string[] urlParts = requestString.Split('?');
-            string authHeader = "";
-            if(urlParts.Length < 1)
-            {
-                authHeader = OAuthHelper.Instance.BuildAuthHeader(OAuthHelper.DataType.GET, auth.RequesterName, auth.OAuthToken, auth.OAuthTokenSecret, urlParts[0]);
-            }
-            else
-            {
-                OAuthHelper.Instance.BuildAuthHeader(OAuthHelper.DataType.GET, auth.Name, auth.OAuthToken, auth.OAuthTokenSecret,requestString);
-            }
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestString);
-            request.Headers[HttpRequestHeader.Authorization] = 
+            string authHeader = OAuthHelper.Instance.BuildAuthHeader(OAuthHelper.DataType.GET, auth.RequesterName, auth.OAuthToken, auth.OAuthTokenSecret, requestObject.BaseUrl, requestObject.Params);
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestObject.Url);
+            request.Headers[HttpRequestHeader.Authorization] = authHeader;
             request.UserAgent = Constants.USER_AGENT;
             request.Method = "GET";
             request.Timeout = 1800000;
@@ -74,7 +66,7 @@ namespace BubbleBuster.Web
             return res;
         }
 
-        public T MakeRequest<T>(string requestString) where T : new()
+        public T MakeRequest<T>(UrlObject requestObject) where T : new()
         {
             T res = default(T);
 
@@ -87,7 +79,7 @@ namespace BubbleBuster.Web
 
             try
             {
-                string data = MakeRequest(requestString);
+                string data = MakeRequest(requestObject);
                 tempRes = JsonConvert.DeserializeObject<T>(data);
             }
             catch (JsonException e)
@@ -103,9 +95,9 @@ namespace BubbleBuster.Web
             return res;
         }
 
-        public bool DBPostRequest (string requestString)
+        public bool DBPostRequest (UrlObject requestObject)
         {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestString);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestObject.Url);
             request.Headers[HttpRequestHeader.Authorization] = "Bearer " + Constants.DB_CREDS;
             request.Method = "POST";
             request.Timeout = 1800000;

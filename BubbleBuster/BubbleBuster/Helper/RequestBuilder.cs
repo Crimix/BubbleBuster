@@ -17,14 +17,14 @@ namespace BubbleBuster
     {
         private static string baseUrl = "https://api.twitter.com/1.1/";
 
-        public static string BuildStartupRequest()
+        public static UrlObject BuildStartupRequest()
         {
             return Build(DataType.limit);
         }
      
-        public static string BuildRequest(DataType returnType, AuthObj apiKey, params string[] parameters)
+        public static UrlObject BuildRequest(DataType returnType, AuthObj apiKey, params string[] parameters)
         {
-            string result = Build(returnType, parameters);
+            UrlObject result = Build(returnType, parameters);
 
             if(CheckIfAllowedToMakeRequestOrSleep(returnType, ref result, apiKey, parameters))
             {
@@ -39,16 +39,23 @@ namespace BubbleBuster
         }
 
 
-        private static bool CheckIfAllowedToMakeRequestOrSleep(DataType returnType, ref string result, AuthObj apiKey, params string[] parameters)
+        private static bool CheckIfAllowedToMakeRequestOrSleep(DataType returnType, ref UrlObject result, AuthObj apiKey, params string[] parameters)
         {
             if (!LimitHelper.Instance(apiKey).AllowedToMakeRequest(returnType))
             {
                 TimeSpan sleepTime = LimitHelper.Instance(apiKey).GetResetTime(returnType);
                 if (sleepTime.TotalMinutes > 0)
                 {
-                    Log.Warn("Sleep at " + DateTime.Now + " until " + LimitHelper.Instance(apiKey).GetResetDateTime(returnType));
+
+                    lock (Log.LOCK)
+                    {
+                        Log.Warn("Sleep at " + DateTime.Now + " until " + LimitHelper.Instance(apiKey).GetResetDateTime(returnType));
+                    }
                     Thread.Sleep(sleepTime);
-                    Log.Warn("Wakeup at " + DateTime.Now);
+                    lock (Log.LOCK)
+                    {
+                        Log.Warn("Wakeup at " + DateTime.Now);
+                    }
                 }
                 LimitHelper.Instance(apiKey).SetLimit(new WebHandler(apiKey).MakeRequest<Limit>(BuildStartupRequest()));
                 result = BuildRequest(returnType, apiKey, parameters);
@@ -57,29 +64,37 @@ namespace BubbleBuster
             return false;
         }
 
-        private static string Build(DataType returnType, params string[] parameters)
+        private static UrlObject Build(DataType returnType, params string[] parameters)
         {
-            string returnString = "";
+            UrlObject returnObject = new UrlObject();
 
             switch (returnType)
             {
                 case DataType.friendsId:
-                    returnString += baseUrl+"friends/ids.json?";
+                    returnObject.BaseUrl += baseUrl + "friends/ids.json";
+                    returnObject.Url += returnObject.BaseUrl + "?";
                     break;
                 case DataType.friendsObj:
-                    returnString += baseUrl + "friends/list.json?";
+                    returnObject.BaseUrl += baseUrl + "friends/list.json";
+                    returnObject.Url += returnObject.BaseUrl + "?";
                     break;
                 case DataType.tweets:
-                    returnString += baseUrl + "statuses/user_timeline.json?include_rts=false&tweet_mode=extended&";
+                    returnObject.Params.Add("include_rts", "false");
+                    returnObject.Params.Add("tweet_mode", "extended");
+                    returnObject.BaseUrl += baseUrl + "statuses/user_timeline.json";
+                    returnObject.Url += returnObject.BaseUrl + "?include_rts=false&tweet_mode=extended&";
                     break;
                 case DataType.limit:
-                    returnString += baseUrl + "application/rate_limit_status.json?resources=friends,statuses,application,users";
+                    returnObject.Params.Add("resources", "friends,statuses,application,users");
+                    returnObject.BaseUrl += baseUrl + "application/rate_limit_status.json";
+                    returnObject.Url += returnObject.BaseUrl + "?resources=friends,statuses,application,users";
                     break;
                 case DataType.user:
-                    returnString += baseUrl + "users/show.json?";
+                    returnObject.BaseUrl += baseUrl + "users/show.json";
+                    returnObject.Url += returnObject.BaseUrl + "?";
                     break;
                 case DataType.database:
-                    returnString += "http://localhost:8000/api/twitter/?";
+                    returnObject.Url += "http://localhost:8000/api/twitter/?";
                     break;
                 default:
                     break;
@@ -87,11 +102,13 @@ namespace BubbleBuster
 
             foreach (string par in parameters)
             {
-                returnString += par + "&";
+                string[] param = par.Split('=');
+                returnObject.Params.Add(param[0], param[1]);
+                returnObject.Url += par + "&";
             }
 
-            returnString = returnString.TrimEnd('&');
-            return returnString;
+            returnObject.Url = returnObject.Url.TrimEnd('&');
+            return returnObject;
         }
     }
 }

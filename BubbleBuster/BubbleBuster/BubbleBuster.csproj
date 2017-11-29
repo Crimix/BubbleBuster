@@ -83,6 +83,7 @@
     <Compile Include="Web\ReturnedObjects\Tweet.cs" />
     <Compile Include="Web\ReturnedObjects\Url.cs" />
     <Compile Include="Web\ReturnedObjects\User.cs" />
+    <Compile Include="Web\UrlObject.cs" />
     <Compile Include="Web\WebHandler.cs" />
     <Compile Include="WordUpdater\PolUserObj.cs" />
     <Compile Include="WordUpdater\UncommonWordObj.cs" />
