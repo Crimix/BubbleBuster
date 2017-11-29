@@ -1,4 +1,5 @@
 ﻿using BubbleBuster.Helper;
+using BubbleBuster.Helper.Objects;
 using BubbleBuster.Web;
 using BubbleBuster.Web.ReturnedObjects;
 using BubbleBuster.Web.ReturnedObjects.RateLimit;
@@ -13,13 +14,13 @@ namespace BubbleBuster
 {
     public class Worker
     {
-        public Worker (string twitterApiKey, string twitterName) //Executes the task parsed by the ServerTask class
+        public Worker (AuthObj twitterApiKey, string twitterName) //Executes the task parsed by the ServerTask class
         {
             string username = twitterName;
-            string apiKey = twitterApiKey;
+            AuthObj apiKey = twitterApiKey;
 
             //Sets the limits such that we do not exceed the limits
-            LimitHelper.Instance(apiKey).SetLimit(new WebHandler().MakeRequest<Limit>(RequestBuilder.BuildStartupRequest()));
+            LimitHelper.Instance(apiKey).SetLimit(new WebHandler(apiKey).MakeRequest<Limit>(RequestBuilder.BuildStartupRequest()));
             User user = new WebHandler(apiKey).MakeRequest<User>(RequestBuilder.BuildRequest(DataType.user, apiKey, "screen_name=" + username)); //Used for getting the users political value
 
             var userTweets = TweetRetriever.Instance.GetTweetsFromUser(user.Id, apiKey); 

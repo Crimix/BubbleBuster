@@ -24,11 +24,11 @@ namespace BubbleBuster.Helper
 
         public void RunNaiveBayes(List<Tweet> tweets)
         {
-            Serializer.Load(@"my_NB.accord", out NaiveBayes<NormalDistribution> nb);
+            var model = FileHelper.ReadModelFromFile<NaiveBayes<NormalDistribution>>(@"my_NB.accord");
 
             double[][] inputs = FormatTweets(tweets);
 
-            int[] answers = nb.Decide(inputs);
+            int[] answers = model.Decide(inputs);
         }
 
         public double[][] FormatTweets (List<Tweet> tweets)

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BubbleBuster.Web.ReturnedObjects;
 using System.Threading;
 using BubbleBuster.Web;
+using BubbleBuster.Helper.Objects;
 
 namespace BubbleBuster.Helper
 {
@@ -30,7 +31,7 @@ namespace BubbleBuster.Helper
             }
         }
 
-        public List<Tweet> GetTweetsFromUser(long userId, string apiKey)
+        public List<Tweet> GetTweetsFromUser(long userId, AuthObj apiKey)
         {
             List<Tweet> tweetList = new List<Tweet>();
             User user = new User();
@@ -43,7 +44,7 @@ namespace BubbleBuster.Helper
             return tweetList;
         }
 
-        public List<Tweet> GetTweetsFromFriends(Friends friends, string apiKey)
+        public List<Tweet> GetTweetsFromFriends(Friends friends, AuthObj apiKey)
         {
             List<Tweet> tweetList = new List<Tweet>();
             List<Task<List<Tweet>>> runningTasks = new List<Task<List<Tweet>>>();
@@ -100,7 +101,7 @@ namespace BubbleBuster.Helper
             return tweetList;
         }
 
-        private List<Tweet> TweetThreadMethod(User user, string apiKey)
+        private List<Tweet> TweetThreadMethod(User user, AuthObj apiKey)
         {
             List<Tweet> temp = GetUserTweets(user, apiKey);
             lock (Log.LOCK)
@@ -120,7 +121,7 @@ namespace BubbleBuster.Helper
             return temp;
         }
 
-        private List<Tweet> GetUserTweets(User user, string apiKey)
+        private List<Tweet> GetUserTweets(User user, AuthObj apiKey)
         {
             List<Tweet> tweetList = new List<Tweet>();
             List<Tweet> tempList = new List<Tweet>();
