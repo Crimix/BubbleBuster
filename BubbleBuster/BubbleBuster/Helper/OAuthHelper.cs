@@ -12,44 +12,73 @@ namespace BubbleBuster.Helper
     {
         public enum DataType { POST, GET }; //Expand based on what data is needed
 
-        public string BuildAuthHeader(DataType type, string twitterName, string consumerKey, string consumerSecret, string accessToken, string tokenSecret)
+        public string BuildAuthHeader(DataType type, string twitterName, string consumerKey, string consumerSecret, 
+            string accessToken, string tokenSecret, string url, Dictionary<string, string> extraParameters)
         {
             HMACSHA1 hmac = new HMACSHA1();
-            string timestamp = Convert.ToString((Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds);
-            //string timestamp = "1318622958";
-            string requestType = Enum.GetName(typeof(DataType), type);
+            //string timestamp = Convert.ToString((Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds);
+            string timestamp = "1511873198"; /* TEST VALUE */
             string signingKey = Uri.EscapeDataString(consumerSecret) + "&" + Uri.EscapeDataString(tokenSecret);
-            string nonce = requestType + twitterName + timestamp;
-            //string nonce = "kYjzVBB8Y0ZFabxSWbWovY3uYSQ2pTgmZeNu2VS4cg";
+            string requestType = Enum.GetName(typeof(DataType), type);
+            //string nonce = requestType + twitterName + timestamp;
+            string nonce = "POSTFilterBubble1511870689aaaaaaa"; /* TEST VALUE */
             string signature_method = "HMAC-SHA1";
             string oauth_version = "1.0";
-            string signature = "";
-            
-            string baseURL = "https://api.twitter.com//1.1/statuses/update.json?include_entities=true";
 
-            string temp_signature = "include_entities=true" +
-                               "&" + Uri.EscapeDataString("oauth_consumer_key") + "=" + Uri.EscapeDataString(consumerKey) +
-                               "&" + Uri.EscapeDataString("oauth_nonce") + "=" + Uri.EscapeDataString(nonce) +
-                               "&" + Uri.EscapeDataString("oauth_signature_method") + "=" + Uri.EscapeDataString(signature_method) +
-                               "&" + Uri.EscapeDataString("oauth_timestamp") + "=" + Uri.EscapeDataString(timestamp) +
-                               "&" + Uri.EscapeDataString("oauth_token") + "=" + Uri.EscapeDataString(accessToken) +
-                               "&" + Uri.EscapeDataString("oauth_version") + "=" + Uri.EscapeDataString(oauth_version);
+            //Append nonce to make it 32 characters
+            while (nonce.Count() < 33)
+                nonce += "a";
 
-            signature = requestType + 
-                        "&" + Uri.EscapeDataString(baseURL) +
-                        "&" + Uri.EscapeDataString(temp_signature);
+            //Add parameters to dictionary
+            Dictionary<string, string> parameters = extraParameters;
+            parameters.Add("oauth_consumer_key", consumerKey);
+            parameters.Add("oauth_nonce", nonce);
+            parameters.Add("oauth_signature_method", signature_method);
+            parameters.Add("oauth_timestamp", timestamp);
+            parameters.Add("oauth_token", accessToken);
+            parameters.Add("oauth_version", oauth_version);
 
+            //Assemble Parameter String
+            List<string> signatureParameters = new List<string>();
+            string parameterString = "";
+
+            foreach(string key in parameters.Keys)
+            {
+                signatureParameters.Add(Uri.EscapeDataString(key) + "=" + Uri.EscapeDataString(parameters[key]) + "&");
+            }
+            signatureParameters.Sort();
+
+            foreach(string param in signatureParameters)
+            {
+                parameterString += param;
+            }
+
+            parameterString = parameterString.Trim('&');
+
+            //Assemble Signature Base String
+            string baseString = requestType + "&";
+            baseString += Uri.EscapeDataString(url) + "&";
+            baseString += Uri.EscapeDataString(parameterString);
+
+            //Console.WriteLine(baseString);
+
+            //Create oauth_signature
+            string oauth_signature = HMACSHA1(signingKey, baseString);
+
+            //oauth_signature = "tnnArxj06cWHq44gCs1OSKk/jLY="; /* TEST VALUE */
+
+            //Assemble Header String
             string headerString = "OAuth " +
-                                  Uri.EscapeDataString("oauth_consumer_key") + "=\"" + Uri.EscapeDataString(consumerKey)+ "\"" +
+                                  Uri.EscapeDataString("oauth_consumer_key") + "=\"" + Uri.EscapeDataString(consumerKey) + "\"" +
                                   ", " + Uri.EscapeDataString("oauth_nonce") + "=\"" + Uri.EscapeDataString(nonce) + "\"" +
-                                  ", " + Uri.EscapeDataString("oauth_signature") + "=\"" + Uri.EscapeDataString(HMACSHA1(signingKey, signature)) + "\"" +
+                                  ", " + Uri.EscapeDataString("oauth_signature") + "=\"" + Uri.EscapeDataString(oauth_signature) + "\"" +
                                   ", " + Uri.EscapeDataString("oauth_signature_method") + "=\"" + Uri.EscapeDataString(signature_method) + "\"" +
                                   ", " + Uri.EscapeDataString("oauth_timestamp") + "=\"" + Uri.EscapeDataString(timestamp) + "\"" +
                                   ", " + Uri.EscapeDataString("oauth_token") + "=\"" + Uri.EscapeDataString(accessToken) + "\"" +
                                   ", " + Uri.EscapeDataString("oauth_version") + "=\"" + Uri.EscapeDataString(oauth_version) + "\"";
 
+            //return headerString;
             return headerString;
-            
         }
 
         //Partly borrowed from https://salesforce.stackexchange.com/questions/92589/why-doesnt-hmacsha1-generate-the-same-hash-as-my-c-code
