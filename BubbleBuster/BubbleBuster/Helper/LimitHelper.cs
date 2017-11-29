@@ -1,4 +1,5 @@
-﻿using BubbleBuster.Web.ReturnedObjects.RateLimit;
+﻿using BubbleBuster.Helper.Objects;
+using BubbleBuster.Web.ReturnedObjects.RateLimit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,14 +11,14 @@ namespace BubbleBuster.Helper
 {
     public class LimitHelper
     {
-        private static Dictionary<string, LimitHelper> limitsByApiKey = new Dictionary<string, LimitHelper>();
+        private static Dictionary<AuthObj, LimitHelper> limitsByApiKey = new Dictionary<AuthObj, LimitHelper>();
 
         private LimitHelper()
         {
 
         }
 
-        public static LimitHelper Instance(string apiKey)
+        public static LimitHelper Instance(AuthObj apiKey)
         {
             if (limitsByApiKey.ContainsKey(apiKey))
             {

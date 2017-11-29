@@ -56,13 +56,11 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GUI\UserControl1.xaml.cs">
-      <DependentUpon>UserControl1.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Helper\Constants.cs" />
     <Compile Include="Helper\FileHelper.cs" />
     <Compile Include="Helper\FriendsRetriever.cs" />
     <Compile Include="Helper\OAuthHelper.cs" />
+    <Compile Include="Helper\Objects\AuthObj.cs" />
     <Compile Include="Helper\Objects\HashtagObj.cs" />
     <Compile Include="Helper\LimitHelper.cs" />
     <Compile Include="Helper\Log.cs" />
@@ -96,11 +94,5 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <Page Include="GUI\UserControl1.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

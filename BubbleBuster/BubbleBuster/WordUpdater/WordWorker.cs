@@ -1,4 +1,5 @@
 ﻿using BubbleBuster.Helper;
+using BubbleBuster.Helper.Objects;
 using BubbleBuster.Web.ReturnedObjects;
 using System;
 using System.Collections.Generic;
@@ -34,13 +35,13 @@ namespace BubbleBuster.WordUpdater
             }
         }
 
-        private Dictionary<PolUserObj, List<Tweet>> GetTweets(List<PolUserObj> userList)
+        private Dictionary<PolUserObj, List<Tweet>> GetTweets(List<PolUserObj> userList, AuthObj apiKey)
         {
             Dictionary<PolUserObj, List<Tweet>> returnObj = new Dictionary<PolUserObj, List<Tweet>>();
 
             foreach (PolUserObj polUser in userList)
             {
-                List<Tweet> tweetList = TweetRetriever.Instance.GetTweetsFromUser(polUser.twitterId,"minapikey");
+                List<Tweet> tweetList = TweetRetriever.Instance.GetTweetsFromUser(polUser.twitterId, apiKey);
                 returnObj.Add(polUser, tweetList);
             }
 
@@ -128,9 +129,9 @@ namespace BubbleBuster.WordUpdater
             return returnObj;
         } 
 
-        public void UpdateWords(List<PolUserObj> users)
+        public void UpdateWords(List<PolUserObj> users, AuthObj apiKey)
         {
-            Dictionary<PolUserObj, List<Tweet>> usersAndTweets = GetTweets(users);
+            Dictionary<PolUserObj, List<Tweet>> usersAndTweets = GetTweets(users, apiKey);
             Dictionary<string, UncommonWordObj> returnList = DetermineWords(usersAndTweets);
             FileHelper.WriteObjectToFile("WordsTest", returnList.Values);
         }

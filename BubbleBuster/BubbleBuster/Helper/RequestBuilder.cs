@@ -1,4 +1,5 @@
 ﻿using BubbleBuster.Helper;
+using BubbleBuster.Helper.Objects;
 using BubbleBuster.Web;
 using BubbleBuster.Web.ReturnedObjects.RateLimit;
 using System;
@@ -21,7 +22,7 @@ namespace BubbleBuster
             return Build(DataType.limit);
         }
      
-        public static string BuildRequest(DataType returnType, string apiKey, params string[] parameters)
+        public static string BuildRequest(DataType returnType, AuthObj apiKey, params string[] parameters)
         {
             string result = Build(returnType, parameters);
 
@@ -38,7 +39,7 @@ namespace BubbleBuster
         }
 
 
-        private static bool CheckIfAllowedToMakeRequestOrSleep(DataType returnType, ref string result, string apiKey, params string[] parameters)
+        private static bool CheckIfAllowedToMakeRequestOrSleep(DataType returnType, ref string result, AuthObj apiKey, params string[] parameters)
         {
             if (!LimitHelper.Instance(apiKey).AllowedToMakeRequest(returnType))
             {
@@ -49,7 +50,7 @@ namespace BubbleBuster
                     Thread.Sleep(sleepTime);
                     Log.Warn("Wakeup at " + DateTime.Now);
                 }
-                LimitHelper.Instance(apiKey).SetLimit(new WebHandler().MakeRequest<Limit>(BuildStartupRequest()));
+                LimitHelper.Instance(apiKey).SetLimit(new WebHandler(apiKey).MakeRequest<Limit>(BuildStartupRequest()));
                 result = BuildRequest(returnType, apiKey, parameters);
                 return true;
             }
