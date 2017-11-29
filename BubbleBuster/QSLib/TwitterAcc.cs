@@ -11,7 +11,7 @@ namespace QSLib
         {
         }
 
-        public TwitterAcc (string Token, string Name, string Secret)
+        public TwitterAcc (string Token, string Name, string RequesterName, string Secret)
         {
             this.Token = Token;
             this.Name = Name;
@@ -33,6 +33,7 @@ namespace QSLib
 
         }
 
+        public string RequesterName { get; set; }
 
         public string Token { get; set; }
 

@@ -101,7 +101,7 @@ namespace QSLib
             try
             {
                 //If the twitter acc does not exist or any of the two keys does not contain proper information
-                if (tAcc == null || (String.IsNullOrWhiteSpace(tAcc.TwitterApiKey) || String.IsNullOrWhiteSpace(tAcc.TwitterName)))
+                if (tAcc == null || (String.IsNullOrWhiteSpace(tAcc.Name) || String.IsNullOrWhiteSpace(tAcc.Token) || String.IsNullOrWhiteSpace(tAcc.Secret)))
                 {
                     return false; //It can not be added so fail
                 }
