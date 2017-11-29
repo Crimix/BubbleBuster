@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
+using BubbleBuster.Helper.Objects;
 
 namespace BubbleBuster.Web
 {
@@ -13,11 +14,11 @@ namespace BubbleBuster.Web
     {
         private static string _cred = "Bearer AAAAAAAAAAAAAAAAAAAAAPRw2QAAAAAAsXqGsVRPgYFVjSScMX3ZVa9YifA%3DkPvipEcLJj3QooYO7aVke3vZ9ruSJp9CgkTlKKtvlmSsGqLUdG";
 
-        public WebHandler(string apiKey) : base()
+        public WebHandler(AuthObj apiKey) : base()
         {
         }
 
-        public WebHandler()
+        private WebHandler()
         {
             ServicePointManager.DefaultConnectionLimit = 4; //Because at normal operation at most 4 threads should be running
         }

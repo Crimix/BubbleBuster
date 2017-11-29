@@ -11,7 +11,6 @@ using BubbleBuster.Web.ReturnedObjects;
 using BubbleBuster.Helper;
 using BubbleBuster.Web.ReturnedObjects.RateLimit;
 using BubbleBuster.Web;
-using BubbleBuster.GUI;
 using BubbleBuster.WordUpdater;
 
 namespace BubbleBuster

@@ -1,4 +1,5 @@
-﻿using BubbleBuster.Web;
+﻿using BubbleBuster.Helper.Objects;
+using BubbleBuster.Web;
 using BubbleBuster.Web.ReturnedObjects;
 using System;
 using System.Collections.Generic;
@@ -29,7 +30,7 @@ namespace BubbleBuster.Helper
             }
         }
 
-        public Friends GetFriends(string screenName, string apiKey)
+        public Friends GetFriends(string screenName, AuthObj apiKey)
         {
             List<User> tempList = new List<User>();
             long cursor = -1;
