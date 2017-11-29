@@ -17,6 +17,7 @@ namespace BubbleBuster.Helper.Objects
             this.RequesterName = RequesterName;
         }
 
+
         public Guid UUID { get; private set; }
 
         public String Name { get; private set; }

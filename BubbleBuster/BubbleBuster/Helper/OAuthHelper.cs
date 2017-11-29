@@ -36,12 +36,12 @@ namespace BubbleBuster.Helper
         public string BuildAuthHeader(DataType type, string twitterName, string accessToken, string tokenSecret, string url, Dictionary<string, string> extraParameters = null)
         {
             HMACSHA1 hmac = new HMACSHA1();
-            //string timestamp = Convert.ToString((Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds);
-            string timestamp = "1511873198"; /* TEST VALUE */
+            string timestamp = Convert.ToString((Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds);
+            //string timestamp = "1511873198"; /* TEST VALUE */
             string signingKey = Uri.EscapeDataString(Constants.CONSUMER_SECRET) + "&" + Uri.EscapeDataString(tokenSecret);
             string requestType = Enum.GetName(typeof(DataType), type);
-            //string nonce = requestType + twitterName + timestamp;
-            string nonce = "POSTFilterBubble1511870689aaaaaaa"; /* TEST VALUE */
+            string nonce = requestType + twitterName + timestamp;
+            //string nonce = "POSTFilterBubble1511870689aaaaaaa"; /* TEST VALUE */
             string signature_method = "HMAC-SHA1";
             string oauth_version = "1.0";
 
