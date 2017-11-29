@@ -17,7 +17,10 @@ namespace QSLib
             this.Name = Name;
             this.Secret = Secret;
         }
-
+        
+        //Returns true if all the needed values for the auth obj is there
+        //Then it assigns the authobj the values
+        //So if this method returns true, the out has some value, else it is null
         public bool GetAuthObj(out AuthObj auth)
         {
             if(string.IsNullOrWhiteSpace(Token) || string.IsNullOrWhiteSpace(Secret))
