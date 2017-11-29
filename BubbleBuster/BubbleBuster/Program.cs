@@ -110,7 +110,7 @@ namespace BubbleBuster
 
             //new TwitterApi(ConsumerKey, ConsumerKeySecret, AccessToken, AccessTokenSecret);
 
-            OAuthHelper a = new OAuthHelper();
+            OAuthHelper a = OAuthHelper.Instance;
             //Console.WriteLine(a.BuildAuthHeader("xvz1evFS4wEEPTGEFPHBog", "370773112-GmHxMAgYyLbNEtIKZeRNFsMKPR9EyMZeS9weJAEb"));
             //Console.WriteLine(a.BuildAuthHeader(OAuthHelper.DataType.POST, "ExampleUser", "xvz1evFS4wEEPTGEFPHBog", "kAcSOqF21Fu85e7zjz7ZN2U4ZRhfV3WpwPAoE3Z7kBw", "370773112-GmHxMAgYyLbNEtIKZeRNFsMKPR9EyMZeS9weJAEb", "LswwdoUaIvS8ltyTt5jkRh4J50vUPVVHtR2YPi5kE"));
 
@@ -127,7 +127,7 @@ namespace BubbleBuster
 
 
 
-            Console.WriteLine(a.BuildAuthHeader(OAuthHelper.DataType.GET, name, consumerKey, consumerSecret, accessToken, tokenSecret, baseUrl, extraParams));
+            Console.WriteLine(a.BuildAuthHeader(OAuthHelper.DataType.GET, name, accessToken, tokenSecret, baseUrl, extraParams));
             Console.WriteLine(Uri.EscapeDataString("_"));
             Console.WriteLine(Uri.EscapeDataString("1.0"));
             Console.WriteLine("?");

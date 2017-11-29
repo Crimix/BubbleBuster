@@ -12,10 +12,11 @@ namespace BubbleBuster.Web
 {
     public class WebHandler
     {
-        private static string _cred = "Bearer AAAAAAAAAAAAAAAAAAAAAPRw2QAAAAAAsXqGsVRPgYFVjSScMX3ZVa9YifA%3DkPvipEcLJj3QooYO7aVke3vZ9ruSJp9CgkTlKKtvlmSsGqLUdG";
+        private AuthObj auth;
 
-        public WebHandler(AuthObj apiKey) : base()
+        public WebHandler(AuthObj auth) : base()
         {
+            this.auth = auth;
         }
 
         private WebHandler()
@@ -26,8 +27,18 @@ namespace BubbleBuster.Web
         public string MakeRequest(string requestString)
         {
             string res = "";
+            string[] urlParts = requestString.Split('?');
+            string authHeader = "";
+            if(urlParts.Length < 1)
+            {
+                authHeader = OAuthHelper.Instance.BuildAuthHeader(OAuthHelper.DataType.GET, auth.RequesterName, auth.OAuthToken, auth.OAuthTokenSecret, urlParts[0]);
+            }
+            else
+            {
+                OAuthHelper.Instance.BuildAuthHeader(OAuthHelper.DataType.GET, auth.Name, auth.OAuthToken, auth.OAuthTokenSecret,requestString);
+            }
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestString);
-            request.Headers[HttpRequestHeader.Authorization] = _cred;
+            request.Headers[HttpRequestHeader.Authorization] = 
             request.UserAgent = Constants.USER_AGENT;
             request.Method = "GET";
             request.Timeout = 1800000;

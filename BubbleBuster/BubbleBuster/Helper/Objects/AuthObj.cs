@@ -8,12 +8,20 @@ namespace BubbleBuster.Helper.Objects
 {
     public class AuthObj
     {
-        public AuthObj(string OAuthToken, string OAuthTokenSecret)
+        public AuthObj(string OAuthToken, string OAuthTokenSecret, string Name, string RequesterName)
         {
             UUID = Guid.NewGuid();
+            this.OAuthToken = OAuthToken;
+            this.OAuthTokenSecret = OAuthTokenSecret;
+            this.Name = Name;
+            this.RequesterName = RequesterName;
         }
 
         public Guid UUID { get; private set; }
+
+        public String Name { get; private set; }
+
+        public String RequesterName { get; private set; }
 
         public string OAuthToken { get; private set; }
 
