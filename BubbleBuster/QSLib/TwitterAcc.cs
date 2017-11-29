@@ -27,7 +27,7 @@ namespace QSLib
             }
             else
             {
-                auth = new AuthObj(Token, Secret);
+                auth = new AuthObj(Token, Secret, Name, RequesterName);
                 return true;
             }
 
