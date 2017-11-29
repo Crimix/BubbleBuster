@@ -22,13 +22,21 @@ namespace BubbleBuster.Helper
             tp = new TextProcessor();
         }
 
-        public void RunNaiveBayes(List<Tweet> tweets)
+        public double RunNaiveBayes(List<Tweet> tweets)
         {
             var model = FileHelper.ReadModelFromFile<NaiveBayes<NormalDistribution>>("NaiveBayes90.accord");
 
             double[][] inputs = FormatTweets(tweets);
-
+            
             int[] answers = model.Decide(inputs);
+            List<int> result = new List<int>(){ 0, 0, 0};
+
+            foreach (var item in answers)
+            {
+                result[item] += 1;
+            }
+
+            return CalcBias(result);
         }
 
         public double[][] FormatTweets (List<Tweet> tweets)
@@ -38,9 +46,15 @@ namespace BubbleBuster.Helper
             {
                 _tweets.Add(item.Text);
             }
-            
-            //Load a trained Bag of Words
-            //bagOfWords = ...
+
+            BagOfWords bagOfWords = new BagOfWords()
+            {
+                MaximumOccurance = 1
+            };
+
+            string[][] trainingTokens = FileHelper.ReadObjectFromFile<string[][]>(@"BagOfWords90.txt");
+
+            bagOfWords.Learn(trainingTokens);
 
             //string[][] tokens = tweets.ToArray().Tokenize();
             string[][] tokens = tp.Tokenizer(_tweets);
@@ -48,6 +62,25 @@ namespace BubbleBuster.Helper
             double[][] input = bagOfWords.Transform(tokens);
 
             return input;
+        }
+
+        double CalcBias(List<int> results)
+        {
+            double left = results[0] - (results[1] / 2);
+            if (left < 0)
+            {
+                left = 0;
+            }
+
+            double right = results[2] - (results[1] / 2);
+            if (right < 0)
+            {
+                right = 0;
+            }
+
+            double bias = left - right;
+
+            return bias;
         }
     }
 }
