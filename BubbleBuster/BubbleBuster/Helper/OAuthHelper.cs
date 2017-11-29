@@ -10,6 +10,27 @@ namespace BubbleBuster.Helper
 {
     public class OAuthHelper
     {
+        private static OAuthHelper _instance;
+        private OAuthHelper()
+        {
+        }
+
+        /// <summary>
+        /// Returns a static instance of the class. This works as a singleton.
+        /// </summary>
+        public static OAuthHelper Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new OAuthHelper();
+                }
+                return _instance;
+            }
+        }
+
+
         public enum DataType { POST, GET }; //Expand based on what data is needed
 
         public string BuildAuthHeader(DataType type, string twitterName, string consumerKey, string consumerSecret, 
