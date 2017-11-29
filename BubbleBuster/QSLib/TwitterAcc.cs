@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BubbleBuster.Helper.Objects;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -9,13 +10,34 @@ namespace QSLib
         public TwitterAcc()
         {
         }
-        public TwitterAcc (string twitterApiKey, string twitterName)
-        {
-            TwitterApiKey = twitterApiKey;
-            TwitterName = twitterName;
-        }
-        public string TwitterApiKey { get; set; }
 
-        public string TwitterName { get; set; }
+        public TwitterAcc (string Token, string Name, string Secret)
+        {
+            this.Token = Token;
+            this.Name = Name;
+            this.Secret = Secret;
+        }
+
+        public bool GetAuthObj(out AuthObj auth)
+        {
+            if(string.IsNullOrWhiteSpace(Token) || string.IsNullOrWhiteSpace(Secret))
+            {
+                auth = null;
+                return false;
+            }
+            else
+            {
+                auth = new AuthObj(Token, Secret);
+                return true;
+            }
+
+        }
+
+
+        public string Token { get; set; }
+
+        public string Name { get; set; }
+
+        public string Secret { get; set; }
     }
 }
