@@ -27,7 +27,7 @@ namespace TextProcesserLib
 
                 {
                      "lineBreaks",
-                     new Regex(@"[\u000A\u000B\u000C\u000D\u2028\u2029\u0085]+")
+                     new Regex(@"([\u000A\u000B\u000C\u000D\u2028\u2029\u0085]+|(\\nl))")
                 },
                 {
                     "users",
@@ -35,15 +35,11 @@ namespace TextProcesserLib
                 },
                 {
                     "links",
-                    new Regex(@"((www\.[^\s]+)|(https?://[^\s]+))")
+                    new Regex(@"((www\.[^\s]+)|(https?:\/[^\s]+))")
                 },
                 {
                     "hashtags",
                     new Regex(@"#")
-                },
-                {
-                    "apostrophe",
-                    new Regex(@"'")
                 },
                 {
                     "duplicateLetters",
@@ -51,7 +47,7 @@ namespace TextProcesserLib
                 },
                 {
                     "punctuation",
-                    new Regex(@"([!-/]|[;-?)")
+                    new Regex(@"([!-/]|[;-?]|['])")
                 },
                 {
                     "numbers",
@@ -67,9 +63,8 @@ namespace TextProcesserLib
 
             procToken = regexes["links"].Replace(procToken, "LINK");
             procToken = regexes["users"].Replace(procToken, "AT_USER");
-            procToken = regexes["lineBreaks"].Replace(procToken, " ");
+            procToken = regexes["lineBreaks"].Replace(procToken, "");
             procToken = regexes["hashtags"].Replace(procToken, "");
-            procToken = regexes["apostrophe"].Replace(procToken, "");
             procToken = regexes["duplicateLetters"].Replace(procToken, "$1");
             procToken = regexes["numbers"].Replace(procToken, "");
             procToken = regexes["multiSpaces"].Replace(procToken, "");

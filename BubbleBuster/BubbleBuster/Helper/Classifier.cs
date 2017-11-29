@@ -24,7 +24,7 @@ namespace BubbleBuster.Helper
 
         public void RunNaiveBayes(List<Tweet> tweets)
         {
-            var model = FileHelper.ReadModelFromFile<NaiveBayes<NormalDistribution>>(@"my_NB.accord");
+            var model = FileHelper.ReadModelFromFile<NaiveBayes<NormalDistribution>>("NaiveBayes90.accord");
 
             double[][] inputs = FormatTweets(tweets);
 
