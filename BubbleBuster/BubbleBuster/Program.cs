@@ -78,36 +78,65 @@ namespace BubbleBuster
             */
 
             List<PolUserObj> polusers = new List<PolUserObj>();
-            polusers.Add(new PolUserObj(61734492, -1)); //fahrenthold, leftwing
-            polusers.Add(new PolUserObj(15893354, -1)); //wpjenna
-            polusers.Add(new PolUserObj(15689503, -1)); //cbellatoni
-            polusers.Add(new PolUserObj(15691197, -1));//Atrios
-            polusers.Add(new PolUserObj(14129299, -1));//Nicopitney
-            polusers.Add(new PolUserObj(16076032, -1));//ggreenwald
-            polusers.Add(new PolUserObj(3586084752, -1));//wonkroom
-            polusers.Add(new PolUserObj(27511061, -1));//stevebenen
-            polusers.Add(new PolUserObj(14924233, -1));//AlanColmes
-            polusers.Add(new PolUserObj(85583894, -1));//MuslimIQ
-            polusers.Add(new PolUserObj(93069110, -1));//MaggieNYT
-            polusers.Add(new PolUserObj(16303106, -1));//StephenAtHome
-            polusers.Add(new PolUserObj(46335511, -1));//TrevorNoah
+            //(MI, ALG)
 
-            polusers.Add(new PolUserObj(147580943, 1)); //
-            polusers.Add(new PolUserObj(18643437, 1));  //
-            polusers.Add(new PolUserObj(640893, 1)); //Ewerickson
-            polusers.Add(new PolUserObj(4248211, 1)); //mindyflynn
-            polusers.Add(new PolUserObj(14197312, 1)); //dmataconis
-            polusers.Add(new PolUserObj(16068266, 1)); //TPCarney
-            polusers.Add(new PolUserObj(16244449, 1)); //jbarro
-            polusers.Add(new PolUserObj(14347972, 1)); //heminator
-            polusers.Add(new PolUserObj(366618441, 1)); //reihansalam
-            polusers.Add(new PolUserObj(15976697, 1)); //michellemalkin
-            polusers.Add(new PolUserObj(65493023, 1)); //sarahpalinUSA
-            polusers.Add(new PolUserObj(17454769, 1)); //glennbeck
-            polusers.Add(new PolUserObj(17980523, 1)); //mitchellvii
+            //Leftwing Users
+            polusers.Add(new PolUserObj(61734492, -1)); //fahrenthold,  (right, left)
+            polusers.Add(new PolUserObj(15893354, -1)); //wpjenna       (right, left)
+            polusers.Add(new PolUserObj(15689503, -1)); //cbellatoni    (right, left)
+            polusers.Add(new PolUserObj(15691197, -1));//Atrios         (right, left)
+            polusers.Add(new PolUserObj(14129299, -1));//Nicopitney     (right, left)
+            polusers.Add(new PolUserObj(16076032, -1));//ggreenwald     (right, left)
+            polusers.Add(new PolUserObj(3586084752, -1));//wonkroom     (banned?)
+            polusers.Add(new PolUserObj(27511061, -1));//stevebenen     (right, left)
+            polusers.Add(new PolUserObj(14924233, -1));//AlanColmes     (right, left)
+            polusers.Add(new PolUserObj(85583894, -1));//MuslimIQ       (right, left)
+            polusers.Add(new PolUserObj(93069110, -1));//MaggieNYT      (right, left)
+            polusers.Add(new PolUserObj(16303106, -1));//StephenAtHome  (right, left)
+            polusers.Add(new PolUserObj(46335511, -1));//TrevorNoah     (right, left)
 
-            
-            WordWorker.Instance.UpdateWords(polusers, new AuthObj());
+            //Rightwing Users
+            polusers.Add(new PolUserObj(147580943, 1)); //              (right, right)
+            polusers.Add(new PolUserObj(18643437, 1));  //              (right, right)
+            polusers.Add(new PolUserObj(640893, 1)); //Ewerickson       (right, right)
+            polusers.Add(new PolUserObj(4248211, 1)); //mindyflynn      (right, left)
+            polusers.Add(new PolUserObj(14197312, 1)); //dmataconis     (right, neutral)
+            polusers.Add(new PolUserObj(16068266, 1)); //TPCarney       (right, right)
+            polusers.Add(new PolUserObj(16244449, 1)); //jbarro         (left, right)
+            polusers.Add(new PolUserObj(14347972, 1)); //heminator      (
+            polusers.Add(new PolUserObj(366618441, 1)); //reihansalam   (
+            polusers.Add(new PolUserObj(15976697, 1)); //michellemalkin (
+            polusers.Add(new PolUserObj(65493023, 1)); //sarahpalinUSA  (
+            polusers.Add(new PolUserObj(17454769, 1)); //glennbeck      (
+            polusers.Add(new PolUserObj(17980523, 1)); //mitchellvii    (
+
+            Console.WriteLine("Begin Retrieving: " + DateTime.Now);
+            AuthObj authobj = new AuthObj("");
+            var userTweets = TweetRetriever.Instance.GetTweetsFromUser(user.Id, apiKey);
+            var friends = FriendsRetriever.Instance.GetFriends(username, apiKey);
+            Log.Info("Following " + friends.Users.Count + "users");
+
+            List<Tweet> filterBubble = TweetRetriever.Instance.GetTweetsFromFriends(friends, apiKey);
+
+            Console.WriteLine("Begin Analyzing: " + DateTime.Now);
+            double[] output = TweetAnalyzer.Instance.AnalyzeAndDecorateTweets(tweetList);
+
+            Console.WriteLine("Done: " + DateTime.Now);
+            /*Classifier classifier = new Classifier();
+
+            Console.WriteLine("Naive Bayes:");
+            double naive = classifier.RunNaiveBayes(tweetList);
+            Console.WriteLine(naive);
+
+            Console.WriteLine("\nAlgorithm:");
+            foreach(double aasda in output)
+            {
+                Console.WriteLine(aasda);
+            }
+
+            FileHelper.WriteObjectToFile("test", tweetList);
+            */
+            //WordWorker.Instance.UpdateWords(polusers, new AuthObj("a"));
 
 
 
@@ -136,6 +165,26 @@ namespace BubbleBuster
 
 
             // Console.WriteLine(a.BuildAuthHeader(OAuthHelper.DataType.GET, name, accessToken, tokenSecret, baseUrl, extraParams));
+
+            
+
+            /*
+            List<string> elist = new List<string>();
+
+
+            List <string> emotionList = FileHelper.ReadObjectFromFile<List<string>>("emotions.json");
+
+            foreach(string str in emotionList)
+            {
+                if (!elist.Contains(str))
+                {
+                    elist.Add(str);
+                }
+            }
+
+            FileHelper.WriteObjectToFile("newEmotion", elist);
+            */
+
             Console.WriteLine("?");
             Console.ReadLine();
         }
