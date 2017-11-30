@@ -8,6 +8,8 @@ namespace BubbleBuster.Helper.Objects
 {
     public class AuthObj
     {
+        public enum AuthType { User, App };
+
         public AuthObj(string OAuthToken, string OAuthTokenSecret, string Name, string RequesterName)
         {
             UUID = Guid.NewGuid();
@@ -15,14 +17,27 @@ namespace BubbleBuster.Helper.Objects
             this.OAuthTokenSecret = OAuthTokenSecret;
             this.Name = Name;
             this.RequesterName = RequesterName;
+            Type = AuthType.User;
         }
 
+        public AuthObj(string Name, string apiKey = Constants.APP_API_CREDS)
+        {
+            UUID = Guid.NewGuid();
+            APIKey = apiKey;
+            this.Name = Name;
+            this.RequesterName = "FilterBubble_SW709";
+            Type = AuthType.App;
+        }
+
+        public string APIKey { get; private set; }
+
+        public AuthType Type { get; private set; }
 
         public Guid UUID { get; private set; }
 
-        public String Name { get; private set; }
+        public string Name { get; private set; }
 
-        public String RequesterName { get; private set; }
+        public string RequesterName { get; private set; }
 
         public string OAuthToken { get; private set; }
 

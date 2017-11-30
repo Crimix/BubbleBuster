@@ -88,7 +88,7 @@
     <Compile Include="Helper\Objects\HashtagObj.cs" />
     <Compile Include="Helper\LimitHelper.cs" />
     <Compile Include="Helper\Log.cs" />
-    <Compile Include="Helper\RequestBuilder.cs" />
+    <Compile Include="Helper\TwitterRequestBuilder.cs" />
     <Compile Include="Helper\TweetRetriever.cs" />
     <Compile Include="Helper\UrlHelper.cs" />
     <Compile Include="Helper\TweetAnalyzer.cs" />

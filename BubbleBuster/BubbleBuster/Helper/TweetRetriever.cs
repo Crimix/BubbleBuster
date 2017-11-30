@@ -101,7 +101,9 @@ namespace BubbleBuster.Helper
             return tweetList;
         }
 
-        private List<Tweet> TweetThreadMethod(User user, AuthObj apiKey)
+
+
+        private List<Tweet> TweetThreadMethod(User user, AuthObj apiKey, Func<double> analyze = null, Func<bool> post = null)
         {
             List<Tweet> temp = RetriveTweets(user, apiKey);
             lock (Log.LOCK)

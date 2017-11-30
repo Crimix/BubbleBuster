@@ -20,17 +20,18 @@ namespace BubbleBuster.Web
             ServicePointManager.DefaultConnectionLimit = 4; //Because at normal operation at most 4 threads should be running
         }
 
-        public string MakeRequest(UrlObject requestObject, string apiKey)
-        {
-            string res = "";
-            GetRequestBody(requestObject, apiKey, ref res);
-            return res;
-        }
-
         public string MakeRequest(UrlObject requestObject)
         {
             string res = "";
-            string authHeader = OAuthHelper.Instance.BuildAuthHeader(OAuthHelper.DataType.GET, auth.RequesterName, auth.OAuthToken, auth.OAuthTokenSecret, requestObject.BaseUrl, requestObject.Params);
+            string authHeader = "";
+            if (auth.Type == AuthObj.AuthType.User)
+            {
+                authHeader = OAuthHelper.Instance.BuildAuthHeader(OAuthHelper.DataType.GET, auth.RequesterName, auth.OAuthToken, auth.OAuthTokenSecret, requestObject.BaseUrl, requestObject.Params);
+            }
+            else if (auth.Type == AuthObj.AuthType.App)
+            {
+                authHeader = auth.APIKey;
+            }
             GetRequestBody(requestObject, authHeader, ref res);
             return res;
         }
@@ -81,17 +82,7 @@ namespace BubbleBuster.Web
             return GetRequestBody(requestObject.Url, auth, ref result);
         }
 
-        public T MakeRequest<T>(UrlObject requestObject,string apiKey) where T : new()
-        {
-            return GetRequestBody<T>(requestObject, (()=> MakeRequest(requestObject, apiKey)));
-        }
-
         public T MakeRequest<T>(UrlObject requestObject) where T : new()
-        {
-            return GetRequestBody<T>(requestObject, (() => MakeRequest(requestObject)));
-        }
-
-        private T GetRequestBody<T>(UrlObject requestObject, Func<String> func) where T : new()
         {
             T res = default(T);
 
@@ -104,7 +95,7 @@ namespace BubbleBuster.Web
 
             try
             {
-                string data = func();
+                string data = MakeRequest(requestObject);
                 tempRes = JsonConvert.DeserializeObject<T>(data);
             }
             catch (JsonException e)
@@ -122,6 +113,7 @@ namespace BubbleBuster.Web
 
             return res;
         }
+        
 
         public bool DBGetRequest(string requestString, ref int result, params string[] parameters)
         {
