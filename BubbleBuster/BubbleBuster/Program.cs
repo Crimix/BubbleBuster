@@ -128,11 +128,11 @@ namespace BubbleBuster
             //extraParams.Add("screen_name", "twitterapi");
             //extraParams.Add("count", "5000");
 
+            //List<Tweet> aasdas = FileHelper.ReadObjectFromFile<List<Tweet>>(Constants.PROGRAM_DATA_FILEPATH + "\\");
 
 
-            Console.WriteLine(a.BuildAuthHeader(OAuthHelper.DataType.GET, name, accessToken, tokenSecret, baseUrl, extraParams));
-            Console.WriteLine(Uri.EscapeDataString("_"));
-            Console.WriteLine(Uri.EscapeDataString("1.0"));
+
+            // Console.WriteLine(a.BuildAuthHeader(OAuthHelper.DataType.GET, name, accessToken, tokenSecret, baseUrl, extraParams));
             Console.WriteLine("?");
             Console.ReadLine();
         }
