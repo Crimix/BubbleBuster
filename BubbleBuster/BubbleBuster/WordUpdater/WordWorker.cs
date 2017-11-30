@@ -1,5 +1,6 @@
 ﻿using BubbleBuster.Helper;
 using BubbleBuster.Helper.Objects;
+using BubbleBuster.Web;
 using BubbleBuster.Web.ReturnedObjects;
 using System;
 using System.Collections.Generic;
@@ -41,7 +42,9 @@ namespace BubbleBuster.WordUpdater
 
             foreach (PolUserObj polUser in userList)
             {
-                List<Tweet> tweetList = TweetRetriever.Instance.GetTweetsFromUser(polUser.twitterId, apiKey);
+                //List<Tweet> tweetList = TweetRetriever.Instance.GetTweetsFromUser(polUser.twitterId, apiKey);
+                
+                List<Tweet> tweetList = new WebHandler(null).MakeRequest<List<Tweet>>(null, "Bearer AAAAAAAAAAAAAAAAAAAAAPRw2QAAAAAAsXqGsVRPgYFVjSScMX3ZVa9YifA%3DkPvipEcLJj3QooYO7aVke3vZ9ruSJp9CgkTlKKtvlmSsGqLUdG");
                 returnObj.Add(polUser, tweetList);
             }
 
