@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using BubbleBuster.Helper;
 
 namespace QSLib
 {
@@ -30,6 +31,7 @@ namespace QSLib
             }
             else
             {
+                Log.Info("Token: " + Token + "Secret: " + Secret + "Name: " + Name + "RequesterName: " + RequesterName);   
                 auth = new AuthObj(Token, Secret, Name, RequesterName);
                 return true;
             }

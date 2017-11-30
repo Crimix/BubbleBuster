@@ -37,7 +37,7 @@ namespace BubbleBuster.Helper
         {
             HMACSHA1 hmac = new HMACSHA1();
             string timestamp = Convert.ToString((Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds);
-            //string timestamp = "1511873198"; /* TEST VALUE */
+            //string timestamp = "1511974934"; /* TEST VALUE */
             string signingKey = Uri.EscapeDataString(Constants.CONSUMER_SECRET) + "&" + Uri.EscapeDataString(tokenSecret);
             string requestType = Enum.GetName(typeof(DataType), type);
             string nonce = requestType + twitterName + timestamp;
@@ -79,14 +79,11 @@ namespace BubbleBuster.Helper
 
             parameterString = parameterString.Trim('&');
 
+
             //Assemble Signature Base String
             string baseString = requestType + "&";
             baseString += Uri.EscapeDataString(url) + "&";
             baseString += Uri.EscapeDataString(parameterString);
-            Console.WriteLine(url);
-            Console.WriteLine(parameterString);
-
-            //Console.WriteLine(baseString);
 
             //Create oauth_signature
             string oauth_signature = HMACSHA1(signingKey, baseString);
