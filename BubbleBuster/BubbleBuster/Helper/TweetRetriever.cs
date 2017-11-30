@@ -31,12 +31,20 @@ namespace BubbleBuster.Helper
             }
         }
 
-        public List<Tweet> GetTweetsFromUser(long userId, AuthObj apiKey, Func<User,bool> get = null, Func<List<Tweet>,double> analyze = null, Func<double,bool> post = null)
+        public void GetTweetsFromUserAndAnalyse(User user, AuthObj apiKey, Func<User, bool> get, Func<List<Tweet>, double> analyze, Func<double, bool> post)
+        {
+            GetTweetsFromUserHelper(user, apiKey, (() => TweetThreadMethod(user, apiKey, get, analyze, post)));
+        }
+
+        public List<Tweet> GetTweetsFromUser(User user, AuthObj apiKey)
+        {
+            return GetTweetsFromUserHelper(user, apiKey, (() => TweetThreadMethod(user, apiKey)));
+        }
+
+        private List<Tweet> GetTweetsFromUserHelper(User user, AuthObj apiKey, Func<List<Tweet>> threadedMethod)
         {
             List<Tweet> tweetList = new List<Tweet>();
-            User user = new User();
-            user.Id = userId;
-            Task<List<Tweet>> task = new Task<List<Tweet>>(() => TweetThreadMethod(user, apiKey, get, analyze, post));
+            Task<List<Tweet>> task = new Task<List<Tweet>>(() => threadedMethod());
             task.Start();
             task.Wait();
             tweetList.AddRange(task.Result);
@@ -44,7 +52,56 @@ namespace BubbleBuster.Helper
             return tweetList;
         }
 
-        public List<Tweet> GetTweetsFromFriends(Friends friends, AuthObj apiKey, Func<User,bool> get = null, Func<List<Tweet>, double> analyze = null, Func<double, bool> post = null)
+        public void GetTweetsFromFriendsAndAnalyse(Friends friends, AuthObj apiKey, Func<User, bool> get, Func<List<Tweet>, double> analyze, Func<double, bool> post)
+        {
+            List<Task<List<Tweet>>> runningTasks = new List<Task<List<Tweet>>>();
+            List<Task<List<Tweet>>> taskList = new List<Task<List<Tweet>>>();
+            Queue<Task<List<Tweet>>> taskQueue = new Queue<Task<List<Tweet>>>();
+            Log.Info(String.Format("{0,5}: {1,-20} {2,-20} {3,-11}", "Count", "User name", "User id", "Tweet count"));
+
+            foreach (User user in friends.Users)
+            {
+                Task<List<Tweet>> task = new Task<List<Tweet>>(() => TweetThreadMethod(user, apiKey, get, analyze, post));
+                taskQueue.Enqueue(task);
+                task = null;
+            }
+
+            friends = null;
+
+            while (taskQueue.Count != 0)
+            {
+                if (taskList.Count < 3)
+                {
+                    for (int i = 0; i < 3; i++)
+                    {
+                        if (taskQueue.Count != 0)
+                        {
+                            var task = taskQueue.Dequeue();
+                            task.Start();
+                            runningTasks.Add(task);
+                            taskList.Add(task);
+                        }
+                    }
+                }
+                else
+                {
+                    int index = Task.WaitAny(runningTasks.ToArray(), -1);
+                    runningTasks.RemoveAt(index);
+                    var task = taskQueue.Dequeue();
+                    task.Start();
+                    runningTasks.Add(task);
+                    taskList.Add(task);
+                }
+            }
+            taskQueue = null;
+
+            Task.WaitAll(taskList.ToArray());
+
+            taskList = null;
+            runningTasks = null;
+        }
+
+        public List<Tweet> GetTweetsFromFriends(Friends friends, AuthObj apiKey)
         {
             List<Tweet> tweetList = new List<Tweet>();
             List<Task<List<Tweet>>> runningTasks = new List<Task<List<Tweet>>>();
@@ -54,7 +111,7 @@ namespace BubbleBuster.Helper
 
             foreach (User user in friends.Users)
             {
-                Task<List<Tweet>> task = new Task<List<Tweet>>(() => TweetThreadMethod(user, apiKey, get, analyze, post));
+                Task<List<Tweet>> task = new Task<List<Tweet>>(() => TweetThreadMethod(user, apiKey));
                 taskQueue.Enqueue(task);
                 task = null;
             }
@@ -132,11 +189,8 @@ namespace BubbleBuster.Helper
                 {
                     tempResult = analyze(temp);
                     post(tempResult);
+                    temp = new List<Tweet>();
                 }
-            }
-            else
-            {
-                post(tempResult);
             }
 
             return temp;
