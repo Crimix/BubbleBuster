@@ -115,7 +115,7 @@ namespace BubbleBuster.Web
         }
         
 
-        public bool DBGetRequest(string requestString, ref int result, params string[] parameters)
+        public bool DBGetRequest(string requestString, ref double result, params string[] parameters)
         {
             bool res = false;
             string tempResult = "";
@@ -129,7 +129,7 @@ namespace BubbleBuster.Web
             if(GetRequestBody(requestString, "Bearer " + Constants.DB_CREDS, ref tempResult))
             {
                 res = true;
-                result = Convert.ToInt32(tempResult);
+                result = Convert.ToDouble(tempResult);
             }
             return res;
         }
