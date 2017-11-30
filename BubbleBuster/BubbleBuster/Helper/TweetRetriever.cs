@@ -31,12 +31,12 @@ namespace BubbleBuster.Helper
             }
         }
 
-        public List<Tweet> GetTweetsFromUser(long userId, AuthObj apiKey)
+        public List<Tweet> GetTweetsFromUser(long userId, AuthObj apiKey, Func<User,bool> get = null, Func<List<Tweet>,double> analyze = null, Func<double,bool> post = null)
         {
             List<Tweet> tweetList = new List<Tweet>();
             User user = new User();
             user.Id = userId;
-            Task<List<Tweet>> task = new Task<List<Tweet>>(() => TweetThreadMethod(user, apiKey));
+            Task<List<Tweet>> task = new Task<List<Tweet>>(() => TweetThreadMethod(user, apiKey, get, analyze, post));
             task.Start();
             task.Wait();
             tweetList.AddRange(task.Result);
@@ -44,7 +44,7 @@ namespace BubbleBuster.Helper
             return tweetList;
         }
 
-        public List<Tweet> GetTweetsFromFriends(Friends friends, AuthObj apiKey)
+        public List<Tweet> GetTweetsFromFriends(Friends friends, AuthObj apiKey, Func<User,bool> get = null, Func<List<Tweet>, double> analyze = null, Func<double, bool> post = null)
         {
             List<Tweet> tweetList = new List<Tweet>();
             List<Task<List<Tweet>>> runningTasks = new List<Task<List<Tweet>>>();
@@ -54,7 +54,7 @@ namespace BubbleBuster.Helper
 
             foreach (User user in friends.Users)
             {
-                Task<List<Tweet>> task = new Task<List<Tweet>>(() => TweetThreadMethod(user, apiKey));
+                Task<List<Tweet>> task = new Task<List<Tweet>>(() => TweetThreadMethod(user, apiKey, get, analyze, post));
                 taskQueue.Enqueue(task);
                 task = null;
             }
@@ -101,24 +101,43 @@ namespace BubbleBuster.Helper
             return tweetList;
         }
 
-
-
-        private List<Tweet> TweetThreadMethod(User user, AuthObj apiKey, Func<double> analyze = null, Func<bool> post = null)
+        private List<Tweet> TweetThreadMethod(User user, AuthObj apiKey, Func<User,bool> get = null, Func<List<Tweet>, double> analyze = null, Func<double, bool> post = null)
         {
-            List<Tweet> temp = RetriveTweets(user, apiKey);
-            lock (Log.LOCK)
+            bool alreadyExist = false;
+            double tempResult = 0;
+            List<Tweet> temp = new List<Tweet>();
+            if (get != null)
             {
-                if (user.IsProtected)
-                {
-                    Log.Info(String.Format("{0,5}: {1,-20} {2,-20} {3,-11}", userTweetCount, user.Name, user.Id, "Protected"));
-                }
-                else
-                {
-                    Log.Info(String.Format("{0,5}: {1,-20} {2,-20} {3,-11}", userTweetCount, user.Name, user.Id, temp.Count));
-                }
+                alreadyExist = get(user);
             }
 
-            Interlocked.Increment(ref userTweetCount);
+            if (!alreadyExist)
+            {
+                temp = RetriveTweets(user, apiKey);
+                lock (Log.LOCK)
+                {
+                    if (user.IsProtected)
+                    {
+                        Log.Info(String.Format("{0,5}: {1,-20} {2,-20} {3,-11}", userTweetCount, user.Name, user.Id, "Protected"));
+                    }
+                    else
+                    {
+                        Log.Info(String.Format("{0,5}: {1,-20} {2,-20} {3,-11}", userTweetCount, user.Name, user.Id, temp.Count));
+                    }
+                }
+
+                Interlocked.Increment(ref userTweetCount);
+
+                if (analyze != null && post != null)
+                {
+                    tempResult = analyze(temp);
+                    post(tempResult);
+                }
+            }
+            else
+            {
+                post(tempResult);
+            }
 
             return temp;
         }

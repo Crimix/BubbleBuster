@@ -20,12 +20,11 @@ namespace BubbleBuster.Helper.Objects
             Type = AuthType.User;
         }
 
-        public AuthObj(string Name, string apiKey = Constants.APP_API_CREDS)
+        public AuthObj(string apiKey = Constants.APP_API_CREDS)
         {
             UUID = Guid.NewGuid();
             APIKey = apiKey;
-            this.Name = Name;
-            this.RequesterName = "FilterBubble_SW709";
+            RequesterName = "FilterBubble_SW709";
             Type = AuthType.App;
         }
 
