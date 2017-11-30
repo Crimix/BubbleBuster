@@ -103,8 +103,58 @@ namespace BubbleBuster.Web
             return res;
         }
 
-        public bool DBPostRequest (string requestString)
+        public bool DBGetRequest(string requestString, ref int result, params string[] parameters)
         {
+            bool res = false;
+            foreach (var item in parameters)
+            {
+                requestString += item + "&";
+            }
+            requestString = requestString.Trim('&');
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestString);
+            request.Headers[HttpRequestHeader.Authorization] = "Bearer " + Constants.DB_CREDS;
+            request.Method = "Get";
+            request.Timeout = 1800000;
+
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                Stream receiveStream = response.GetResponseStream();
+                StreamReader readStream = null;
+
+                if (response.CharacterSet == null)
+                {
+                    readStream = new StreamReader(receiveStream);
+                }
+                else
+                {
+                    readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
+                }
+
+                try
+                {
+                    result = Convert.ToInt32(readStream.ReadToEnd());
+                    res = true;
+                }
+                catch (IOException)
+                {
+                }
+
+                response.Close();
+                readStream.Close();
+            }
+            return res;
+        }
+
+        public bool DBPostRequest (string requestString, params string[] parameters)
+        {
+            foreach (var item in parameters)
+            {
+                requestString += item + "&";
+            }
+            requestString = requestString.Trim('&');
+
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestString);
             request.Headers[HttpRequestHeader.Authorization] = "Bearer " + Constants.DB_CREDS;
             request.Method = "POST";
