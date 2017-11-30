@@ -170,7 +170,7 @@ namespace BubbleBuster.Helper
                     foreach (string word in wordList)
                     {
                         //Sentiment Analysis
-                        if (analysisWords.Keys.Contains(word, StringComparer.InvariantCultureIgnoreCase))
+                        if (analysisWords.ContainsKey(word))
                         {
                             int wordValue;
 
@@ -191,7 +191,7 @@ namespace BubbleBuster.Helper
                         }
 
                         //Hashtag Analysis
-                        if (hashtags.Keys.Contains(word, StringComparer.InvariantCultureIgnoreCase) && !tweet.tagList.Contains(word, StringComparer.InvariantCultureIgnoreCase))
+                        if (hashtags.ContainsKey(word) && !tweet.tagList.Contains(word, StringComparer.InvariantCultureIgnoreCase))
                         {
                             HashtagObj hashtagObj;
 

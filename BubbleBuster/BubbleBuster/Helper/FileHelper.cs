@@ -154,13 +154,20 @@ namespace BubbleBuster.Helper
 
         private static string CheckFileName(string input)
         {
-            if (input.EndsWith(".txt"))
+            if (!input.Contains('.'))
             {
-                return input;
+                if (input.EndsWith(".txt"))
+                {
+                    return input;
+                }
+                else
+                {
+                    return input + ".txt";
+                }
             }
             else
             {
-                return input + ".txt";
+                return input;
             }
         }
 

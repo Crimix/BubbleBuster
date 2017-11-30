@@ -42,9 +42,8 @@ namespace BubbleBuster.WordUpdater
 
             foreach (PolUserObj polUser in userList)
             {
-                //List<Tweet> tweetList = TweetRetriever.Instance.GetTweetsFromUser(polUser.twitterId, apiKey);
-                
-                List<Tweet> tweetList = new WebHandler(null).MakeRequest<List<Tweet>>(null, "Bearer AAAAAAAAAAAAAAAAAAAAAPRw2QAAAAAAsXqGsVRPgYFVjSScMX3ZVa9YifA%3DkPvipEcLJj3QooYO7aVke3vZ9ruSJp9CgkTlKKtvlmSsGqLUdG");
+                List<Tweet> tweetList = TweetRetriever.Instance.GetTweetsFromUser(polUser.twitterId, apiKey);
+
                 returnObj.Add(polUser, tweetList);
             }
 
