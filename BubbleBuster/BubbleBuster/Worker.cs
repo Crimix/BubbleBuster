@@ -20,8 +20,8 @@ namespace BubbleBuster
             AuthObj apiKey = twitterApiKey;
 
             //Sets the limits such that we do not exceed the limits
-            LimitHelper.Instance(apiKey).SetLimit(new WebHandler(apiKey).MakeRequest<Limit>(RequestBuilder.BuildStartupRequest()));
-            User user = new WebHandler(apiKey).MakeRequest<User>(RequestBuilder.BuildRequest(DataType.user, apiKey, "screen_name=" + username)); //Used for getting the users political value
+            LimitHelper.Instance(apiKey).SetLimit(new WebHandler(apiKey).MakeRequest<Limit>(TwitterRequestBuilder.BuildStartupRequest()));
+            User user = new WebHandler(apiKey).MakeRequest<User>(TwitterRequestBuilder.BuildRequest(DataType.user, apiKey, "screen_name=" + username)); //Used for getting the users political value
 
             var userTweets = TweetRetriever.Instance.GetTweetsFromUser(user.Id, apiKey); 
             var friends = FriendsRetriever.Instance.GetFriends(username,apiKey);

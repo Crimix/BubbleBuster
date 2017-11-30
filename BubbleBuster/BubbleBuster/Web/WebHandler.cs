@@ -14,23 +14,32 @@ namespace BubbleBuster.Web
     {
         private AuthObj auth;
 
-        public WebHandler(AuthObj auth) : base()
+        public WebHandler(AuthObj auth)
         {
             this.auth = auth;
+            ServicePointManager.DefaultConnectionLimit = 4; //Because at normal operation at most 4 threads should be running
         }
 
-        private WebHandler()
+        public string MakeRequest(UrlObject requestObject, string apiKey)
         {
-            ServicePointManager.DefaultConnectionLimit = 4; //Because at normal operation at most 4 threads should be running
+            string res = "";
+            GetRequestBody(requestObject, apiKey, ref res);
+            return res;
         }
 
         public string MakeRequest(UrlObject requestObject)
         {
             string res = "";
             string authHeader = OAuthHelper.Instance.BuildAuthHeader(OAuthHelper.DataType.GET, auth.RequesterName, auth.OAuthToken, auth.OAuthTokenSecret, requestObject.BaseUrl, requestObject.Params);
+            GetRequestBody(requestObject, authHeader, ref res);
+            return res;
+        }
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestObject.Url);
-            request.Headers[HttpRequestHeader.Authorization] = authHeader;
+        private bool GetRequestBody(string requestString, object auth, ref string result)
+        {
+            bool res = false;
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestString);
+            request.Headers[HttpRequestHeader.Authorization] = auth.ToString();
             request.UserAgent = Constants.USER_AGENT;
             request.Method = "GET";
             request.Timeout = 1800000;
@@ -53,12 +62,13 @@ namespace BubbleBuster.Web
 
                 try
                 {
-                    res = readStream.ReadToEnd();
+                    result = readStream.ReadToEnd();
+                    res = true;
                 }
                 catch (IOException)
                 {
                 }
-                                    
+
                 response.Close();
                 readStream.Close();
             }
@@ -66,7 +76,22 @@ namespace BubbleBuster.Web
             return res;
         }
 
+        private bool GetRequestBody(UrlObject requestObject, object auth, ref string result)
+        {
+            return GetRequestBody(requestObject.Url, auth, ref result);
+        }
+
+        public T MakeRequest<T>(UrlObject requestObject,string apiKey) where T : new()
+        {
+            return GetRequestBody<T>(requestObject, (()=> MakeRequest(requestObject, apiKey)));
+        }
+
         public T MakeRequest<T>(UrlObject requestObject) where T : new()
+        {
+            return GetRequestBody<T>(requestObject, (() => MakeRequest(requestObject)));
+        }
+
+        private T GetRequestBody<T>(UrlObject requestObject, Func<String> func) where T : new()
         {
             T res = default(T);
 
@@ -74,20 +99,23 @@ namespace BubbleBuster.Web
             {
                 res = new T();
             }
-            
+
             T tempRes = default(T);
 
             try
             {
-                string data = MakeRequest(requestObject);
+                string data = func();
                 tempRes = JsonConvert.DeserializeObject<T>(data);
             }
             catch (JsonException e)
             {
-                Console.WriteLine(e.Message);
+                lock (Log.LOCK)
+                {
+                    Log.Info(e.Message);
+                }
             }
 
-            if(tempRes != null)
+            if (tempRes != null)
             {
                 res = tempRes;
             }
@@ -98,43 +126,18 @@ namespace BubbleBuster.Web
         public bool DBGetRequest(string requestString, ref int result, params string[] parameters)
         {
             bool res = false;
+            string tempResult = "";
             foreach (var item in parameters)
             {
                 requestString += item + "&";
             }
             requestString = requestString.Trim('&');
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestString);
-            request.Headers[HttpRequestHeader.Authorization] = "Bearer " + Constants.DB_CREDS;
-            request.Method = "Get";
-            request.Timeout = 1800000;
 
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-            if (response.StatusCode == HttpStatusCode.OK)
+            if(GetRequestBody(requestString, "Bearer " + Constants.DB_CREDS, ref tempResult))
             {
-                Stream receiveStream = response.GetResponseStream();
-                StreamReader readStream = null;
-
-                if (response.CharacterSet == null)
-                {
-                    readStream = new StreamReader(receiveStream);
-                }
-                else
-                {
-                    readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
-                }
-
-                try
-                {
-                    result = Convert.ToInt32(readStream.ReadToEnd());
-                    res = true;
-                }
-                catch (IOException)
-                {
-                }
-
-                response.Close();
-                readStream.Close();
+                res = true;
+                result = Convert.ToInt32(tempResult);
             }
             return res;
         }

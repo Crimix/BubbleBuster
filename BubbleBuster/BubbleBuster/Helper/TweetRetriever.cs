@@ -103,7 +103,7 @@ namespace BubbleBuster.Helper
 
         private List<Tweet> TweetThreadMethod(User user, AuthObj apiKey)
         {
-            List<Tweet> temp = GetUserTweets(user, apiKey);
+            List<Tweet> temp = RetriveTweets(user, apiKey);
             lock (Log.LOCK)
             {
                 if (user.IsProtected)
@@ -121,7 +121,7 @@ namespace BubbleBuster.Helper
             return temp;
         }
 
-        private List<Tweet> GetUserTweets(User user, AuthObj apiKey)
+        private List<Tweet> RetriveTweets(User user, AuthObj apiKey)
         {
             List<Tweet> tweetList = new List<Tweet>();
             List<Tweet> tempList = new List<Tweet>();
@@ -129,7 +129,7 @@ namespace BubbleBuster.Helper
             if (!user.IsProtected)
             {
                 long lastTweetID = 0;
-                tempList.AddRange(new WebHandler(apiKey).MakeRequest<List<Tweet>>(RequestBuilder.BuildRequest(DataType.tweets, apiKey, "user_id=" + user.Id, "count=200")));
+                tempList.AddRange(new WebHandler(apiKey).MakeRequest<List<Tweet>>(TwitterRequestBuilder.BuildRequest(DataType.tweets, apiKey, "user_id=" + user.Id, "count=200")));
                 if (tempList.Count != 0)
                 {
                     lastTweetID = tempList.ElementAt(tempList.Count - 1).Id;
@@ -137,7 +137,7 @@ namespace BubbleBuster.Helper
 
                     while (tweetList.Count < Constants.TWEETS_TO_RETRIEVE)
                     {
-                        tempList.AddRange(new WebHandler(apiKey).MakeRequest<List<Tweet>>(RequestBuilder.BuildRequest(DataType.tweets, apiKey, "user_id=" + user.Id, "count=200", "max_id=" + lastTweetID)));
+                        tempList.AddRange(new WebHandler(apiKey).MakeRequest<List<Tweet>>(TwitterRequestBuilder.BuildRequest(DataType.tweets, apiKey, "user_id=" + user.Id, "count=200", "max_id=" + lastTweetID)));
 
                         if (tempList.Count == 0 || tempList.ElementAt(tempList.Count - 1).Id == lastTweetID)
                         {

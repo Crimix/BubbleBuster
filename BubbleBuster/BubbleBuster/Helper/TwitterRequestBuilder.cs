@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace BubbleBuster
 {
-    public enum DataType { friendsId, friendsObj, tweets, limit, user, database }; //Expand based on what data is needed
+    public enum DataType { friendsId, friendsObj, tweets, limit, user }; //Expand based on what data is needed
 
-    public static class RequestBuilder
+    public static class TwitterRequestBuilder
     {
         private static string baseUrl = "https://api.twitter.com/1.1/";
 
@@ -92,9 +92,6 @@ namespace BubbleBuster
                 case DataType.user:
                     returnObject.BaseUrl += baseUrl + "users/show.json";
                     returnObject.Url += returnObject.BaseUrl + "?";
-                    break;
-                case DataType.database:
-                    returnObject.Url += "http://localhost:8000/api/twitter/?";
                     break;
                 default:
                     break;

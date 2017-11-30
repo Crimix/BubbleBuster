@@ -86,8 +86,6 @@ namespace BubbleBuster.Helper
                     return (0 + Constants.REMAINING_OFFSET) < LimitCallsRemaining;
                 case DataType.user:
                     return (0 + Constants.REMAINING_OFFSET) < UserCallsRemaining;
-                case DataType.database:
-                    return true;
                 default:
                     return false;
             }
