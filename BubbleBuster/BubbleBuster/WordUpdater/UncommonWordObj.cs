@@ -37,5 +37,8 @@ namespace BubbleBuster.WordUpdater
         public int RightNeuCount { get; set; }
         public int CenterNeuCount { get; set; }
 
+        public int Count { get { return LeftNegCount + LeftNeuCount + LeftPosCount + CenterNegCount + CenterNeuCount 
+                    + CenterPosCount + RightNegCount + RightNeuCount + RightPosCount; } }
+
     }
 }
