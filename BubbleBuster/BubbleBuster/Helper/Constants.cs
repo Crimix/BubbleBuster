@@ -10,7 +10,7 @@ namespace BubbleBuster.Helper
     {
         public const int REMAINING_OFFSET = 5;
         public const string USER_AGENT = "FilterBubble_SW709";
-        public const int TWEETS_TO_RETRIEVE = 400;
+        public const int TWEETS_TO_RETRIEVE = 3200;
         private static string PROGRAM_DATA = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
 
         //Auth string for DB server on Christoffer's pc

@@ -9,6 +9,7 @@ using System.Windows;
 using BubbleBuster;
 using BubbleBuster.Web.ReturnedObjects;
 using BubbleBuster.Helper;
+using BubbleBuster.Helper.Objects;
 using BubbleBuster.Web.ReturnedObjects.RateLimit;
 using BubbleBuster.Web;
 using BubbleBuster.WordUpdater;
@@ -76,7 +77,7 @@ namespace BubbleBuster
             FileHelper.WriteObjectToFile("abc", a.Name, tweetList);
             */
 
-            /*List<PolUserObj> polusers = new List<PolUserObj>();
+            List<PolUserObj> polusers = new List<PolUserObj>();
             polusers.Add(new PolUserObj(61734492, -1)); //fahrenthold, leftwing
             polusers.Add(new PolUserObj(15893354, -1)); //wpjenna
             polusers.Add(new PolUserObj(15689503, -1)); //cbellatoni
@@ -104,7 +105,9 @@ namespace BubbleBuster
             polusers.Add(new PolUserObj(65493023, 1)); //sarahpalinUSA
             polusers.Add(new PolUserObj(17454769, 1)); //glennbeck
             polusers.Add(new PolUserObj(17980523, 1)); //mitchellvii
-            WordWorker.Instance.UpdateWords(polusers);*/
+
+            
+            WordWorker.Instance.UpdateWords(polusers, );
 
 
 
