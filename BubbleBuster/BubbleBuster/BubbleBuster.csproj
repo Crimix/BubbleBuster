@@ -79,9 +79,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GUI\UserControl1.xaml.cs">
-      <DependentUpon>UserControl1.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Helper\Classifier.cs" />
     <Compile Include="Helper\Constants.cs" />
     <Compile Include="Helper\FileHelper.cs" />
@@ -126,12 +123,6 @@
       <Project>{5266299d-25e8-4775-8241-669c46f3a074}</Project>
       <Name>TextProcessorLib</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="GUI\UserControl1.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />

@@ -12,7 +12,7 @@ using TextProcesserLib;
 
 namespace BubbleBuster.Helper
 {
-    class Classifier
+    public class Classifier
     {
         BagOfWords bagOfWords;
         TextProcessor tp;
