@@ -111,15 +111,19 @@ namespace BubbleBuster
             polusers.Add(new PolUserObj(17980523, 1)); //mitchellvii    (
 
             Console.WriteLine("Begin Retrieving: " + DateTime.Now);
-            AuthObj authobj = new AuthObj("");
-            var userTweets = TweetRetriever.Instance.GetTweetsFromUser(user.Id, apiKey);
-            var friends = FriendsRetriever.Instance.GetFriends(username, apiKey);
+            AuthObj apiKey = new AuthObj();
+            var userTweets = TweetRetriever.Instance.GetTweetsFromUser(25073877, apiKey);
+            var friends = FriendsRetriever.Instance.GetFriends("realDonaldTrump", apiKey);
             Log.Info("Following " + friends.Users.Count + "users");
+
+            Dictionary<Tweet, string> asf = new Dictionary<Tweet, string>();
+
+            //List<Tweet> ageg = asf.Keys;
 
             List<Tweet> filterBubble = TweetRetriever.Instance.GetTweetsFromFriends(friends, apiKey);
 
             Console.WriteLine("Begin Analyzing: " + DateTime.Now);
-            double[] output = TweetAnalyzer.Instance.AnalyzeAndDecorateTweets(tweetList);
+            double[] output = TweetAnalyzer.Instance.AnalyzeAndDecorateTweets(filterBubble);
 
             Console.WriteLine("Done: " + DateTime.Now);
             /*Classifier classifier = new Classifier();
