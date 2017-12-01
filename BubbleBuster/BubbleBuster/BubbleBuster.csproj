@@ -84,6 +84,7 @@
     <Compile Include="Helper\FileHelper.cs" />
     <Compile Include="Helper\FriendsRetriever.cs" />
     <Compile Include="Helper\OAuthHelper.cs" />
+    <Compile Include="Helper\Objects\AnalysisResultObj.cs" />
     <Compile Include="Helper\Objects\AuthObj.cs" />
     <Compile Include="Helper\Objects\HashtagObj.cs" />
     <Compile Include="Helper\LimitHelper.cs" />
