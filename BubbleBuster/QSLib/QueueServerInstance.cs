@@ -26,17 +26,17 @@ namespace QSLib
         }
 
         Queue<TwitterAcc> nonAddedRequests = new Queue<TwitterAcc>(); //Requests from the browser goes into here
-        public async void TaskQueue()
+        public async void TaskQueue() //The main function of the queue server
         {
             const int TASKLIMIT = 5;
             Log.Info("test");
             Queue<Task> taskQueue = new Queue<Task>(); //Queue of tasks that are not started yet
             List<Task> runningTasksList = new List<Task>(); //List of currently running tasks.
-            while (true)
+            while (true) //runs for as long as the server is up.
             {
                 while (ThereIsNewTask())
                 {
-                    if (nonAddedRequests.Count > 0) // Adds all requests to the queue
+                    if (nonAddedRequests.Count > 0) // Adds all requests to the queue as tasks.
                     {
                         TwitterAcc input = nonAddedRequests.Peek();
 
@@ -63,7 +63,8 @@ namespace QSLib
                 }
                 if(runningTasksList.Count > 0) // If any tasks are running, it removes the completed ones from the list.
                 {
-                    List<Task> runningTasksListInstance = runningTasksList;
+                    List<Task> runningTasksListInstance = new List<Task>();
+                    runningTasksListInstance.AddRange(runningTasksList);
                     foreach (var task in runningTasksListInstance) //ToDo Fik en exception her, omkring samling blev ændret
                     {
                         if (task.IsCompleted)
@@ -71,7 +72,6 @@ namespace QSLib
                             runningTasksList.Remove(task);
                         }
                     }
-                    //runningTasksList.RemoveAt(Task.WaitAny(runningTasksList.ToArray()));
                 }
             }
         }
@@ -100,10 +100,10 @@ namespace QSLib
 
             try
             {
-                //If the twitter acc does not exist or any of the two keys does not contain proper information
+                //If the twitter account does not exist or if any of the two keys do not contain proper information, it can not be added.
                 if (tAcc == null || (String.IsNullOrWhiteSpace(tAcc.Name) || String.IsNullOrWhiteSpace(tAcc.Token) || String.IsNullOrWhiteSpace(tAcc.Secret)))
                 {
-                    return false; //It can not be added so fail
+                    return false;
                 }
                 nonAddedRequests.Enqueue(tAcc);
             }
