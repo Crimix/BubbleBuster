@@ -8,45 +8,77 @@ namespace BubbleBuster.Helper.Objects
 {
     public class AuthObj
     {
+        //To tell which type of auth it is
         public enum AuthType { User, App };
 
-        public AuthObj(string OAuthToken, string OAuthTokenSecret, string Name, string RequesterName)
+        /// <summary>
+        /// Creates an user auth object.
+        /// </summary>
+        /// <param name="OAuthToken">The user's OAuthToken</param>
+        /// <param name="OAuthTokenSecret">The user's OAuthTokenSecret</param>
+        /// <param name="Name">The user's name</param>
+        public AuthObj(string OAuthToken, string OAuthTokenSecret, string Name)
         {
-            UUID = Guid.NewGuid();
+            UID = Guid.NewGuid();
             this.OAuthToken = OAuthToken;
             this.OAuthTokenSecret = OAuthTokenSecret;
             this.Name = Name;
-            this.RequesterName = RequesterName;
             Type = AuthType.User;
         }
 
+        /// <summary>
+        /// Creates an app auth object.
+        /// Has Optional parameter.
+        /// </summary>
+        /// <param name="apiKey">The api key. OPTIONAL</param>
         public AuthObj(string apiKey = Constants.APP_API_CREDS)
         {
-            UUID = Guid.NewGuid();
+            UID = Guid.NewGuid();
             APIKey = apiKey;
-            RequesterName = "FilterBubble_SW709";
+            Name = "FilterBubble_SW709";
             Type = AuthType.App;
         }
 
+        /// <summary>
+        /// The API key, only used when AuthType = App
+        /// </summary>
         public string APIKey { get; private set; }
 
+        /// <summary>
+        /// The auth type
+        /// </summary>
         public AuthType Type { get; private set; }
 
-        public Guid UUID { get; private set; }
+        /// <summary>
+        /// The unique id of this auth object
+        /// </summary>
+        public Guid UID { get; private set; }
 
+        /// <summary>
+        /// The name of the user
+        /// </summary>
         public string Name { get; private set; }
 
-        public string RequesterName { get; private set; }
-
+        /// <summary>
+        /// The OAuthToken
+        /// </summary>
         public string OAuthToken { get; private set; }
 
+        /// <summary>
+        /// The OAuthTokenSecret
+        /// </summary>
         public string OAuthTokenSecret { get; private set; }
 
+        /// <summary>
+        /// Overridden, such that it uses the UID to compare objects 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             if(obj is AuthObj)
             {
-                return (obj as AuthObj).UUID == this.UUID;
+                return (obj as AuthObj).UID == this.UID;
             }
             else
             {
@@ -54,9 +86,13 @@ namespace BubbleBuster.Helper.Objects
             }
         }
 
+        /// <summary>
+        /// Overridden, such that it uses the hashcode of the UID
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
-            return UUID.GetHashCode();
+            return UID.GetHashCode();
         }
     }
 }

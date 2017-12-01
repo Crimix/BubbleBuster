@@ -45,7 +45,7 @@ namespace BubbleBuster.Helper
         /// <param name="classifyAlgorithm">The algorithm to classify tweets</param>
         /// <param name="classifyBayes">The naive bayes network to classify tweets</param>
         /// <param name="post">The method to post the result to the database</param>
-        public void GetTweetsFromUserAndAnalyse(User user, AuthObj auth, Func<User, bool> get, Func<List<Tweet>, double> classifyAlgorithm, Func<List<Tweet>, double> classifyBayes, Func<double, bool> post)
+        public void GetTweetsFromUserAndAnalyse(User user, AuthObj auth, Func<User, bool> get, Func<List<Tweet>, AnalysisResultObj> classifyAlgorithm, Func<List<Tweet>, double> classifyBayes, Func<AnalysisResultObj, bool> post)
         {
             GetTweetsFromUserHelper(user, auth, (() => TweetThreadMethod(user, auth, get, classifyAlgorithm, classifyBayes, post)));
         }
@@ -90,7 +90,7 @@ namespace BubbleBuster.Helper
         /// <param name="classifyAlgorithm">The algorithm to classify tweets</param>
         /// <param name="classifyBayes">The naive bayes network to classify tweets</param>
         /// <param name="post">The method to post the result to the database</param>
-        public void GetTweetsFromFriendsAndAnalyse(Friends friends, AuthObj auth, Func<User, bool> get, Func<List<Tweet>, double> classifyAlgorithm, Func<List<Tweet>, double> classifyBayes, Func<double, bool> post)
+        public void GetTweetsFromFriendsAndAnalyse(Friends friends, AuthObj auth, Func<User, bool> get, Func<List<Tweet>, AnalysisResultObj> classifyAlgorithm, Func<List<Tweet>, double> classifyBayes, Func<AnalysisResultObj, bool> post)
         {
             GetTweetsFromFriendsHelper(friends, auth, ((x) => TweetThreadMethod(x, auth, get, classifyAlgorithm, classifyBayes, post)));
         }
@@ -181,10 +181,10 @@ namespace BubbleBuster.Helper
         /// <param name="classifyBayes">The naive bayes network to classify tweets</param>
         /// <param name="post">The method to post the result to the database</param>
         /// <returns>A list of tweets </returns>
-        private List<Tweet> TweetThreadMethod(User user, AuthObj auth, Func<User,bool> get = null, Func<List<Tweet>, double> classifyAlgorithm = null, Func<List<Tweet>, double> classifyBayes = null, Func<double, bool> post = null)
+        private List<Tweet> TweetThreadMethod(User user, AuthObj auth, Func<User,bool> get = null, Func<List<Tweet>, AnalysisResultObj> classifyAlgorithm = null, Func<List<Tweet>, double> classifyBayes = null, Func<AnalysisResultObj, bool> post = null)
         {
             bool alreadyExist = false;
-            double tempResult = 0;
+            AnalysisResultObj tempResult = new AnalysisResultObj();
             List<Tweet> temp = new List<Tweet>();
             if (get != null)
             {

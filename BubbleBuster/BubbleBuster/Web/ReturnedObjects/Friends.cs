@@ -9,6 +9,11 @@ namespace BubbleBuster.Web.ReturnedObjects
 {
     public class Friends
     {
+        public Friends()
+        {
+            Users = new List<User>();
+        }
+
         [JsonProperty("users")]
         public List<User> Users { get; set; }
 

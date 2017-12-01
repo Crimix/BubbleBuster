@@ -26,7 +26,7 @@ namespace BubbleBuster.Web
             string authHeader = "";
             if (auth.Type == AuthObj.AuthType.User)
             {
-                authHeader = OAuthHelper.Instance.BuildAuthHeader(OAuthHelper.DataType.GET, auth.RequesterName, auth.OAuthToken, auth.OAuthTokenSecret, requestObject.BaseUrl, requestObject.Params);
+                authHeader = OAuthHelper.Instance.BuildAuthHeader(OAuthHelper.DataType.GET, auth.Name, auth.OAuthToken, auth.OAuthTokenSecret, requestObject.BaseUrl, requestObject.Params);
             }
             else if (auth.Type == AuthObj.AuthType.App)
             {

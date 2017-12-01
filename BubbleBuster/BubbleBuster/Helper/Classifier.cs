@@ -14,8 +14,8 @@ namespace BubbleBuster.Helper
 {
     public class Classifier
     {
-        BagOfWords bagOfWords;
-        TextProcessor tp;
+        private BagOfWords bagOfWords;
+        private TextProcessor tp;
 
         public Classifier()
         {

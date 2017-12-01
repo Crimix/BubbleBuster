@@ -14,20 +14,17 @@ namespace BubbleBuster
 {
     public class Worker
     {
-        public Worker (AuthObj twitterApiKey, string twitterName) //Executes the task parsed by the ServerTask class
+        public Worker (AuthObj auth, string twitterName) //Executes the task parsed by the ServerTask class
         {
-            string username = twitterName;
-            AuthObj apiKey = twitterApiKey;
-
             //Sets the limits such that we do not exceed the limits
-            LimitHelper.Instance(apiKey).SetLimit(new WebHandler(apiKey).MakeRequest<Limit>(TwitterRequestBuilder.BuildStartupRequest()));
-            User user = new WebHandler(apiKey).MakeRequest<User>(TwitterRequestBuilder.BuildRequest(DataType.user, apiKey, "screen_name=" + username)); //Used for getting the users political value
+            LimitHelper.Instance(auth).SetLimit(new WebHandler(auth).MakeRequest<Limit>(TwitterRequestBuilder.BuildStartupRequest()));
+            User user = new WebHandler(auth).MakeRequest<User>(TwitterRequestBuilder.BuildRequest(DataType.user, auth, "screen_name=" + twitterName)); //Used for getting the users political value
 
-            var userTweets = TweetRetriever.Instance.GetTweetsFromUser(user.Id, apiKey); 
-            var friends = FriendsRetriever.Instance.GetFriends(username,apiKey);
+            var userTweets = TweetRetriever.Instance.GetTweetsFromUser(user, auth); 
+            var friends = FriendsRetriever.Instance.GetFriends(user, auth);
             Log.Info("Following " + friends.Users.Count + "users");
 
-            List<Tweet> filterBubble = TweetRetriever.Instance.GetTweetsFromFriends(friends,apiKey);
+            List<Tweet> filterBubble = TweetRetriever.Instance.GetTweetsFromFriends(friends, auth);
             FileHelper.WriteObjectToFile("multTweets", filterBubble);
 
             Classifier c = new Classifier();
