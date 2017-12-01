@@ -59,11 +59,11 @@ namespace BubbleBuster.Helper
         /// </summary>
         /// <param name="tweetList"></param>
         /// <returns></returns>
-        public double[] AnalyzeAndDecorateTweetsThreaded(List<Tweet> tweetList)
+        public AnalysisResultObj AnalyzeAndDecorateTweetsThreaded(List<Tweet> tweetList)
         {
             Log.Info("Spliting " + tweetList.Count + " tweets");
             int tweets = tweetList.Count;
-            List<Task<double[]>> tasks = new List<Task<double[]>>();
+            List<Task<AnalysisResultObj>> tasks = new List<Task<AnalysisResultObj>>();
             var copyTweetList = tweetList;
             int e = tweetList.Count / Constants.TWEET_LIST_AMOUNT;
             List<List<Tweet>> splittedList = new List<List<Tweet>>();
@@ -87,27 +87,26 @@ namespace BubbleBuster.Helper
             //Starts the tasks
             foreach (var item in splittedList)
             {
-                Task<double[]> t = new Task<double[]>(() => AnalyzeAndDecorateTweets(item));
+                Task<AnalysisResultObj> t = new Task<AnalysisResultObj>(() => AnalyzeAndDecorateTweets(item));
                 t.Start();
                 tasks.Add(t);
             }
 
             Task.WaitAll(tasks.ToArray());
-            double[] res = { 0.0, 0.0, 0.0, 0.0, 0.0 };
+            AnalysisResultObj res = new AnalysisResultObj();
 
             //Combines the result 
             foreach (var task in tasks)
             {
-                res[0] += task.Result[0];
-                res[1] += task.Result[1];
-                res[2] += task.Result[2];
-                res[3] += task.Result[3];
-                res[4] += task.Result[4];
+                res.KeywordBias += task.Result.KeywordBias;
+                res.MediaBias += task.Result.MediaBias;
+                res.Count = task.Result.Count;
+                res.NegativeSentiment += task.Result.NegativeSentiment;
+                res.PositiveSentiment += task.Result.PositiveSentiment;
             }
             Log.Info("Combining tweets");
-            Log.Info("Res " + (res[0] + res[1]));
+            Log.Info("Res " + res.GetAlgorithmResult);
             
-
             return res;
         }
 
@@ -122,39 +121,9 @@ namespace BubbleBuster.Helper
         /// </summary>
         /// <param name="tweetList"></param>
         /// <returns></returns>
-        public double[] AnalyzeAndDecorateTweets(List<Tweet> tweetList)
+        public AnalysisResultObj AnalyzeAndDecorateTweets(List<Tweet> tweetList)
         {
-            //double conclusion = 0; //Higher value means more right leaning. Lower value means more left leaning.
-            double[] output = DoEverything(tweetList); //hashtag, media, count, pos, neg
-                                                       /*
-                                                       List<Tweet> returnList = tweetList;
-
-
-
-                                                       returnList = CalculateSentiment(returnList);        //Calculate the sentiment of each tweet. Positive/negative sentiment.
-                                                       returnList = CalculateHashtagSentiment(returnList); //Calculate a political value based on key-words and sentimental context. E.g. "Hate Trump": Negative sentiment, Trump-keyword.
-                                                       returnList = CalculateUrlSentiment(returnList);     //
-
-                                                       */
-
-            //List<Tweet> returnList = DoEverything(tweetList);
-
-            /* foreach (Tweet tweet in returnList)
-             {
-                 output[0] += tweet.hashtagBias * Constants.HASHTAG_WEIGHT;
-                 output[1] += tweet.mediaBias * Constants.URL_WEIGHT;
-                 output[3] += tweet.negativeValue;
-                 output[4] += tweet.positiveValue;
-             }
-
-             output[2] = tweetList.Count;
-             */
-            return output;
-        }
-
-        private double[] DoEverything(List<Tweet> tweetList)
-        {
-            double[] output = { 0.0, 0.0, 0.0, 0.0, 0.0 }; //hashtag, media, count, pos, neg
+            AnalysisResultObj output = new AnalysisResultObj();
             List<Tweet> returnList = tweetList;
 
             foreach (Tweet tweet in returnList)
@@ -166,7 +135,7 @@ namespace BubbleBuster.Helper
                     var puncturation = tweet.Text.Where(Char.IsPunctuation).Distinct().ToArray();
                     List<String> wordList = tweet.Text.Split(' ').Select(x => x.Trim(puncturation)).ToList<String>();
 
-                    
+
                     foreach (string word in wordList)
                     {
                         //Sentiment Analysis
@@ -221,13 +190,16 @@ namespace BubbleBuster.Helper
                         }
                     }
 
-                    output[0] += tweet.hashtagBias * Constants.HASHTAG_WEIGHT;
-                    output[1] += tweet.mediaBias * Constants.URL_WEIGHT;
-                    output[2] = returnList.Count;
-                    output[3] += tweet.negativeValue;
-                    output[4] += tweet.positiveValue;
+                    output.KeywordBias += tweet.hashtagBias;
+                    output.MediaBias += tweet.mediaBias;
+                    output.Count = returnList.Count;
+                    output.NegativeSentiment += tweet.negativeValue;
+                    output.PositiveSentiment += tweet.positiveValue;
                 }
             }
+
+
+
             return output;
         }
 

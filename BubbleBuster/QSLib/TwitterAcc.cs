@@ -35,7 +35,6 @@ namespace QSLib
                 auth = new AuthObj(Token, Secret, Name, RequesterName);
                 return true;
             }
-
         }
 
         public string RequesterName { get; set; }

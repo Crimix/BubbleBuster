@@ -34,7 +34,5 @@ namespace RestQueueServer
         {
             QueueServerInstance.Instance.TaskQueue();
         }
-
-
     }
 }
