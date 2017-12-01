@@ -1,24 +1,26 @@
-﻿using System;
+﻿using BubbleBuster.Helper.Objects;
+using BubbleBuster.Web;
+using BubbleBuster.Web.ReturnedObjects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using BubbleBuster.Web.ReturnedObjects;
-using System.Threading;
-using BubbleBuster.Web;
-using BubbleBuster.Helper.Objects;
 
 namespace BubbleBuster.Helper
 {
     public class TweetRetriever
     {
-        private static TweetRetriever _instance;
-        private static int userTweetCount = 1;
+        private static TweetRetriever _instance; //Variable for the singleton instance
 
+        //To make it a singleton 
         private TweetRetriever()
         {
         }
 
+        /// <summary>
+        /// Method to get access to the TweetRetriever.
+        /// Is the only static method, because it is not possible to create an instance outside of this class
+        /// </summary>
         public static TweetRetriever Instance
         {
             get
@@ -31,20 +33,46 @@ namespace BubbleBuster.Helper
             }
         }
 
-        public void GetTweetsFromUserAndAnalyse(User user, AuthObj apiKey, Func<User, bool> get, Func<List<Tweet>, double> analyze, Func<double, bool> post)
+        /// <summary>
+        /// Get the tweets a user has posted, but does not return them, 
+        /// but only if the database does not contain a result.
+        /// It analyses the tweets using both our approaches.
+        /// Then uploads it to the database.
+        /// </summary>
+        /// <param name="user">The user</param>
+        /// <param name="auth">The auth object</param>
+        /// <param name="get">The method to check the database for previous results</param>
+        /// <param name="classifyAlgorithm">The algorithm to classify tweets</param>
+        /// <param name="classifyBayes">The naive bayes network to classify tweets</param>
+        /// <param name="post">The method to post the result to the database</param>
+        public void GetTweetsFromUserAndAnalyse(User user, AuthObj auth, Func<User, bool> get, Func<List<Tweet>, AnalysisResultObj> classifyAlgorithm, Func<List<Tweet>, double> classifyBayes, Func<AnalysisResultObj, bool> post)
         {
-            GetTweetsFromUserHelper(user, apiKey, (() => TweetThreadMethod(user, apiKey, get, analyze, post)));
+            GetTweetsFromUserHelper(user, auth, (() => TweetThreadMethod(user, auth, get, classifyAlgorithm, classifyBayes, post)));
         }
 
-        public List<Tweet> GetTweetsFromUser(User user, AuthObj apiKey)
+        /// <summary>
+        /// Get the tweets a user has posted, but does nothing to them.
+        /// Kept for legacy purposes
+        /// </summary>
+        /// <param name="user">The user</param>
+        /// <param name="auth">The auth object</param>
+        /// <returns>A list of tweets a user has posted</returns>
+        public List<Tweet> GetTweetsFromUser(User user, AuthObj auth)
         {
-            return GetTweetsFromUserHelper(user, apiKey, (() => TweetThreadMethod(user, apiKey)));
+            return GetTweetsFromUserHelper(user, auth, (() => TweetThreadMethod(user, auth)));
         }
 
-        private List<Tweet> GetTweetsFromUserHelper(User user, AuthObj apiKey, Func<List<Tweet>> threadedMethod)
+        /// <summary>
+        /// Helper method, that is used by both GetTweetsFromUser and GetTweetsFromUserAndAnalyse
+        /// </summary>
+        /// <param name="user">The user</param>
+        /// <param name="auth">The auth object</param>
+        /// <param name="retrieveMethod">Method to retrieve the tweets</param>
+        /// <returns>A list of tweets a user has posted</returns>
+        private List<Tweet> GetTweetsFromUserHelper(User user, AuthObj auth, Func<List<Tweet>> retrieveMethod)
         {
             List<Tweet> tweetList = new List<Tweet>();
-            Task<List<Tweet>> task = new Task<List<Tweet>>(() => threadedMethod());
+            Task<List<Tweet>> task = new Task<List<Tweet>>(() => retrieveMethod());
             task.Start();
             task.Wait();
             tweetList.AddRange(task.Result);
@@ -52,66 +80,51 @@ namespace BubbleBuster.Helper
             return tweetList;
         }
 
-        public void GetTweetsFromFriendsAndAnalyse(Friends friends, AuthObj apiKey, Func<User, bool> get, Func<List<Tweet>, double> analyze, Func<double, bool> post)
+        /// <summary>
+        /// Gets and analyses the tweets from each of the friends.
+        /// In the same way that GetTweetsFromUserAndAnalyse does.
+        /// </summary>
+        /// <param name="friends">The friends of an user </param>
+        /// <param name="auth">The auth object</param>
+        /// <param name="get">The method to check the database for previous results</param>
+        /// <param name="classifyAlgorithm">The algorithm to classify tweets</param>
+        /// <param name="classifyBayes">The naive bayes network to classify tweets</param>
+        /// <param name="post">The method to post the result to the database</param>
+        public void GetTweetsFromFriendsAndAnalyse(Friends friends, AuthObj auth, Func<User, bool> get, Func<List<Tweet>, AnalysisResultObj> classifyAlgorithm, Func<List<Tweet>, double> classifyBayes, Func<AnalysisResultObj, bool> post)
         {
-            List<Task<List<Tweet>>> runningTasks = new List<Task<List<Tweet>>>();
-            List<Task<List<Tweet>>> taskList = new List<Task<List<Tweet>>>();
-            Queue<Task<List<Tweet>>> taskQueue = new Queue<Task<List<Tweet>>>();
-            Log.Info(String.Format("{0,5}: {1,-20} {2,-20} {3,-11}", "Count", "User name", "User id", "Tweet count"));
-
-            foreach (User user in friends.Users)
-            {
-                Task<List<Tweet>> task = new Task<List<Tweet>>(() => TweetThreadMethod(user, apiKey, get, analyze, post));
-                taskQueue.Enqueue(task);
-                task = null;
-            }
-
-            friends = null;
-
-            while (taskQueue.Count != 0)
-            {
-                if (taskList.Count < 3)
-                {
-                    for (int i = 0; i < 3; i++)
-                    {
-                        if (taskQueue.Count != 0)
-                        {
-                            var task = taskQueue.Dequeue();
-                            task.Start();
-                            runningTasks.Add(task);
-                            taskList.Add(task);
-                        }
-                    }
-                }
-                else
-                {
-                    int index = Task.WaitAny(runningTasks.ToArray(), -1);
-                    runningTasks.RemoveAt(index);
-                    var task = taskQueue.Dequeue();
-                    task.Start();
-                    runningTasks.Add(task);
-                    taskList.Add(task);
-                }
-            }
-            taskQueue = null;
-
-            Task.WaitAll(taskList.ToArray());
-
-            taskList = null;
-            runningTasks = null;
+            GetTweetsFromFriendsHelper(friends, auth, ((x) => TweetThreadMethod(x, auth, get, classifyAlgorithm, classifyBayes, post)));
         }
 
-        public List<Tweet> GetTweetsFromFriends(Friends friends, AuthObj apiKey)
+        /// <summary>
+        /// Gets the tweets from each of the friends.
+        /// Kept for legacy purposes.
+        /// </summary>
+        /// <param name="friends">The friends of an user </param>
+        /// <param name="auth">The auth object</param>
+        /// <returns>A list of tweets from the friends</returns>
+        public List<Tweet> GetTweetsFromFriends(Friends friends, AuthObj auth)
+        {
+            return GetTweetsFromFriendsHelper(friends, auth, ((x) => TweetThreadMethod(x, auth)));
+        }
+
+        /// <summary>
+        /// Helper method for both GetTweetsFromFriendsAndAnalyse and GetTweetsFromFriends.
+        /// </summary>
+        /// <param name="friends">The friends of an user </param>
+        /// <param name="auth">The auth object</param>
+        /// <param name="retrieveMethod">Method to retrieve the tweets</param>
+        /// <returns>A list of tweets from the friends</returns>
+        private List<Tweet> GetTweetsFromFriendsHelper(Friends friends, AuthObj apiKey, Func<User,List<Tweet>> retrieveMethod)
         {
             List<Tweet> tweetList = new List<Tweet>();
             List<Task<List<Tweet>>> runningTasks = new List<Task<List<Tweet>>>();
             List<Task<List<Tweet>>> taskList = new List<Task<List<Tweet>>>();
             Queue<Task<List<Tweet>>> taskQueue = new Queue<Task<List<Tweet>>>();
-            Log.Info(String.Format("{0,5}: {1,-20} {2,-20} {3,-11}", "Count", "User name", "User id", "Tweet count"));
+            Log.Info(String.Format("{1,-30} {2,-20} {3,-11}", "User name", "User id", "Tweet count"));
 
             foreach (User user in friends.Users)
             {
-                Task<List<Tweet>> task = new Task<List<Tweet>>(() => TweetThreadMethod(user, apiKey));
+                Task<List<Tweet>> task = new Task<List<Tweet>>(() => retrieveMethod(user));
                 taskQueue.Enqueue(task);
                 task = null;
             }
@@ -158,10 +171,20 @@ namespace BubbleBuster.Helper
             return tweetList;
         }
 
-        private List<Tweet> TweetThreadMethod(User user, AuthObj apiKey, Func<User,bool> get = null, Func<List<Tweet>, double> analyze = null, Func<double, bool> post = null)
+        /// <summary>
+        /// The threaded tweet retrieve method which is used in the task 
+        /// </summary>
+        /// <param name="user">The user</param>
+        /// <param name="auth">The auth object</param>
+        /// <param name="get">The method to check the database for previous results</param>
+        /// <param name="classifyAlgorithm">The algorithm to classify tweets</param>
+        /// <param name="classifyBayes">The naive bayes network to classify tweets</param>
+        /// <param name="post">The method to post the result to the database</param>
+        /// <returns>A list of tweets </returns>
+        private List<Tweet> TweetThreadMethod(User user, AuthObj auth, Func<User,bool> get = null, Func<List<Tweet>, AnalysisResultObj> classifyAlgorithm = null, Func<List<Tweet>, double> classifyBayes = null, Func<AnalysisResultObj, bool> post = null)
         {
             bool alreadyExist = false;
-            double tempResult = 0;
+            AnalysisResultObj tempResult = new AnalysisResultObj();
             List<Tweet> temp = new List<Tweet>();
             if (get != null)
             {
@@ -170,24 +193,22 @@ namespace BubbleBuster.Helper
 
             if (!alreadyExist)
             {
-                temp = RetriveTweets(user, apiKey);
+                temp = RetrieveTweets(user, auth);
                 lock (Log.LOCK)
                 {
                     if (user.IsProtected)
                     {
-                        Log.Info(String.Format("{0,5}: {1,-20} {2,-20} {3,-11}", userTweetCount, user.Name, user.Id, "Protected"));
+                        Log.Info(String.Format("{1,-30} {2,-20} {3,-11}", user.Name, user.Id, "Protected"));
                     }
                     else
                     {
-                        Log.Info(String.Format("{0,5}: {1,-20} {2,-20} {3,-11}", userTweetCount, user.Name, user.Id, temp.Count));
+                        Log.Info(String.Format("{1,-30} {2,-20} {3,-11}", user.Name, user.Id, temp.Count));
                     }
                 }
 
-                Interlocked.Increment(ref userTweetCount);
-
-                if (analyze != null && post != null)
+                if (classifyAlgorithm != null  && classifyBayes != null && post != null)
                 {
-                    tempResult = analyze(temp);
+                    tempResult = classifyAlgorithm(temp);
                     post(tempResult);
                     temp = new List<Tweet>();
                 }
@@ -196,7 +217,14 @@ namespace BubbleBuster.Helper
             return temp;
         }
 
-        private List<Tweet> RetriveTweets(User user, AuthObj apiKey)
+        /// <summary>
+        /// The method to retrieve tweets from a specific user.
+        /// This method can retrieve as few tweets as 200 or as many as the constant TWEETS_TO_RETRIEVE (max.  3200) 
+        /// </summary>
+        /// <param name="user">The user</param>
+        /// <param name="auth">The auth object</param>
+        /// <returns>A list of tweet posted by the user</returns>
+        private List<Tweet> RetrieveTweets(User user, AuthObj auth)
         {
             List<Tweet> tweetList = new List<Tweet>();
             List<Tweet> tempList = new List<Tweet>();
@@ -204,7 +232,7 @@ namespace BubbleBuster.Helper
             if (!user.IsProtected)
             {
                 long lastTweetID = 0;
-                tempList.AddRange(new WebHandler(apiKey).MakeRequest<List<Tweet>>(TwitterRequestBuilder.BuildRequest(DataType.tweets, apiKey, "user_id=" + user.Id, "count=200")));
+                tempList.AddRange(new WebHandler(auth).MakeRequest<List<Tweet>>(TwitterRequestBuilder.BuildRequest(DataType.tweets, auth, "user_id=" + user.Id, "count=200")));
                 if (tempList.Count != 0)
                 {
                     lastTweetID = tempList.ElementAt(tempList.Count - 1).Id;
@@ -212,7 +240,7 @@ namespace BubbleBuster.Helper
 
                     while (tweetList.Count < Constants.TWEETS_TO_RETRIEVE)
                     {
-                        tempList.AddRange(new WebHandler(apiKey).MakeRequest<List<Tweet>>(TwitterRequestBuilder.BuildRequest(DataType.tweets, apiKey, "user_id=" + user.Id, "count=200", "max_id=" + lastTweetID)));
+                        tempList.AddRange(new WebHandler(auth).MakeRequest<List<Tweet>>(TwitterRequestBuilder.BuildRequest(DataType.tweets, auth, "user_id=" + user.Id, "count=200", "max_id=" + lastTweetID)));
 
                         if (tempList.Count == 0 || tempList.ElementAt(tempList.Count - 1).Id == lastTweetID)
                         {

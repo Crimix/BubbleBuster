@@ -105,8 +105,8 @@ namespace BubbleBuster.Helper
                 res.PositiveSentiment += task.Result.PositiveSentiment;
             }
             Log.Info("Combining tweets");
-            Log.Info("Res " + res.GetAlgorithmResult);
-
+            Log.Info("Res " + res.GetAlgorithmResult());
+            
             return res;
         }
 
@@ -168,11 +168,11 @@ namespace BubbleBuster.Helper
                                 int sentiment = tweet.getSentiment();
 
                                 if (sentiment > 1)
-                                    tweet.hashtagBias += hashtagObj.pos;
+                                    tweet.hashtagBias += hashtagObj.Pos;
                                 else if (sentiment < -1)
-                                    tweet.hashtagBias += hashtagObj.neg;
+                                    tweet.hashtagBias += hashtagObj.Neg;
                                 else
-                                    tweet.hashtagBias += hashtagObj.bas;
+                                    tweet.hashtagBias += hashtagObj.Bas;
                             }
                         }
                     }

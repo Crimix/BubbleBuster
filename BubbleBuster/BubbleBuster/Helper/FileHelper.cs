@@ -10,18 +10,26 @@ using Accord.Statistics.Distributions.Univariate;
 
 namespace BubbleBuster.Helper
 {
+    //This class is static because it is only a helper class.
     public static class FileHelper
     {
-        static Dictionary<string, int> newsHyperlinks;
-        static Dictionary<string, HashtagObj> hashtags;
-        static Dictionary<string, int> analysisWords; //Value: -1=negativeWord, 1=positiveWord
-        static List<string> commonWords;
-        static string hyperlinkFilePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + "news_hyperlinks";
-        static string commonWordsFilePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + "commonWords";
-        static string posWordsFilePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + "positive-words";
-        static string negWordsFilePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + "negative-words";
-        static string hashtagsFilePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + "hashtags";
+        //Such that we do only need to read the file once
+        private static Dictionary<string, int> newsHyperlinks;
+        private static Dictionary<string, HashtagObj> hashtags;
+        private static Dictionary<string, int> analysisWords; //Value: -1=negativeWord, 1=positiveWord
+        private static List<string> commonWords;
 
+        //path variables
+        private static string hyperlinkFilePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + "news_hyperlinks";
+        private static string commonWordsFilePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + "commonWords";
+        private static string posWordsFilePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + "positive-words";
+        private static string negWordsFilePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + "negative-words";
+        private static string hashtagsFilePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + "hashtags";
+
+        /// <summary>
+        /// Gets the dictionary of hyperlinks and bias value
+        /// </summary>
+        /// <returns>A dictionary of hyperlinks and bias value</returns>
         public static Dictionary<string, int> GetHyperlinks()
         {
             if(newsHyperlinks != null)
@@ -46,7 +54,11 @@ namespace BubbleBuster.Helper
             
             return newsHyperlinks;
         }
-        
+
+        /// <summary>
+        /// Gets the dictionary of analysis words and if the word is positive or negative
+        /// /// </summary>
+        /// <returns>A dictionary of analysis words</returns>
         public static Dictionary<string, int> GetAnalysisWords()
         {
             if (analysisWords != null)
@@ -78,6 +90,10 @@ namespace BubbleBuster.Helper
             return analysisWords;
         }
 
+        /// <summary>
+        /// Gets the dictionary of hashtags
+        /// /// </summary>
+        /// <returns>A dictionary of hashtags</returns>
         public static Dictionary<string, HashtagObj> GetHashtags()
         {
             if (hashtags != null)
@@ -105,6 +121,9 @@ namespace BubbleBuster.Helper
             return hashtags;
         }
 
+        /// <summary>
+        /// Generates the directory structure
+        /// </summary>
         public static void GenerateDirectoryStructure()
         {
             if (!Directory.Exists(Constants.PROGRAM_DATA_FILEPATH))
@@ -113,6 +132,11 @@ namespace BubbleBuster.Helper
             }
         }
 
+        /// <summary>
+        /// Writes the string to the file
+        /// </summary>
+        /// <param name="fileName">The name of the file</param>
+        /// <param name="data">The data string</param>
         public static void WriteStringToFile(string fileName, string data)
         {
             fileName = CheckFileName(fileName);
@@ -121,6 +145,11 @@ namespace BubbleBuster.Helper
             File.WriteAllText(filePath, data);
         }
 
+        /// <summary>
+        /// Reads a file and returns the content as a string
+        /// </summary>
+        /// <param name="fileName">The name of the file</param>
+        /// <returns>A string</returns>
         public static string ReadStringFromFile(string fileName)
         {
             fileName = CheckFileName(fileName);
@@ -128,6 +157,11 @@ namespace BubbleBuster.Helper
             return File.ReadAllText(filePath);
         }
 
+        /// <summary>
+        /// Writes an object to the file
+        /// </summary>
+        /// <param name="fileName">The name of the file</param>
+        /// <param name="data">The data object</param>
         public static void WriteObjectToFile(string fileName, Object data)
         {
             fileName = CheckFileName(fileName);
@@ -137,13 +171,35 @@ namespace BubbleBuster.Helper
             data = null;
         }
 
+        /// <summary>
+        /// Reads a file and tries to deserialize it from Json to the type T
+        /// </summary>
+        /// <typeparam name="T">The type T</typeparam>
+        /// <param name="fileName">The name of the file</param>
+        /// <returns>An object of type T</returns>
         public static T ReadObjectFromFile<T>(string fileName)
         {
+            T obj = default(T);
             fileName = CheckFileName(fileName);
             string filePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + fileName;
-            return JsonConvert.DeserializeObject<T>(File.ReadAllText(filePath));
+            try
+            {
+                obj = JsonConvert.DeserializeObject<T>(File.ReadAllText(filePath));
+            }
+            catch (Exception)
+            {
+                Log.Error("Could not deserialize the file");
+            }
+            
+            return obj;
         }
 
+        /// <summary>
+        /// Reads a model from file
+        /// </summary>
+        /// <typeparam name="T">The type T</typeparam>
+        /// <param name="filename">The name of the file</param>
+        /// <returns>An object of type T</returns>
         public static T ReadModelFromFile<T>(string filename)
         {
             string filePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + filename;
@@ -152,18 +208,17 @@ namespace BubbleBuster.Helper
             return model;
         }
 
+        /// <summary>
+        /// Checks the name of the input file, if it does not contain a file extenstion, adds .txt to the end of it
+        /// and returns the strng
+        /// </summary>
+        /// <param name="input">The input name of the file</param>
+        /// <returns>A string</returns>
         private static string CheckFileName(string input)
         {
             if (!input.Contains('.'))
             {
-                if (input.EndsWith(".txt"))
-                {
-                    return input;
-                }
-                else
-                {
-                    return input + ".txt";
-                }
+                return input + ".txt";
             }
             else
             {
@@ -171,6 +226,10 @@ namespace BubbleBuster.Helper
             }
         }
 
+        /// <summary>
+        /// Returns a list of common words
+        /// </summary>
+        /// <returns>A list of common words</returns>
         public static List<string> GetCommonWords()
         {
             if (commonWords != null)

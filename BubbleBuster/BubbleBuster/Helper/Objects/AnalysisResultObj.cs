@@ -20,38 +20,41 @@ namespace BubbleBuster.Helper.Objects
         //Machine Learning
         public double MIResult { get; set; } = 0;
 
-        //Methods
-        public double GetSentiment
+
+        /// <summary>
+        /// Get the sentiment value
+        /// </summary>
+        /// <returns>A double</returns>
+        public double GetSentiment()
         {
-            get
-            {
-                if (Count != 0)
-                    return (PositiveSentiment + NegativeSentiment) / Count;
-                else
-                    return 0;
-            }
+            if (Count != 0)
+                return (PositiveSentiment + NegativeSentiment) / Count;
+            else
+                return 0;
         }
 
-        public double GetAlgorithmResult
+        /// <summary>
+        /// Get the algorithm result value
+        /// </summary>
+        /// <returns>A double</returns>
+        public double GetAlgorithmResult()
         {
-            get
-            {
-                if (Count != 0)
-                    return (KeywordBias + MediaBias) / Count;
-                else
-                    return 0;
-            }
+            if (Count != 0)
+                return (KeywordBias + MediaBias) / Count;
+            else
+                return 0;
         }
 
-        public double GetMIResult
+        /// <summary>
+        /// Get the Mi result value
+        /// </summary>
+        /// <returns>A double</returns>
+        public double GetMIResult()
         {
-            get
-            {
-                if (Count != 0)
-                    return MIResult / Count;
-                else
-                    return 0;
-            }
+            if (Count != 0)
+                return MIResult / Count;
+            else
+                return 0;
         }
     }
 }

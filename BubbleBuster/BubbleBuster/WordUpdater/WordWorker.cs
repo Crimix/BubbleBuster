@@ -42,7 +42,7 @@ namespace BubbleBuster.WordUpdater
 
             foreach (PolUserObj polUser in userList)
             {
-                List<Tweet> tweetList = TweetRetriever.Instance.GetTweetsFromUser(polUser.twitterId, apiKey);
+                List<Tweet> tweetList = TweetRetriever.Instance.GetTweetsFromUser(polUser.ToUser(), apiKey);
 
                 returnObj.Add(polUser, tweetList);
             }
@@ -96,7 +96,7 @@ namespace BubbleBuster.WordUpdater
                         returnObj.Add(word, new UncommonWordObj(word));
                     }
 
-                    switch (user.affiliation)
+                    switch (user.Affiliation)
                     {
                         case -1:
                             if(tempWordList[word] > 1)

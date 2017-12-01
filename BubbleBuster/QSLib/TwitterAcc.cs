@@ -12,7 +12,7 @@ namespace QSLib
         {
         }
 
-        public TwitterAcc (string Token, string Name, string RequesterName, string Secret)
+        public TwitterAcc (string Token, string Name, string Secret)
         {
             this.Token = Token;
             this.Name = Name;
@@ -24,20 +24,17 @@ namespace QSLib
         //So if this method returns true, the out has some value, else it is null
         public bool GetAuthObj(out AuthObj auth)
         {
-            if(string.IsNullOrWhiteSpace(Token) || string.IsNullOrWhiteSpace(Secret))
+            if(string.IsNullOrWhiteSpace(Token) || string.IsNullOrWhiteSpace(Secret) || string.IsNullOrWhiteSpace(Name))
             {
                 auth = null;
                 return false;
             }
             else
             {
-                Log.Info("Token: " + Token + "Secret: " + Secret + "Name: " + Name + "RequesterName: " + RequesterName);   
-                auth = new AuthObj(Token, Secret, Name, RequesterName);
+                auth = new AuthObj(Token, Secret, Name);
                 return true;
             }
         }
-
-        public string RequesterName { get; set; }
 
         public string Token { get; set; }
 
