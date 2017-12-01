@@ -138,24 +138,21 @@ namespace BubbleBuster.Helper
 
                     foreach (string word in wordList)
                     {
+                        int wordValue;
+
                         //Sentiment Analysis
-                        if (analysisWords.ContainsKey(word))
+                        if (analysisWords.ContainsKey(word) && analysisWords.TryGetValue(word, out wordValue))
                         {
-                            int wordValue;
-
-                            if (analysisWords.TryGetValue(word, out wordValue))
+                            if (wordValue == 1)
                             {
-                                if (!tweet.posList.Contains(word) && wordValue == 1)
-                                {
-                                    tweet.posList.Add(word);
-                                    tweet.positiveValue++;
-                                }
+                                tweet.posList.Add(word);
+                                tweet.positiveValue++;
+                            }
 
-                                else if (!tweet.negList.Contains(word) && wordValue == -1)
-                                {
-                                    tweet.negList.Add(word);
-                                    tweet.negativeValue++;
-                                }
+                            else if (wordValue == -1)
+                            {
+                                tweet.negList.Add(word);
+                                tweet.negativeValue++;
                             }
                         }
 
