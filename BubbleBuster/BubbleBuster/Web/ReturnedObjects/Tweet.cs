@@ -26,9 +26,9 @@ namespace BubbleBuster.Web.ReturnedObjects
         public Entities Entities { get; set; }
 
         /// <summary>
-        /// Contains the bias of the hashtag
+        /// Contains the bias of the keyword
         /// </summary>
-        public int HashtagBias { get; set; } = 0;
+        public int KeywordBias { get; set; } = 0;
 
         /// <summary>
         /// Contains the positive value for the tweet
@@ -66,7 +66,7 @@ namespace BubbleBuster.Web.ReturnedObjects
         public List<String> NegList { get; set; } = new List<string>();
 
         /// <summary>
-        /// Wordlist for the hashtags
+        /// Wordlist for the keywords
         /// </summary>
         public List<String> TagList { get; set; } = new List<string>();
 
