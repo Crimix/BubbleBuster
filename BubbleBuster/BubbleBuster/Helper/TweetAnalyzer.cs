@@ -105,7 +105,7 @@ namespace BubbleBuster.Helper
                 res.PositiveSentiment += task.Result.PositiveSentiment;
             }
             Log.Info("Combining tweets");
-            Log.Info("Res " + res.GetAlgorithmResult());
+            Log.Info("Result " + res.GetAlgorithmResult());
             
             return res;
         }
