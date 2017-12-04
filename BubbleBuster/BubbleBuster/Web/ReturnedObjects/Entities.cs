@@ -12,9 +12,6 @@ namespace BubbleBuster.Web.ReturnedObjects
     /// </summary>
     public class Entities
     {
-        [JsonProperty("hashtags")]
-        public List<Hashtag> HashTags { get; set; }
-
         [JsonProperty("urls")]
         public List<Url> Urls { get; set; }
     }
