@@ -14,34 +14,131 @@ namespace BubbleBuster
 {
     public class Worker //TODO: Implement the last things
     {
+        private long userRecordId = -1;
+        private AuthObj auth;
+        private WebHandler webHandler;
+
         public Worker (AuthObj auth, string twitterName) //Executes the task parsed by the ServerTask class
         {
+            this.auth = auth;
+            webHandler = new WebHandler(auth);
             //Sets the limits such that we do not exceed the limits
             LimitHelper.Instance(auth).InitPropertises(new WebHandler(auth).TwitterGetRequest<Limit>(TwitterRequestBuilder.BuildStartupRequest()));
-            User user = new WebHandler(auth).TwitterGetRequest<User>(TwitterRequestBuilder.BuildRequest(RequestType.user, auth, "screen_name=" + twitterName)); //Used for getting the users political value
+            User user = webHandler.TwitterGetRequest<User>(TwitterRequestBuilder.BuildRequest(RequestType.user, auth, "screen_name=" + twitterName)); //Used for getting the users political value
 
-            //Gets the tweets of the user and the friends
-            var userTweets = TweetRetriever.Instance.GetTweetsFromUser(user, auth); 
+            //Analyse the tweets while retrieving and post them to the database
+            TweetRetriever.Instance.GetTweetsFromUserAndAnalyse(user, auth, CheckIfResultExistOnDB, ClassifyTweet, PostResultToDB); 
+            if(!GetUsersRecordIdOnDb(user,ref userRecordId))
+            {
+                Log.Error("Could not find the posted user, something is wrong!");
+                return;
+            } 
+
+            //Gets the friends for the user
             var friends = FriendsRetriever.Instance.GetFriends(user, auth);
-            Log.Info("Following " + friends.Users.Count + "users");
+            Log.Info("Following " + friends.Users.Count + " users");
 
-            //Get the tweets of the filther bubble
-            List<Tweet> filterBubble = TweetRetriever.Instance.GetTweetsFromFriends(friends, auth);
+            //Analyse the tweets while retrieving and post them to the database
+            TweetRetriever.Instance.GetTweetsFromFriendsAndAnalyse(friends, auth, CheckIfResultExistOnDB, ClassifyTweet, PostResultToDB);
 
+            Finalize();
+            Log.Info("Done!!!");
+        }
+
+        private bool GetUsersRecordIdOnDb(User user, ref long result)
+        {
+            object temp = new object();
+            if (webHandler.DatabaseGetRequest(Constants.DB_SERVER_IP + "twitter/has-id/" + user.Id, ref temp))
+            {
+                try
+                {
+                    result = Convert.ToInt64(temp);
+                }
+                catch (Exception e)
+                {
+                    lock (Log.LOCK)
+                    {
+                        Log.Error(e.Message);
+                    }
+                    return false;
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+            
+        }
+
+        private bool CheckIfResultExistOnDB(User user)
+        {
+            long result = -1;
+            bool succes = GetUsersRecordIdOnDb(user, ref result);
+            if (succes)
+            {
+                AddFollower(result);
+            }
+
+            return succes;
+        }
+
+        private AnalysisResultObj ClassifyTweet(List<Tweet> tweetList)
+        {
             Classifier c = new Classifier();
-            double userpol = c.RunNaiveBayes(userTweets);
-            double filtherpol = c.RunNaiveBayes(filterBubble);
+            AnalysisResultObj result = TweetAnalyzer.Instance.AnalyzeAndDecorateTweetsThreaded(tweetList);
+            result.MIResult = c.RunNaiveBayes(tweetList);
 
-            Log.Info(userpol + "   " + filtherpol);
+            return result;
+        }
 
-            //double[] filterBubbleResults = TweetAnalyzer.Instance.AnalyzeAndDecorateTweetsThreaded(filterBubble);
-            //double[] userResults = TweetAnalyzer.Instance.AnalyzeAndDecorateTweetsThreaded(userTweets);
-            //double userpol = userResults[0] + userResults[1];
-            //double filterPol = filterBubbleResults[0] + filterBubbleResults[1];
+        private bool PostResultToDB(AnalysisResultObj resultObj, User user)
+        {
+            bool succes = webHandler.DatabaseSendDataRequest(Constants.DB_SERVER_IP + "twitter", "POST", "twitter_name=" + user.Name, "twitter_id=" + user.Id, "analysis=" + resultObj.GetAlgorithmResult(), "media=" + resultObj.MediaBias,"mi=" + resultObj.GetMIResult(), "sentiment="+ resultObj.GetSentiment(), "tweet_count=" + resultObj.Count, "protect="+ user.IsProtected);
+            if (!succes)
+            {
+                lock (Log.LOCK)
+                {
+                    Log.Error("Could not post the user to the database");
+                }
+            }
 
-            //bool post = new WebHandler(apiKey).DBPostRequest(Constants.DB_SERVER_IP+ "twitter/?", "name =" + user.Name, "twitterID=" + user.Id, "pol_var=" + userpol, "lib_var=" + 0, "fpol_var=" + filterPol, "flib_var=" + 0, "protect=" + Convert.ToInt32(user.IsProtected)));
+            long temp = -1;
+            succes = GetUsersRecordIdOnDb(user, ref temp);
+            if (!succes)
+            {
+                lock (Log.LOCK)
+                {
+                    Log.Error("Could not find the posted user");
+                }
+            }
+            AddFollower(temp);
 
-            //Log.Info("Done!!! " + filterBubble.Count + " success " + post);
+            return false;
+        }
+
+        private bool AddFollower(long frinedRecordId)
+        {
+            bool succes = webHandler.DatabaseSendDataRequest(Constants.DB_SERVER_IP + "twitter/add_follower", "PUT", "record_id=" + userRecordId, "follows_id=" + frinedRecordId);
+            if (!succes)
+            {
+                lock (Log.LOCK)
+                {
+                    Log.Error("Could not add the follower");
+                }
+            }
+            return succes;
+        }
+
+        private void Finalize()
+        {
+            if(!webHandler.DatabaseSendDataRequest(Constants.DB_SERVER_IP + "twitter/finalize", "PUT", "record_id=" + userRecordId))
+            {
+                lock (Log.LOCK)
+                {
+                    Log.Error("Could not finalize the request");
+                }
+            }
         }
 
 

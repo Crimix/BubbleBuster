@@ -42,12 +42,11 @@ namespace BubbleBuster.Helper
         /// <param name="user">The user</param>
         /// <param name="auth">The auth object</param>
         /// <param name="get">The method to check the database for previous results</param>
-        /// <param name="classifyAlgorithm">The algorithm to classify tweets</param>
-        /// <param name="classifyBayes">The naive bayes network to classify tweets</param>
+        /// <param name="classifyMethod">The method to classify tweets</param>
         /// <param name="post">The method to post the result to the database</param>
-        public void GetTweetsFromUserAndAnalyse(User user, AuthObj auth, Func<User, bool> get, Func<List<Tweet>, AnalysisResultObj> classifyAlgorithm, Func<List<Tweet>, double> classifyBayes, Func<AnalysisResultObj, bool> post)
+        public void GetTweetsFromUserAndAnalyse(User user, AuthObj auth, Func<User, bool> get, Func<List<Tweet>, AnalysisResultObj> classifyMethod, Func<AnalysisResultObj,User, bool> post)
         {
-            GetTweetsFromUserHelper(user, auth, (() => TweetThreadMethod(user, auth, get, classifyAlgorithm, classifyBayes, post)));
+            GetTweetsFromUserHelper(user, auth, (() => TweetThreadMethod(user, auth, get, classifyMethod, post)));
         }
 
         /// <summary>
@@ -87,12 +86,11 @@ namespace BubbleBuster.Helper
         /// <param name="friends">The friends of an user </param>
         /// <param name="auth">The auth object</param>
         /// <param name="get">The method to check the database for previous results</param>
-        /// <param name="classifyAlgorithm">The algorithm to classify tweets</param>
-        /// <param name="classifyBayes">The naive bayes network to classify tweets</param>
+        /// <param name="classifyMethod">The method to classify tweets</param>
         /// <param name="post">The method to post the result to the database</param>
-        public void GetTweetsFromFriendsAndAnalyse(Friends friends, AuthObj auth, Func<User, bool> get, Func<List<Tweet>, AnalysisResultObj> classifyAlgorithm, Func<List<Tweet>, double> classifyBayes, Func<AnalysisResultObj, bool> post)
+        public void GetTweetsFromFriendsAndAnalyse(Friends friends, AuthObj auth, Func<User, bool> get, Func<List<Tweet>, AnalysisResultObj> classifyMethod,  Func<AnalysisResultObj,User, bool> post)
         {
-            GetTweetsFromFriendsHelper(friends, auth, ((x) => TweetThreadMethod(x, auth, get, classifyAlgorithm, classifyBayes, post)));
+            GetTweetsFromFriendsHelper(friends, auth, ((x) => TweetThreadMethod(x, auth, get, classifyMethod, post)));
         }
 
         /// <summary>
@@ -177,11 +175,10 @@ namespace BubbleBuster.Helper
         /// <param name="user">The user</param>
         /// <param name="auth">The auth object</param>
         /// <param name="get">The method to check the database for previous results</param>
-        /// <param name="classifyAlgorithm">The algorithm to classify tweets</param>
-        /// <param name="classifyBayes">The naive bayes network to classify tweets</param>
+        /// <param name="classifyMethod">The method to classify tweets</param>
         /// <param name="post">The method to post the result to the database</param>
         /// <returns>A list of tweets </returns>
-        private List<Tweet> TweetThreadMethod(User user, AuthObj auth, Func<User,bool> get = null, Func<List<Tweet>, AnalysisResultObj> classifyAlgorithm = null, Func<List<Tweet>, double> classifyBayes = null, Func<AnalysisResultObj, bool> post = null)
+        private List<Tweet> TweetThreadMethod(User user, AuthObj auth, Func<User,bool> get = null, Func<List<Tweet>, AnalysisResultObj> classifyMethod = null, Func<AnalysisResultObj,User, bool> post = null)
         {
             bool alreadyExist = false;
             AnalysisResultObj tempResult = new AnalysisResultObj();
@@ -206,10 +203,10 @@ namespace BubbleBuster.Helper
                     }
                 }
 
-                if (classifyAlgorithm != null  && classifyBayes != null && post != null)
+                if (classifyMethod != null  && post != null)
                 {
-                    tempResult = classifyAlgorithm(temp);
-                    post(tempResult);
+                    tempResult = classifyMethod(temp);
+                    post(tempResult,user);
                     temp = new List<Tweet>();
                 }
             }

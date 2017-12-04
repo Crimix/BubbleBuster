@@ -23,7 +23,7 @@ namespace RestQueueServer.Controllers
 
             else
             {
-                return new Response("Job failed successfully.");
+                return new Response("Job failed to be created.");
             }
         }
     }

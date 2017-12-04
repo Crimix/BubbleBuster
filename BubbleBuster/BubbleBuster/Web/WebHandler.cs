@@ -92,7 +92,7 @@ namespace BubbleBuster.Web
         /// <param name="result">The result of the request</param>
         /// <param name="parameters">The parameters of the request</param>
         /// <returns>True if the request succeed</returns>
-        public bool DatabaseGetRequest(string requestUrl, ref double result, params string[] parameters)
+        public bool DatabaseGetRequest(string requestUrl, ref object result, params string[] parameters)
         {
             bool res = false;
             string tempResult = "";
@@ -108,7 +108,7 @@ namespace BubbleBuster.Web
             if(GetRequestBody(requestUrl, "Bearer " + Constants.DB_CREDS, ref tempResult))
             {
                 res = true;
-                result = Convert.ToDouble(tempResult);
+                result = tempResult;
             }
             return res;
         }
@@ -117,9 +117,10 @@ namespace BubbleBuster.Web
         /// Database post request to post something to the database
         /// </summary>
         /// <param name="requestUrl">The request url</param>
+        /// <param name="method">Can be either POST or PUT</param>
         /// <param name="parameters">The parameters of the request</param>
         /// <returns>True if the request succeed</returns>
-        public bool DatabasePostRequest(string requestUrl, params string[] parameters)
+        public bool DatabaseSendDataRequest(string requestUrl, string method, params string[] parameters)
         {
             foreach (var item in parameters)
             {
@@ -129,12 +130,12 @@ namespace BubbleBuster.Web
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUrl);
             request.Headers[HttpRequestHeader.Authorization] = "Bearer " + Constants.DB_CREDS;
-            request.Method = "POST";
+            request.Method = method;
             request.Timeout = 1800000;
 
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
-            if(response.StatusCode == HttpStatusCode.OK)
+            if(response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Created)
             {
                 return true;
             }
