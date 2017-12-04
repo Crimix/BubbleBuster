@@ -89,11 +89,11 @@ namespace BubbleBuster
 
             //List<Tweet> ageg = asf.Keys;
 
-            List<Tweet> filterBubble = TweetRetriever.Instance.GetTweetsFromFriends(friends, auth);
-
+            //List<Tweet> filterBubble = TweetRetriever.Instance.GetTweetsFromFriends(friends, auth);
+            List<Tweet> filterBubble = TweetRetriever.Instance.GetTweetsFromUser(user, auth);
             Console.WriteLine("Begin Analyzing: " + DateTime.Now);
             AnalysisResultObj output = TweetAnalyzer.Instance.AnalyzeAndDecorateTweets(filterBubble);
-
+            Console.WriteLine(output.GetAlgorithmResult() + " " + output.KeywordBias);
             Console.WriteLine("Done: " + DateTime.Now);
             /*Classifier classifier = new Classifier();
 

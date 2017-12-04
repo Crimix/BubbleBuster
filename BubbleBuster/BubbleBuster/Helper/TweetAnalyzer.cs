@@ -57,8 +57,8 @@ namespace BubbleBuster.Helper
         /// <summary>
         /// Splits the tweets int sub lists and analyzes them using tasks
         /// </summary>
-        /// <param name="tweetList">The list of tweet</param>
-        /// <returns>AnalysisResultObj containing the results</returns>
+        /// <param name="tweetList"></param>
+        /// <returns></returns>
         public AnalysisResultObj AnalyzeAndDecorateTweetsThreaded(List<Tweet> tweetList)
         {
             Log.Info("Spliting " + tweetList.Count + " tweets");
@@ -109,6 +109,74 @@ namespace BubbleBuster.Helper
             
             return res;
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="word"></param>
+        /// <param name="tweet"></param>
+        private void SentimentAnalysis(string word, Tweet tweet)
+        {
+            int wordValue;
+
+            if (analysisWords.ContainsKey(word) && analysisWords.TryGetValue(word, out wordValue))
+            {
+                if (wordValue == 1)
+                {
+                    tweet.posList.Add(word);
+                    tweet.positiveValue++;
+                }
+
+                else if (wordValue == -1)
+                {
+                    tweet.negList.Add(word);
+                    tweet.negativeValue++;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="word"></param>
+        /// <param name="tweet"></param>
+        private void KeywordAnalysis(string word, Tweet tweet)
+        {
+            if (hashtags.ContainsKey(word) && !tweet.tagList.Contains(word, StringComparer.InvariantCultureIgnoreCase))
+            {
+                HashtagObj hashtagObj;
+
+                if (hashtags.TryGetValue(word, out hashtagObj))
+                {
+                    tweet.tagList.Add(word);
+
+                    int sentiment = tweet.getSentiment();
+
+                    if (sentiment > 1)
+                        tweet.hashtagBias += hashtagObj.Pos;
+                    else if (sentiment < -1)
+                        tweet.hashtagBias += hashtagObj.Neg;
+                    else
+                        tweet.hashtagBias += hashtagObj.Bas;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tweet"></param>
+        private void MediaAnalysis(Tweet tweet)
+        {
+            foreach (Url link in tweet.Entities.Urls)
+            {
+                string shortenedUrl = UrlHelper.Instance.ShortenUrl(link.ExpandedUrl);
+                if (newsHyperlinks.Keys.Contains(shortenedUrl))
+                {
+                    tweet.mediaBias += newsHyperlinks[shortenedUrl];
+                }
+            }
+        }
 
 
         /// <summary>
@@ -119,8 +187,8 @@ namespace BubbleBuster.Helper
         /// Pos: Number of positive words found
         /// Neg: Number of negative words found
         /// </summary>
-        /// <param name="tweetList">The list of tweets</param>
-        /// <returns>AnalysisResultObj containing the results</returns>
+        /// <param name="tweetList"></param>
+        /// <returns></returns>
         public AnalysisResultObj AnalyzeAndDecorateTweets(List<Tweet> tweetList)
         {
             AnalysisResultObj output = new AnalysisResultObj();
@@ -128,100 +196,48 @@ namespace BubbleBuster.Helper
 
             foreach (Tweet tweet in returnList)
             {
-                tweet.HasQuotes = CheckForQuotationMarks(tweet);
+                tweet.hasQuotes = CheckForQuotationMarks(tweet);
 
-                if (!tweet.HasQuotes)
+                if (!tweet.hasQuotes)
                 {
                     var puncturation = tweet.Text.Where(Char.IsPunctuation).Distinct().ToArray();
                     List<String> wordList = tweet.Text.Split(' ').Select(x => x.Trim(puncturation)).ToList<String>();
 
-
                     foreach (string word in wordList)
                     {
-                        int wordValue;
-
                         //Sentiment Analysis
-                        if (analysisWords.ContainsKey(word) && analysisWords.TryGetValue(word, out wordValue))
-                        {
-                            if (wordValue == 1)
-                            {
-                                tweet.PosList.Add(word);
-                                tweet.PositiveValue++;
-                            }
-
-                            else if (wordValue == -1)
-                            {
-                                tweet.NegList.Add(word);
-                                tweet.NegativeValue++;
-                            }
-                        }
+                        SentimentAnalysis(word, tweet);
 
                         //Hashtag Analysis
-                        if (hashtags.ContainsKey(word) && !tweet.TagList.Contains(word, StringComparer.InvariantCultureIgnoreCase))
-                        {
-                            HashtagObj hashtagObj;
-
-                            if (hashtags.TryGetValue(word, out hashtagObj))
-                            {
-                                tweet.TagList.Add(word);
-
-                                int sentiment = tweet.GetSentiment();
-
-                                if (sentiment > 1)
-                                    tweet.HashtagBias += hashtagObj.Pos;
-                                else if (sentiment < -1)
-                                    tweet.HashtagBias += hashtagObj.Neg;
-                                else
-                                    tweet.HashtagBias += hashtagObj.Bas;
-                            }
-                        }
+                        KeywordAnalysis(word, tweet);
                     }
 
                     //Media Analysis
-                    foreach (Url link in tweet.Entities.Urls)
-                    {
-                        string shortenedUrl = UrlHelper.Instance.ShortenUrl(link.ExpandedUrl);
-                        if (newsHyperlinks.Keys.Contains(shortenedUrl))
-                        {
-                            tweet.MediaBias += newsHyperlinks[shortenedUrl];
-                        }
-                    }
+                    MediaAnalysis(tweet);
 
-                    output.KeywordBias += tweet.HashtagBias;
-                    output.MediaBias += tweet.MediaBias;
+                    output.KeywordBias += tweet.hashtagBias;
+                    output.MediaBias += tweet.mediaBias;
                     output.Count = returnList.Count;
-                    output.NegativeSentiment += tweet.NegativeValue;
-                    output.PositiveSentiment += tweet.PositiveValue;
+                    output.NegativeSentiment += tweet.negativeValue;
+                    output.PositiveSentiment += tweet.positiveValue;
                 }
             }
-
-
 
             return output;
         }
 
-        /// <summary>
-        /// Check if there is any quotation marks in the tweet
-        /// </summary>
-        /// <param name="tweet">the tweet</param>
-        /// <returns>True if any " is found</returns>
         private bool CheckForQuotationMarks(Tweet tweet)
         {
             return tweet.Text.Contains("\"");
         }
 
-        /// <summary>
-        /// Another way to check for quotes.
-        /// </summary>
-        /// <param name="tweet">Tweet</param>
-        /// <returns>Boolean for if any quotes is found</returns>
         public bool CheckForQuotes(Tweet tweet)
         {
             Regex regex = new Regex("\"(.*?)\"");
 
             if (regex.IsMatch(tweet.Text))
             {
-                tweet.Quotes = regex.Matches(tweet.Text)
+                tweet.quotes = regex.Matches(tweet.Text)
                                .Cast<Match>()
                                .Select(m => m.Value)
                                .ToArray();

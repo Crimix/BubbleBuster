@@ -120,7 +120,7 @@ namespace BubbleBuster.Helper
             List<Task<List<Tweet>>> runningTasks = new List<Task<List<Tweet>>>();
             List<Task<List<Tweet>>> taskList = new List<Task<List<Tweet>>>();
             Queue<Task<List<Tweet>>> taskQueue = new Queue<Task<List<Tweet>>>();
-            Log.Info(String.Format("{1,-30} {2,-20} {3,-11}", "User name", "User id", "Tweet count"));
+            Log.Info(String.Format("{0,-30} {1,-20} {2,-11}", "User name", "User id", "Tweet count"));
 
             foreach (User user in friends.Users)
             {
@@ -198,11 +198,11 @@ namespace BubbleBuster.Helper
                 {
                     if (user.IsProtected)
                     {
-                        Log.Info(String.Format("{1,-30} {2,-20} {3,-11}", user.Name, user.Id, "Protected"));
+                        Log.Info(String.Format("{0,-30} {1,-20} {2,-11}", user.Name, user.Id, "Protected"));
                     }
                     else
                     {
-                        Log.Info(String.Format("{1,-30} {2,-20} {3,-11}", user.Name, user.Id, temp.Count));
+                        Log.Info(String.Format("{0,-30} {1,-20} {2,-11}", user.Name, user.Id, temp.Count));
                     }
                 }
 
