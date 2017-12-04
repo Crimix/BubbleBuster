@@ -109,6 +109,74 @@ namespace BubbleBuster.Helper
             
             return res;
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="word"></param>
+        /// <param name="tweet"></param>
+        private void SentimentAnalysis(string word, Tweet tweet)
+        {
+            int wordValue;
+
+            if (analysisWords.ContainsKey(word) && analysisWords.TryGetValue(word, out wordValue))
+            {
+                if (wordValue == 1)
+                {
+                    tweet.posList.Add(word);
+                    tweet.positiveValue++;
+                }
+
+                else if (wordValue == -1)
+                {
+                    tweet.negList.Add(word);
+                    tweet.negativeValue++;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="word"></param>
+        /// <param name="tweet"></param>
+        private void KeywordAnalysis(string word, Tweet tweet)
+        {
+            if (hashtags.ContainsKey(word) && !tweet.tagList.Contains(word, StringComparer.InvariantCultureIgnoreCase))
+            {
+                HashtagObj hashtagObj;
+
+                if (hashtags.TryGetValue(word, out hashtagObj))
+                {
+                    tweet.tagList.Add(word);
+
+                    int sentiment = tweet.getSentiment();
+
+                    if (sentiment > 1)
+                        tweet.hashtagBias += hashtagObj.Pos;
+                    else if (sentiment < -1)
+                        tweet.hashtagBias += hashtagObj.Neg;
+                    else
+                        tweet.hashtagBias += hashtagObj.Bas;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tweet"></param>
+        private void MediaAnalysis(Tweet tweet)
+        {
+            foreach (Url link in tweet.Entities.Urls)
+            {
+                string shortenedUrl = UrlHelper.Instance.ShortenUrl(link.ExpandedUrl);
+                if (newsHyperlinks.Keys.Contains(shortenedUrl))
+                {
+                    tweet.mediaBias += newsHyperlinks[shortenedUrl];
+                }
+            }
+        }
 
 
         /// <summary>
@@ -135,57 +203,17 @@ namespace BubbleBuster.Helper
                     var puncturation = tweet.Text.Where(Char.IsPunctuation).Distinct().ToArray();
                     List<String> wordList = tweet.Text.Split(' ').Select(x => x.Trim(puncturation)).ToList<String>();
 
-
                     foreach (string word in wordList)
                     {
-                        int wordValue;
-
                         //Sentiment Analysis
-                        if (analysisWords.ContainsKey(word) && analysisWords.TryGetValue(word, out wordValue))
-                        {
-                            if (wordValue == 1)
-                            {
-                                tweet.posList.Add(word);
-                                tweet.positiveValue++;
-                            }
-
-                            else if (wordValue == -1)
-                            {
-                                tweet.negList.Add(word);
-                                tweet.negativeValue++;
-                            }
-                        }
+                        SentimentAnalysis(word, tweet);
 
                         //Hashtag Analysis
-                        if (hashtags.ContainsKey(word) && !tweet.tagList.Contains(word, StringComparer.InvariantCultureIgnoreCase))
-                        {
-                            HashtagObj hashtagObj;
-
-                            if (hashtags.TryGetValue(word, out hashtagObj))
-                            {
-                                tweet.tagList.Add(word);
-
-                                int sentiment = tweet.getSentiment();
-
-                                if (sentiment > 1)
-                                    tweet.hashtagBias += hashtagObj.Pos;
-                                else if (sentiment < -1)
-                                    tweet.hashtagBias += hashtagObj.Neg;
-                                else
-                                    tweet.hashtagBias += hashtagObj.Bas;
-                            }
-                        }
+                        KeywordAnalysis(word, tweet);
                     }
 
                     //Media Analysis
-                    foreach (Url link in tweet.Entities.Urls)
-                    {
-                        string shortenedUrl = UrlHelper.Instance.ShortenUrl(link.ExpandedUrl);
-                        if (newsHyperlinks.Keys.Contains(shortenedUrl))
-                        {
-                            tweet.mediaBias += newsHyperlinks[shortenedUrl];
-                        }
-                    }
+                    MediaAnalysis(tweet);
 
                     output.KeywordBias += tweet.hashtagBias;
                     output.MediaBias += tweet.mediaBias;
@@ -194,8 +222,6 @@ namespace BubbleBuster.Helper
                     output.PositiveSentiment += tweet.positiveValue;
                 }
             }
-
-
 
             return output;
         }
