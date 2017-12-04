@@ -19,9 +19,20 @@ namespace BubbleBuster.WordUpdater
             Affiliation = aff;
         }
 
+        /// <summary>
+        /// The id of an pol user
+        /// </summary>
         public long TwitterId { get; set; } = 0;
+
+        /// <summary>
+        /// The affiliation of the pol user
+        /// </summary>
         public int Affiliation { get; set; } = 0; //-1 = leftWing, 1 = rightWing
 
+        /// <summary>
+        /// Converts a Pol user to a user
+        /// </summary>
+        /// <returns></returns>
         public User ToUser()
         {
             return new User() { Id = TwitterId };

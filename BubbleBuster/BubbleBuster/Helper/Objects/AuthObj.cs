@@ -8,7 +8,9 @@ namespace BubbleBuster.Helper.Objects
 {
     public class AuthObj
     {
-        //To tell which type of auth it is
+        /// <summary>
+        /// To tell which type of auth it is
+        /// </summary>
         public enum AuthType { User, App };
 
         /// <summary>

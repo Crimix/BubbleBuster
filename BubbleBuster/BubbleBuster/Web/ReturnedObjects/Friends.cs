@@ -7,15 +7,14 @@ using System.Threading.Tasks;
 
 namespace BubbleBuster.Web.ReturnedObjects
 {
+    /// <summary>
+    /// Class that can contain JSON information from Twitter. Deserilized using Newtonsoft.Json
+    /// </summary>
     public class Friends
     {
-        public Friends()
-        {
-            Users = new List<User>();
-        }
 
         [JsonProperty("users")]
-        public List<User> Users { get; set; }
+        public List<User> Users { get; set; } = new List<User>();
 
         [JsonProperty("next_cursor")]
         public long NextCursor { get; set; }

@@ -18,12 +18,17 @@ namespace BubbleBuster.WordUpdater
 {
     public class WordWorker
     {
+        //Instance variable
         private static WordWorker _instance;
 
         private WordWorker()
         {
         }
 
+        /// <summary>
+        /// Method to get access to the TweetRetriever.
+        /// Is the only static method, because it is not possible to create an instance outside of this class
+        /// </summary>
         public static WordWorker Instance
         {
             get
@@ -36,13 +41,14 @@ namespace BubbleBuster.WordUpdater
             }
         }
 
-        private Dictionary<PolUserObj, List<Tweet>> GetTweets(List<PolUserObj> userList, AuthObj apiKey)
+        //Private method to get the tweets a list of pol users have posted 
+        private Dictionary<PolUserObj, List<Tweet>> GetTweets(List<PolUserObj> userList, AuthObj auth)
         {
             Dictionary<PolUserObj, List<Tweet>> returnObj = new Dictionary<PolUserObj, List<Tweet>>();
 
             foreach (PolUserObj polUser in userList)
             {
-                List<Tweet> tweetList = TweetRetriever.Instance.GetTweetsFromUser(polUser.ToUser(), apiKey);
+                List<Tweet> tweetList = TweetRetriever.Instance.GetTweetsFromUser(polUser.ToUser(), auth);
 
                 returnObj.Add(polUser, tweetList);
             }
@@ -50,6 +56,7 @@ namespace BubbleBuster.WordUpdater
             return returnObj;
         }
 
+        //Identifes uncommon words in a list of tweets
         private Dictionary<string, double> IdentifyUncommonWords(List<Tweet> tweetList)
         {
             List<string> commonWords = FileHelper.GetCommonWords();
@@ -57,8 +64,6 @@ namespace BubbleBuster.WordUpdater
 
             foreach (Tweet tweet in tweetList)
             {
-                double sentiment = tweet.getSentiment();
-
                 var puncturation = tweet.Text.Where(Char.IsPunctuation).Distinct().ToArray();
                 List<String> wordList = tweet.Text.Split(' ').Select(x => x.Trim(puncturation)).ToList<String>();
 
@@ -66,11 +71,12 @@ namespace BubbleBuster.WordUpdater
                 {
                     if (!commonWords.Contains(listWord, StringComparer.InvariantCultureIgnoreCase))
                     {
-                        if (!uncommonWords.Keys.Contains(listWord, StringComparer.InvariantCultureIgnoreCase))
+                        if (!uncommonWords.ContainsKey(listWord))
                         {
                             if (!listWord.StartsWith("https://"))
                             {
                                 Console.WriteLine(listWord);
+                                double sentiment = tweet.GetSentiment();
                                 uncommonWords.Add(listWord, sentiment);
                             }                          
                         }
@@ -81,6 +87,7 @@ namespace BubbleBuster.WordUpdater
             return uncommonWords;
         }
 
+        //Determines each words affiliation
         private Dictionary<string, UncommonWordObj> DetermineWords(Dictionary<PolUserObj, List<Tweet>> dic)
         {
             Dictionary<string, UncommonWordObj> returnObj = new Dictionary<string, UncommonWordObj>();            
@@ -131,9 +138,14 @@ namespace BubbleBuster.WordUpdater
             return returnObj;
         } 
 
-        public void UpdateWords(List<PolUserObj> users, AuthObj apiKey)
+        /// <summary>
+        /// Method used to update the words based on a set of pol users
+        /// </summary>
+        /// <param name="users">The pol users</param>
+        /// <param name="auth">The auth object</param>
+        public void UpdateWords(List<PolUserObj> users, AuthObj auth)
         {
-            Dictionary<PolUserObj, List<Tweet>> usersAndTweets = GetTweets(users, apiKey);
+            Dictionary<PolUserObj, List<Tweet>> usersAndTweets = GetTweets(users, auth);
             Dictionary<string, UncommonWordObj> returnList = DetermineWords(usersAndTweets);
             FileHelper.WriteObjectToFile("WordsTest", returnList.Values);
         }

@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace BubbleBuster.Web.ReturnedObjects
 {
+    /// <summary>
+    /// Class that can contain JSON information from Twitter. Deserilized using Newtonsoft.Json
+    /// </summary>
     public class Url
     {
         [JsonProperty("url")]

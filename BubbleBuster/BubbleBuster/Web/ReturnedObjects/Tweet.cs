@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace BubbleBuster.Web.ReturnedObjects
 {
+    /// <summary>
+    /// Class that can contain JSON information from Twitter. Deserilized using Newtonsoft.Json
+    /// Also contains more information
+    /// </summary>
     public class Tweet
     {
         [JsonProperty("full_text")]
@@ -21,27 +25,61 @@ namespace BubbleBuster.Web.ReturnedObjects
         [JsonProperty("entities")]
         public Entities Entities { get; set; }
 
-        public Dictionary<string, int> NewsHyperlinks = new Dictionary<string, int>();
+        /// <summary>
+        /// Contains the bias of the hashtag
+        /// </summary>
+        public int HashtagBias { get; set; } = 0;
 
-        public int hashtagBias = 0;
-        public int positiveValue = 0;
-        public int negativeValue = 0;
-        public double mediaBias = 0;
-        public bool hasQuotes = false;
+        /// <summary>
+        /// Contains the positive value for the tweet
+        /// </summary>
+        public int PositiveValue { get; set; } = 0;
 
-        public string[] quotes;
+        /// <summary>
+        /// Contains the negative value for the tweet 
+        /// </summary>
+        public int NegativeValue { get; set; } = 0;
 
-        public List<String> posList = new List<string>();
-        public List<String> negList = new List<string>();
-        public List<String> tagList = new List<string>();
+        /// <summary>
+        /// Contains the bias for media, the links in the tweet
+        /// </summary>
+        public double MediaBias { get; set; } = 0;
 
-        public int analysisConclusion = 0;
+        /// <summary>
+        /// Boolean for if a tweet contains quotes
+        /// </summary>
+        public bool HasQuotes { get; set; } = false;
 
-        public int getSentiment()
+        /// <summary>
+        /// String array for the quotes
+        /// </summary>
+        public string[] Quotes { get; set; }
+
+        /// <summary>
+        /// Wordlist for the positive words
+        /// </summary>
+        public List<String> PosList { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Wordlist for the negative words
+        /// </summary>
+        public List<String> NegList { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Wordlist for the hashtags
+        /// </summary>
+        public List<String> TagList { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Returns the sentiment of the tweet
+        /// </summary>
+        /// <returns>The sentiment as an int</returns>
+        public int GetSentiment()
         {
-            return positiveValue - negativeValue;
+            return PositiveValue - NegativeValue;
         }
 
+        //Overridden such that a tweet object can be compared based on id
         public override bool Equals(object obj)
         {
             if(obj is Tweet)
@@ -54,6 +92,7 @@ namespace BubbleBuster.Web.ReturnedObjects
             }           
         }
 
+        //Overridden because Equals is
         public override int GetHashCode()
         {
             return Id.GetHashCode();

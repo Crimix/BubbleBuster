@@ -11,20 +11,20 @@ using System.Threading.Tasks;
 
 namespace BubbleBuster
 {
-    public enum DataType { friendsId, friendsObj, tweets, limit, user }; //Expand based on what data is needed
+    public enum RequestType { friendsId, friendsObj, tweets, limit, user }; //Expand based on what data is needed
 
     public static class TwitterRequestBuilder
     {
         private static string baseUrl = "https://api.twitter.com/1.1/";
 
-        public static UrlObject BuildStartupRequest()
+        public static RequestUrlObject BuildStartupRequest()
         {
-            return Build(DataType.limit);
+            return Build(RequestType.limit);
         }
      
-        public static UrlObject BuildRequest(DataType returnType, AuthObj apiKey, params string[] parameters)
+        public static RequestUrlObject BuildRequest(RequestType returnType, AuthObj apiKey, params string[] parameters)
         {
-            UrlObject result = Build(returnType, parameters);
+            RequestUrlObject result = Build(returnType, parameters);
 
             if(CheckIfAllowedToMakeRequestOrSleep(returnType, ref result, apiKey, parameters))
             {
@@ -39,7 +39,7 @@ namespace BubbleBuster
         }
 
 
-        private static bool CheckIfAllowedToMakeRequestOrSleep(DataType returnType, ref UrlObject result, AuthObj apiKey, params string[] parameters)
+        private static bool CheckIfAllowedToMakeRequestOrSleep(RequestType returnType, ref RequestUrlObject result, AuthObj apiKey, params string[] parameters)
         {
             if (!LimitHelper.Instance(apiKey).AllowedToMakeRequest(returnType))
             {
@@ -57,39 +57,39 @@ namespace BubbleBuster
                         Log.Warn("Wakeup at " + DateTime.Now);
                     }
                 }
-                LimitHelper.Instance(apiKey).SetLimit(new WebHandler(apiKey).MakeRequest<Limit>(BuildStartupRequest()));
+                LimitHelper.Instance(apiKey).InitPropertises(new WebHandler(apiKey).TwitterGetRequest<Limit>(BuildStartupRequest()));
                 result = BuildRequest(returnType, apiKey, parameters);
                 return true;
             }
             return false;
         }
 
-        private static UrlObject Build(DataType returnType, params string[] parameters)
+        private static RequestUrlObject Build(RequestType returnType, params string[] parameters)
         {
-            UrlObject returnObject = new UrlObject();
+            RequestUrlObject returnObject = new RequestUrlObject();
 
             switch (returnType)
             {
-                case DataType.friendsId:
+                case RequestType.friendsId:
                     returnObject.BaseUrl += baseUrl + "friends/ids.json";
                     returnObject.Url += returnObject.BaseUrl + "?";
                     break;
-                case DataType.friendsObj:
+                case RequestType.friendsObj:
                     returnObject.BaseUrl += baseUrl + "friends/list.json";
                     returnObject.Url += returnObject.BaseUrl + "?";
                     break;
-                case DataType.tweets:
+                case RequestType.tweets:
                     returnObject.Params.Add("include_rts", "false");
                     returnObject.Params.Add("tweet_mode", "extended");
                     returnObject.BaseUrl += baseUrl + "statuses/user_timeline.json";
                     returnObject.Url += returnObject.BaseUrl + "?include_rts=false&tweet_mode=extended&";
                     break;
-                case DataType.limit:
+                case RequestType.limit:
                     returnObject.Params.Add("resources", "friends,statuses,application,users");
                     returnObject.BaseUrl += baseUrl + "application/rate_limit_status.json";
                     returnObject.Url += returnObject.BaseUrl + "?resources=friends,statuses,application,users";
                     break;
-                case DataType.user:
+                case RequestType.user:
                     returnObject.BaseUrl += baseUrl + "users/show.json";
                     returnObject.Url += returnObject.BaseUrl + "?";
                     break;
