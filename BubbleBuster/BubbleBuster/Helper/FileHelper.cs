@@ -15,7 +15,7 @@ namespace BubbleBuster.Helper
     {
         //Such that we do only need to read the file once
         private static Dictionary<string, int> newsHyperlinks;
-        private static Dictionary<string, HashtagObj> hashtags;
+        private static Dictionary<string, KeywordObj> keywords;
         private static Dictionary<string, int> analysisWords; //Value: -1=negativeWord, 1=positiveWord
         private static List<string> commonWords;
 
@@ -24,7 +24,7 @@ namespace BubbleBuster.Helper
         private static string commonWordsFilePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + "commonWords";
         private static string posWordsFilePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + "positive-words";
         private static string negWordsFilePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + "negative-words";
-        private static string hashtagsFilePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + "hashtags";
+        private static string keywordsFilePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + "keywords";
 
         /// <summary>
         /// Gets the dictionary of hyperlinks and bias value
@@ -91,26 +91,26 @@ namespace BubbleBuster.Helper
         }
 
         /// <summary>
-        /// Gets the dictionary of hashtags
+        /// Gets the dictionary of keywords
         /// /// </summary>
-        /// <returns>A dictionary of hashtags</returns>
-        public static Dictionary<string, HashtagObj> GetHashtags()
+        /// <returns>A dictionary of keywords</returns>
+        public static Dictionary<string, KeywordObj> GetKeywords()
         {
-            if (hashtags != null)
+            if (keywords != null)
             {
-                return hashtags;
+                return keywords;
             }
 
-            hashtags = new Dictionary<string, HashtagObj>();
+            keywords = new Dictionary<string, KeywordObj>();
 
             try
             {
-                List<String> temp = File.ReadAllLines(hashtagsFilePath).Skip(7).ToList<String>();
+                List<String> temp = File.ReadAllLines(keywordsFilePath).Skip(7).ToList<String>();
 
-                foreach (string hashtag in temp)
+                foreach (string keyword in temp)
                 {
-                    string[] tempArray = hashtag.Split(';'); 
-                    hashtags.Add(tempArray[0], new HashtagObj(hashtag, int.Parse(tempArray[1]), int.Parse(tempArray[2]), int.Parse(tempArray[3])));
+                    string[] tempArray = keyword.Split(';'); 
+                    keywords.Add(tempArray[0], new KeywordObj(keyword, int.Parse(tempArray[1]), int.Parse(tempArray[2]), int.Parse(tempArray[3])));
                 }
             }
             catch (FileNotFoundException e)
@@ -118,7 +118,7 @@ namespace BubbleBuster.Helper
                 Log.Error("Words Source file not loaded: " + e.Message);
             }
 
-            return hashtags;
+            return keywords;
         }
 
         /// <summary>

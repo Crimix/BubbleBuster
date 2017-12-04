@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace BubbleBuster.Helper.Objects
 {
-    public class HashtagObj
+    public class KeywordObj
     {
         public string Name { get; set; } = "";
         public int Neg { get; set; } = 0;
         public int Pos { get; set; } = 0;
         public int Bas { get; set; } = 0;
 
-        public HashtagObj(string nameVal, int negVal, int baseVal, int posVal)
+        public KeywordObj(string nameVal, int negVal, int baseVal, int posVal)
         {
             Name = nameVal;
             Neg = negVal;
