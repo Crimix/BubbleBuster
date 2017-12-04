@@ -22,38 +22,6 @@ namespace BubbleBuster
         static void Main(string[] args)
         {
             /*
-            var application = new Application();
-            Window window = new Window();
-            UserControl1 user = new UserControl1();
-            window.Content = user;
-            application.Run(window);
-            FileHelper.GenerateDirectoryStructure();
-            foreach (string line in FileHelper.GetAnalysisWords().Keys)
-            {
-                Log.Info(line);
-            }
-            string username = "realDonaldTrump";
-            //string username = "TestBot_SW709";
-
-            LimitHelper.Instance.SetLimit(new WebHandler().MakeRequest<Limit>(RequestBuilder.BuildStartupRequest()));
-
-            var returned = FriendsRetriever.Instance.GetFriends(username);
-            Log.Info("Following " + returned.Users.Count);
-
-            /*List<Tweet> returned2 = TweetRetriever.Instance.GetTweetsFromUser(909688209080242176);
-            string temp = "";
-            /foreach (var item in returned2)
-            {
-                foreach (var url in item.Entities.Urls)
-                {
-                    temp += url.ExpandedUrl + Environment.NewLine;
-                }
-            }
-            FileHelper.WriteStringToFile("BubbleBuster", "url", temp);
-
-            Console.WriteLine("Done!!! " + returned2.Count);
-            */
-            /*
             List<Tweet> returned3 = TweetRetriever.Instance.GetTweetsFromFriends(returned);
             FileHelper.WriteObjectToFile("BubbleBuster", "multTweets", returned3);
 
@@ -112,7 +80,7 @@ namespace BubbleBuster
 
             Console.WriteLine("Begin Retrieving: " + DateTime.Now);
             AuthObj auth = new AuthObj();
-            User user = new WebHandler(auth).MakeRequest<User>(TwitterRequestBuilder.BuildRequest(DataType.user, auth, "screen_name=" + "realDonaldTrump"));
+            User user = new WebHandler(auth).TwitterGetRequest<User>(TwitterRequestBuilder.BuildRequest(RequestType.user, auth, "screen_name=" + "realDonaldTrump"));
             var userTweets = TweetRetriever.Instance.GetTweetsFromUser(user, auth);
             var friends = FriendsRetriever.Instance.GetFriends(user, auth);
             Log.Info("Following " + friends.Users.Count + "users");

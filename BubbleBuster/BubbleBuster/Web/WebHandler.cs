@@ -12,6 +12,7 @@ namespace BubbleBuster.Web
 {
     public class WebHandler
     {
+        //Varible to contain the supplied auth object
         private AuthObj auth;
 
         public WebHandler(AuthObj auth)
@@ -20,13 +21,18 @@ namespace BubbleBuster.Web
             ServicePointManager.DefaultConnectionLimit = 4; //Because at normal operation at most 4 threads should be running
         }
 
-        public string MakeRequest(UrlObject requestObject)
+        /// <summary>
+        /// Get request for twitter.
+        /// </summary>
+        /// <param name="requestObject">The request object</param>
+        /// <returns>A string representation of the result of the request</returns>
+        public string TwitterGetRequest(RequestUrlObject requestObject)
         {
             string res = "";
             string authHeader = "";
             if (auth.Type == AuthObj.AuthType.User)
             {
-                authHeader = OAuthHelper.Instance.BuildAuthHeader(OAuthHelper.DataType.GET, auth.Name, auth.OAuthToken, auth.OAuthTokenSecret, requestObject.BaseUrl, requestObject.Params);
+                authHeader = OAuthHelper.Instance.BuildAuthHeader(OAuthHelper.RequestMethod.GET, auth.Name, auth.OAuthToken, auth.OAuthTokenSecret, requestObject.BaseUrl, requestObject.Params);
             }
             else if (auth.Type == AuthObj.AuthType.App)
             {
@@ -36,6 +42,115 @@ namespace BubbleBuster.Web
             return res;
         }
 
+
+        /// <summary>
+        /// Get request for twitter.
+        /// </summary>
+        /// <typeparam name="T">The return type T</typeparam>
+        /// <param name="requestObject">The request object</param>
+        /// <returns>The result represented as an object of type T</returns>
+        public T TwitterGetRequest<T>(RequestUrlObject requestObject) where T : new() //Needed such that a new instance of an object can be made
+        {
+            T res = default(T); // First set it to its default
+
+            //Then if it is a list (IEnumerable), then it creates a new instance of it. 
+            //Such that it is not null
+            if (typeof(IEnumerable).IsAssignableFrom(typeof(T)))
+            {
+                res = new T();
+            }
+
+            //Such that if it fails to get an result or deserialize it just is null
+            T tempRes = default(T);
+
+            try
+            {
+                string data = TwitterGetRequest(requestObject);
+                tempRes = JsonConvert.DeserializeObject<T>(data);
+            }
+            catch (JsonException e)
+            {
+                lock (Log.LOCK)
+                {
+                    Log.Info(e.Message);
+                }
+            }
+
+            if (tempRes != null)
+            {
+                res = tempRes;
+            }
+
+            return res;
+        }
+
+
+        /// <summary>
+        /// Database Get request to retrieve information from the database
+        /// </summary>
+        /// <param name="requestUrl">The request url</param>
+        /// <param name="result">The result of the request</param>
+        /// <param name="parameters">The parameters of the request</param>
+        /// <returns>True if the request succeed</returns>
+        public bool DatabaseGetRequest(string requestUrl, ref double result, params string[] parameters)
+        {
+            bool res = false;
+            string tempResult = "";
+
+            //Appends the parameters
+            foreach (var item in parameters)
+            {
+                requestUrl += item + "&";
+            }
+            requestUrl = requestUrl.Trim('&');
+
+            //Uses the private method to get the result
+            if(GetRequestBody(requestUrl, "Bearer " + Constants.DB_CREDS, ref tempResult))
+            {
+                res = true;
+                result = Convert.ToDouble(tempResult);
+            }
+            return res;
+        }
+
+        /// <summary>
+        /// Database post request to post something to the database
+        /// </summary>
+        /// <param name="requestUrl">The request url</param>
+        /// <param name="parameters">The parameters of the request</param>
+        /// <returns>True if the request succeed</returns>
+        public bool DatabasePostRequest(string requestUrl, params string[] parameters)
+        {
+            foreach (var item in parameters)
+            {
+                requestUrl += item + "&";
+            }
+            requestUrl = requestUrl.Trim('&');
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUrl);
+            request.Headers[HttpRequestHeader.Authorization] = "Bearer " + Constants.DB_CREDS;
+            request.Method = "POST";
+            request.Timeout = 1800000;
+
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+            if(response.StatusCode == HttpStatusCode.OK)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        //Private helper method to return the result of an get request
+        private bool GetRequestBody(RequestUrlObject requestObject, object auth, ref string result)
+        {
+            return GetRequestBody(requestObject.Url, auth, ref result);
+        }
+
+        //Private helper method to return the result of an get request
         private bool GetRequestBody(string requestString, object auth, ref string result)
         {
             bool res = false;
@@ -75,88 +190,6 @@ namespace BubbleBuster.Web
             }
 
             return res;
-        }
-
-        private bool GetRequestBody(UrlObject requestObject, object auth, ref string result)
-        {
-            return GetRequestBody(requestObject.Url, auth, ref result);
-        }
-
-        public T MakeRequest<T>(UrlObject requestObject) where T : new()
-        {
-            T res = default(T);
-
-            if (typeof(IEnumerable).IsAssignableFrom(typeof(T)))
-            {
-                res = new T();
-            }
-
-            T tempRes = default(T);
-
-            try
-            {
-                string data = MakeRequest(requestObject);
-                tempRes = JsonConvert.DeserializeObject<T>(data);
-            }
-            catch (JsonException e)
-            {
-                lock (Log.LOCK)
-                {
-                    Log.Info(e.Message);
-                }
-            }
-
-            if (tempRes != null)
-            {
-                res = tempRes;
-            }
-
-            return res;
-        }
-        
-
-        public bool DBGetRequest(string requestString, ref double result, params string[] parameters)
-        {
-            bool res = false;
-            string tempResult = "";
-            foreach (var item in parameters)
-            {
-                requestString += item + "&";
-            }
-            requestString = requestString.Trim('&');
-
-
-            if(GetRequestBody(requestString, "Bearer " + Constants.DB_CREDS, ref tempResult))
-            {
-                res = true;
-                result = Convert.ToDouble(tempResult);
-            }
-            return res;
-        }
-
-        public bool DBPostRequest (string requestString, params string[] parameters)
-        {
-            foreach (var item in parameters)
-            {
-                requestString += item + "&";
-            }
-            requestString = requestString.Trim('&');
-
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestString);
-            request.Headers[HttpRequestHeader.Authorization] = "Bearer " + Constants.DB_CREDS;
-            request.Method = "POST";
-            request.Timeout = 1800000;
-
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-
-            if(response.StatusCode == HttpStatusCode.OK)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
         }
     }
 }

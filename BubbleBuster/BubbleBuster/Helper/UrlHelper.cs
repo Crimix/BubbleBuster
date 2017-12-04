@@ -9,12 +9,18 @@ namespace BubbleBuster.Helper
 {
     public class UrlHelper
     {
+        //Instance variables
         private static UrlHelper _instance;
 
+        //Private constructor such that it is a singleton
         private UrlHelper()
         {
         }
 
+        /// <summary>
+        /// Returns a static instance of the class, if one exist.
+        /// Else et creates a new instance.
+        /// </summary>
         public static UrlHelper Instance
         {
             get
@@ -27,6 +33,11 @@ namespace BubbleBuster.Helper
             }
         }
 
+        /// <summary>
+        /// Shortens an url by removing the prefix and postfix. Such as http:// and .com
+        /// </summary>
+        /// <param name="url">The url string</param>
+        /// <returns>A shorten url string</returns>
         public string ShortenUrl(string url)
         {
             string[] words = { "www.", "http://", "https://", "www1." };

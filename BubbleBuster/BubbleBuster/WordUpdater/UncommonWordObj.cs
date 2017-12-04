@@ -14,7 +14,7 @@ namespace BubbleBuster.WordUpdater
     {
         public UncommonWordObj(string wordString)
         {
-            word = wordString;
+            Word = wordString;
             LeftPosCount = 0;
             LeftNegCount = 0;
             LeftNeuCount = 0;
@@ -26,7 +26,7 @@ namespace BubbleBuster.WordUpdater
             CenterNeuCount = 0;
         }
 
-        public string word { get; set; } = "";
+        public string Word { get; set; } = "";
         public int LeftPosCount { get; set; }
         public int RightPosCount { get; set; }
         public int CenterPosCount { get; set; }

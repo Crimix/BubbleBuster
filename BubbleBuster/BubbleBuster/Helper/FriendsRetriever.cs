@@ -71,7 +71,7 @@ namespace BubbleBuster.Helper
             
             while (cursor != 0)
             {
-                var friends = new WebHandler(auth).MakeRequest<Friends>(TwitterRequestBuilder.BuildRequest(DataType.friendsObj, auth, parameter, "count=200",  "cursor=" + cursor));
+                var friends = new WebHandler(auth).TwitterGetRequest<Friends>(TwitterRequestBuilder.BuildRequest(RequestType.friendsObj, auth, parameter, "count=200",  "cursor=" + cursor));
                 tempList.AddRange(friends.Users);
                 cursor = friends.NextCursor;
                 friends = null;

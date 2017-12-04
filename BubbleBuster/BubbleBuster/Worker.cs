@@ -12,20 +12,21 @@ using System.Web;
 
 namespace BubbleBuster
 {
-    public class Worker
+    public class Worker //TODO: Implement the last things
     {
         public Worker (AuthObj auth, string twitterName) //Executes the task parsed by the ServerTask class
         {
             //Sets the limits such that we do not exceed the limits
-            LimitHelper.Instance(auth).SetLimit(new WebHandler(auth).MakeRequest<Limit>(TwitterRequestBuilder.BuildStartupRequest()));
-            User user = new WebHandler(auth).MakeRequest<User>(TwitterRequestBuilder.BuildRequest(DataType.user, auth, "screen_name=" + twitterName)); //Used for getting the users political value
+            LimitHelper.Instance(auth).InitPropertises(new WebHandler(auth).TwitterGetRequest<Limit>(TwitterRequestBuilder.BuildStartupRequest()));
+            User user = new WebHandler(auth).TwitterGetRequest<User>(TwitterRequestBuilder.BuildRequest(RequestType.user, auth, "screen_name=" + twitterName)); //Used for getting the users political value
 
+            //Gets the tweets of the user and the friends
             var userTweets = TweetRetriever.Instance.GetTweetsFromUser(user, auth); 
             var friends = FriendsRetriever.Instance.GetFriends(user, auth);
             Log.Info("Following " + friends.Users.Count + "users");
 
+            //Get the tweets of the filther bubble
             List<Tweet> filterBubble = TweetRetriever.Instance.GetTweetsFromFriends(friends, auth);
-            FileHelper.WriteObjectToFile("multTweets", filterBubble);
 
             Classifier c = new Classifier();
             double userpol = c.RunNaiveBayes(userTweets);
