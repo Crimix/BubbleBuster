@@ -86,7 +86,7 @@
     <Compile Include="Helper\OAuthHelper.cs" />
     <Compile Include="Helper\Objects\AnalysisResultObj.cs" />
     <Compile Include="Helper\Objects\AuthObj.cs" />
-    <Compile Include="Helper\Objects\HashtagObj.cs" />
+    <Compile Include="Helper\Objects\KeywordObj.cs" />
     <Compile Include="Helper\LimitHelper.cs" />
     <Compile Include="Helper\Log.cs" />
     <Compile Include="Helper\TwitterRequestBuilder.cs" />

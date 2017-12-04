@@ -23,7 +23,7 @@ namespace BubbleBuster.Web.ReturnedObjects
 
         public Dictionary<string, int> NewsHyperlinks = new Dictionary<string, int>();
 
-        public int hashtagBias = 0;
+        public int keywordBias = 0;
         public int positiveValue = 0;
         public int negativeValue = 0;
         public double mediaBias = 0;
