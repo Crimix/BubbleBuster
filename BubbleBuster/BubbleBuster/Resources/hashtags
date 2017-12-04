@@ -1,0 +1,150 @@
+;;Hashtags retrieved from https://top-hashtags.com/hashtag/politics/#, on the 6th of November 2017
+;;The following list consists of all hashtags related to #politics on Instagram, Twitter, Facebook, Tumblr, and ello 
+;;We have 3 categories: RightWing, LeftWing, and Neutral.
+;;Each hashtag has 3 values: Negative, Base, Positive.
+;;These values indicate if the tweet is Right, Neutral or Left given a positive/Negative connotation.
+;;Tweet			Neg	Base	Pos
+
+white supremacist;-10;0;0
+white supremacy;-10;0;0
+nazi;-10;0;0
+nazism;-10;0;0
+nazis;-10;0;0
+communist;6;0;-6
+communism;6;0;-6
+right wing;-6;0;6
+left wing;6;0;-6
+muslim;6;0;-6
+muslims;6;0;-6
+islamist;6;0;-6
+islam;10;0;-10
+health care;10;0;-10
+free speech;10;10;10
+snowflake;10;0;0
+cuck;10;10;10
+bluelivesmatter;10;10;10
+blue lives matter;10;10;10
+backtheblue;10;10;10
+back the blue;10;10;10
+patriot;10;10;10
+makeamericagreatagain;10;10;10
+make america great again;10;10;10
+trumptrain;10;10;10
+trump train;10;10;10
+americafirst;10;10;10
+america first;10;10;10
+maga;10;10;10
+boycottnfl;10;10;10
+boycott nfl;10;10;10
+2a;10;10;10
+ccw247;10;10;10
+buildthatwall;10;10;10
+build that wall;10;10;10
+build the wall;10;10;10
+draintheswamp;10;10;10
+drain the swamp;10;10;10
+constitution;10;10;10
+supportourtroops;10;10;10
+support our troops;10;10;10
+alllivesmatter;10;10;10
+all lives matter;10;10;10
+momapproved;10;10;10
+hillaryforprison;10;10;10
+hillary for prison;10;10;10
+secondamendment;10;10;10
+second amendment;10;10;10
+buildthewall;10;10;10
+libtard;10;10;10
+noincometax;10;10;10
+globalcitizen;10;10;10
+global citizen;10;10;10
+taxationistheft;10;10;10
+taxation is theft;10;10;10
+freemarket;10;10;10
+free market;10;10;10
+liberallogic;10;10;10
+liberal logic;10;10;10
+prision;10;10;10
+fakenews;10;10;10
+fake news;10;10;10
+freedom;10;10;10
+deplorable;0;0;0
+deplorables;0;0;0
+impeach;-10;-10;-10
+takeaknee;-10;-10;-10
+take a knee;-10;-10;-10
+notmypresident;-10;-10;-10
+not my president;-10;-10;-10
+newlaws;-10;-10;-10
+weneedhelp;-10;-10;-10
+resist;-10;-10;-10
+legalizeit;-10;-10;-10
+homophobia;-10;-10;-10
+bigotry;-10;-10;-10
+travelban;-10;-10;-10
+travel ban;-10;-10;-10
+feminism;3;0;-3
+racism;3;0;-3
+racists;3;0;-3
+racist;3;0;-3
+equality;-10;-10;-10
+acceptance;-10;-10;-10
+humanrights;-10;-10;-10
+antifa;3;0;-3
+conservative;-3;0;3
+whitehouse;-3;0;3
+politics;0;0;0
+lawandorder;-3;0;3
+goverment;-3;0;3
+capitalism;-3;0;3
+usa;-3;0;3
+ronaldreagan;-3;0;3
+trump;-3;0;3
+presidenttrump;-3;0;3
+republican;-3;0;3
+immigration;3;0;-3
+merica;-3;0;3
+army;-3;0;3
+navy;-3;0;3
+marines;-3;0;3
+airforce;-3;0;3
+coastguard;-3;0;3
+military;-3;0;3
+armedforces;-3;0;3
+armed forces;-3;0;3
+nra;-3;0;3
+police;-3;0;3
+donaldtrump;-3;0;3
+donald trump;-3;0;3
+america;-3;0;3
+guns;-3;0;3
+gop;-3;0;3
+conservatism;-3;0;3
+democrat;3;0;-3
+democratic;3;0;-3
+libertarian;3;0;-3
+potus;-3;0;3
+potus45;-3;0;3
+realdonaldtrump;-3;0;3
+foxnews;-3;0;3
+cnn;3;0;-3
+nbc;3;0;-3
+abc;3;0;-3
+republicans;-3;0;3
+melaniatrump;-3;0;3
+ivankatrump;-3;0;3
+obama;3;0;-3
+liberals;3;0;-3
+nfl;3;0;-3
+protest;3;0;-3
+rightwing;-3;0;3
+liberal;3;0;-3
+capitalist;-3;0;3
+venezuela;1;0;1
+democrats;3;0;-3
+president;-3;0;3
+bbc;3;0;-3
+thenewyorktimes;3;0;-3
+donald;-3;0;3
+jews;3;0;-3
+hilaryclinton;3;0;-3
