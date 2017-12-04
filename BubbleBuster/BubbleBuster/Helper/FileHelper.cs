@@ -111,6 +111,7 @@ namespace BubbleBuster.Helper
                 {
                     string[] tempArray = keyword.Split(';'); 
                     keywords.Add(tempArray[0], new KeywordObj(keyword, int.Parse(tempArray[1]), int.Parse(tempArray[2]), int.Parse(tempArray[3])));
+                    keywords.Add('#' + tempArray[0], new KeywordObj('#' + keyword, int.Parse(tempArray[1]), int.Parse(tempArray[2]), int.Parse(tempArray[3])));
                 }
             }
             catch (FileNotFoundException e)

@@ -146,10 +146,10 @@ namespace BubbleBuster.Helper
         {
             foreach (string word in wordList)
             {
-                if (keywords.ContainsKey(word) && !tweet.TagList.Contains(word, StringComparer.InvariantCultureIgnoreCase))
+                if (keywords.ContainsKey(word) && 
+                    !tweet.TagList.Contains(word, StringComparer.InvariantCultureIgnoreCase) && 
+                    keywords.TryGetValue(word, out KeywordObj keywordObj))
                 {
-                    if (keywords.TryGetValue(word, out KeywordObj keywordObj))
-                    {
                         tweet.TagList.Add(word);
 
                         int sentiment = tweet.GetSentiment();
@@ -160,7 +160,6 @@ namespace BubbleBuster.Helper
                             tweet.KeywordBias += keywordObj.Neg;
                         else
                             tweet.KeywordBias += keywordObj.Bas;
-                    }
                 }
             }
         }
@@ -211,12 +210,11 @@ namespace BubbleBuster.Helper
 
                     output.KeywordBias += tweet.KeywordBias;
                     output.MediaBias += tweet.MediaBias;
-                    output.Count = tweetList.Count;
                     output.NegativeSentiment += tweet.NegativeValue;
                     output.PositiveSentiment += tweet.PositiveValue;
                 }
             }
-
+            output.Count = tweetList.Count;
             return output;
         }
 
