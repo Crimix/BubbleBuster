@@ -69,7 +69,7 @@ namespace QSLib
                 {
                     List<Task> runningTasksListInstance = new List<Task>();
                     runningTasksListInstance.AddRange(runningTasksList);
-                    foreach (var task in runningTasksListInstance) //ToDo Fik en exception her, omkring samling blev ændret
+                    foreach (var task in runningTasksListInstance)
                     {
                         if (task.IsCompleted)
                         {
