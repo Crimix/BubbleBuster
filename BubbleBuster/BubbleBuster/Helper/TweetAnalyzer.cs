@@ -24,8 +24,8 @@ namespace BubbleBuster.Helper
         //Instance variable
         private static TweetAnalyzer _instance;
 
-        //"Hashtags" are key-words used in analysis. Each has a number of fields determining their political value in a given positive/negative sentimental context.
-        private Dictionary<string, KeywordObj> hashtags = new Dictionary<string, KeywordObj>(StringComparer.InvariantCultureIgnoreCase);
+        //"Keywords" are key-words used in analysis. Each has a number of fields determining their political value in a given positive/negative sentimental context.
+        private Dictionary<string, KeywordObj> keywords = new Dictionary<string, KeywordObj>(StringComparer.InvariantCultureIgnoreCase);
 
         //Words from file. Has an emotional value used in sentimental analysis.
         private Dictionary<string, int> analysisWords = new Dictionary<string, int>(StringComparer.InvariantCultureIgnoreCase);
@@ -49,7 +49,7 @@ namespace BubbleBuster.Helper
                     _instance = new TweetAnalyzer();
                     _instance.analysisWords = FileHelper.GetAnalysisWords();
                     _instance.newsHyperlinks = FileHelper.GetHyperlinks();
-                    _instance.hashtags = FileHelper.GetKeywords();
+                    _instance.keywords = FileHelper.GetKeywords();
                 }
                 return _instance;
             }
@@ -116,45 +116,51 @@ namespace BubbleBuster.Helper
         /// </summary>
         /// <param name="word">The word</param>
         /// <param name="tweet">The tweet</param>
-        private void SentimentAnalysis(string word, Tweet tweet)
+        private void SentimentAnalysis(List<string> wordList, Tweet tweet)
         {
-            if (analysisWords.ContainsKey(word) && analysisWords.TryGetValue(word, out int wordValue))
+            foreach (string word in wordList)
             {
-                if (wordValue == 1)
+                if (analysisWords.ContainsKey(word) && analysisWords.TryGetValue(word, out int wordValue))
                 {
-                    tweet.PosList.Add(word);
-                    tweet.PositiveValue++;
-                }
+                    if (wordValue == 1)
+                    {
+                        tweet.PosList.Add(word);
+                        tweet.PositiveValue++;
+                    }
 
-                else if (wordValue == -1)
-                {
-                    tweet.NegList.Add(word);
-                    tweet.NegativeValue++;
+                    else if (wordValue == -1)
+                    {
+                        tweet.NegList.Add(word);
+                        tweet.NegativeValue++;
+                    }
                 }
             }
         }
 
         /// <summary>
-        /// Hashtag analysis of a tweet 
+        /// Keyword analysis of a tweet 
         /// </summary>
-        /// <param name="hashtag">The hashtag</param>
+        /// <param name="keyword">The keyword</param>
         /// <param name="tweet">The tweet</param>
-        private void HashtagAnalysis(string hashtag, Tweet tweet)
+        private void KeywordAnalysis(List<string> wordList, Tweet tweet)
         {
-            if (hashtags.ContainsKey(hashtag) && !tweet.TagList.Contains(hashtag, StringComparer.InvariantCultureIgnoreCase))
+            foreach (string word in wordList)
             {
-                if (hashtags.TryGetValue(hashtag, out KeywordObj hashtagObj))
+                if (keywords.ContainsKey(word) && !tweet.TagList.Contains(word, StringComparer.InvariantCultureIgnoreCase))
                 {
-                    tweet.TagList.Add(hashtag);
+                    if (keywords.TryGetValue(word, out KeywordObj keywordObj))
+                    {
+                        tweet.TagList.Add(word);
 
-                    int sentiment = tweet.GetSentiment();
+                        int sentiment = tweet.GetSentiment();
 
-                    if (sentiment > 1)
-                        tweet.HashtagBias += hashtagObj.Pos;
-                    else if (sentiment < -1)
-                        tweet.HashtagBias += hashtagObj.Neg;
-                    else
-                        tweet.HashtagBias += hashtagObj.Bas;
+                        if (sentiment > 1)
+                            tweet.KeywordBias += keywordObj.Pos;
+                        else if (sentiment < -1)
+                            tweet.KeywordBias += keywordObj.Neg;
+                        else
+                            tweet.KeywordBias += keywordObj.Bas;
+                    }
                 }
             }
         }
@@ -178,7 +184,7 @@ namespace BubbleBuster.Helper
 
         /// <summary>
         /// Analyzes a list of Tweets, and returns the following values as a double-array:
-        /// Hashtag-Bias: Determined political value of the words used in the tweets
+        /// Keyword-Bias: Determined political value of the words used in the tweets
         /// Media-Bias: Determined political value of news media linked to in the tweets
         /// Count: Number of tweets analtyzed
         /// Pos: Number of positive words found
@@ -189,9 +195,8 @@ namespace BubbleBuster.Helper
         public AnalysisResultObj AnalyzeAndDecorateTweets(List<Tweet> tweetList)
         {
             AnalysisResultObj output = new AnalysisResultObj();
-            List<Tweet> returnList = tweetList;
 
-            foreach (Tweet tweet in returnList)
+            foreach (Tweet tweet in tweetList)
             {
                 tweet.HasQuotes = CheckForQuotationMarks(tweet);
 
@@ -199,22 +204,14 @@ namespace BubbleBuster.Helper
                 {
                     var puncturation = tweet.Text.Where(Char.IsPunctuation).Distinct().ToArray();
                     List<String> wordList = tweet.Text.Split(' ').Select(x => x.Trim(puncturation)).ToList<String>();
-
-                    foreach (string word in wordList)
-                    {
-                        //Sentiment Analysis
-                        SentimentAnalysis(word, tweet);
-
-                        //Hashtag Analysis
-                        HashtagAnalysis(word, tweet);
-                    }
-
-                    //Media Analysis
+                    
+                    SentimentAnalysis(wordList, tweet);
+                    KeywordAnalysis(wordList, tweet);
                     MediaAnalysis(tweet);
 
-                    output.KeywordBias += tweet.HashtagBias;
+                    output.KeywordBias += tweet.KeywordBias;
                     output.MediaBias += tweet.MediaBias;
-                    output.Count = returnList.Count;
+                    output.Count = tweetList.Count;
                     output.NegativeSentiment += tweet.NegativeValue;
                     output.PositiveSentiment += tweet.PositiveValue;
                 }
