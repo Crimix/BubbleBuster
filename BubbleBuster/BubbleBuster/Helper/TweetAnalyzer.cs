@@ -25,7 +25,7 @@ namespace BubbleBuster.Helper
         private static TweetAnalyzer _instance;
 
         //"Hashtags" are key-words used in analysis. Each has a number of fields determining their political value in a given positive/negative sentimental context.
-        private Dictionary<string, HashtagObj> hashtags = new Dictionary<string, HashtagObj>(StringComparer.InvariantCultureIgnoreCase);
+        private Dictionary<string, KeywordObj> hashtags = new Dictionary<string, KeywordObj>(StringComparer.InvariantCultureIgnoreCase);
 
         //Words from file. Has an emotional value used in sentimental analysis.
         private Dictionary<string, int> analysisWords = new Dictionary<string, int>(StringComparer.InvariantCultureIgnoreCase);
@@ -49,7 +49,7 @@ namespace BubbleBuster.Helper
                     _instance = new TweetAnalyzer();
                     _instance.analysisWords = FileHelper.GetAnalysisWords();
                     _instance.newsHyperlinks = FileHelper.GetHyperlinks();
-                    _instance.hashtags = FileHelper.GetHashtags();
+                    _instance.hashtags = FileHelper.GetKeywords();
                 }
                 return _instance;
             }
@@ -143,7 +143,7 @@ namespace BubbleBuster.Helper
         {
             if (hashtags.ContainsKey(hashtag) && !tweet.TagList.Contains(hashtag, StringComparer.InvariantCultureIgnoreCase))
             {
-                if (hashtags.TryGetValue(hashtag, out HashtagObj hashtagObj))
+                if (hashtags.TryGetValue(hashtag, out KeywordObj hashtagObj))
                 {
                     tweet.TagList.Add(hashtag);
 
