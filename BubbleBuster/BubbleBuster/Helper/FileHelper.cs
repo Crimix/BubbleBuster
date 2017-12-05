@@ -186,9 +186,9 @@ namespace BubbleBuster.Helper
             {
                 obj = JsonConvert.DeserializeObject<T>(File.ReadAllText(filePath));
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                Log.Error("Could not deserialize the file");
+                Log.Error("Could not deserialize the file" + e.Message);
             }
             
             return obj;

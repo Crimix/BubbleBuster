@@ -122,27 +122,50 @@ namespace BubbleBuster.Web
         /// <returns>True if the request succeed</returns>
         public bool DatabaseSendDataRequest(string requestUrl, string method, params string[] parameters)
         {
+            bool result = false;
+            string postData = "";
             foreach (var item in parameters)
             {
-                requestUrl += item + "&";
+                postData += item + "&";
             }
-            requestUrl = requestUrl.Trim('&');
+            postData = postData.Trim('&');
+            var data = Encoding.ASCII.GetBytes(postData);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUrl);
             request.Headers[HttpRequestHeader.Authorization] = "Bearer " + Constants.DB_CREDS;
             request.Method = method;
+            request.ContentType = "application/x-www-form-urlencoded";
+            request.ContentLength = data.Length;
             request.Timeout = 1800000;
 
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            using (var stream = request.GetRequestStream())
+            {
+                stream.Write(data, 0, data.Length);
+            }
 
-            if(response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Created)
+            try
             {
-                return true;
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+                if (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Created)
+                {
+                    result = true;
+                }
+                else
+                { 
+                    result = false;
+                }
             }
-            else
+            catch (WebException e)
             {
-                return false;
+                lock (Log.LOCK)
+                {
+                    Log.Error(e.Message + ": " + requestUrl );
+                }
             }
+
+            return result;
+
         }
 
         //Private helper method to return the result of an get request
@@ -161,34 +184,45 @@ namespace BubbleBuster.Web
             request.Method = "GET";
             request.Timeout = 1800000;
 
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-
-            if (response.StatusCode == HttpStatusCode.OK)
+            try
             {
-                Stream receiveStream = response.GetResponseStream();
-                StreamReader readStream = null;
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
-                if (response.CharacterSet == null)
+                if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    readStream = new StreamReader(receiveStream);
-                }
-                else
-                {
-                    readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
-                }
+                    Stream receiveStream = response.GetResponseStream();
+                    StreamReader readStream = null;
 
-                try
-                {
-                    result = readStream.ReadToEnd();
-                    res = true;
-                }
-                catch (IOException)
-                {
-                }
+                    if (response.CharacterSet == null)
+                    {
+                        readStream = new StreamReader(receiveStream);
+                    }
+                    else
+                    {
+                        readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
+                    }
 
-                response.Close();
-                readStream.Close();
+                    try
+                    {
+                        result = readStream.ReadToEnd();
+                        res = true;
+                    }
+                    catch (IOException)
+                    {
+                    }
+
+                    response.Close();
+                    readStream.Close();
+                }
             }
+            catch (WebException e)
+            {
+                lock (Log.LOCK)
+                {
+                    Log.Error(e.Message + ": " + requestString);
+                }
+            }
+           
 
             return res;
         }
