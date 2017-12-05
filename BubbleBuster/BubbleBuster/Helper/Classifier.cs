@@ -17,20 +17,30 @@ namespace BubbleBuster.Helper
         private BagOfWords bagOfWords;
         private TextProcessor tp;
 
+        /// <summary>
+        /// Initialize a TextProcessor
+        /// </summary>
         public Classifier()
         {
             tp = new TextProcessor();
         }
 
+        /// <summary>
+        /// Loads a NB model from a file
+        /// Formats the tweets and decides on their bias.
+        /// </summary>
+        /// <param name="tweets"> The list of tweets</param>
+        /// <returns> The bias </returns>
         public double RunNaiveBayes(List<Tweet> tweets)
         {
             var model = FileHelper.ReadModelFromFile<NaiveBayes<NormalDistribution>>("NaiveBayes90.accord");
 
             double[][] inputs = FormatTweets(tweets);
             
+            //Predicts each tweets class
             int[] answers = model.Decide(inputs);
-            List<int> result = new List<int>(){ 0, 0, 0};
 
+            List<int> result = new List<int>(){ 0, 0, 0};
             foreach (var item in answers)
             {
                 result[item] += 1;
@@ -39,6 +49,11 @@ namespace BubbleBuster.Helper
             return CalcBias(result);
         }
 
+        /// <summary>
+        /// Formats a list of Tweets to the correct Accord.Net format
+        /// </summary>
+        /// <param name="tweets"> A list of tweets </param>
+        /// <returns>  Formatted Tweets </returns>
         public double[][] FormatTweets (List<Tweet> tweets)
         {
             List<string> _tweets = new List<string>();
@@ -52,11 +67,14 @@ namespace BubbleBuster.Helper
                 MaximumOccurance = 1
             };
 
+            //Loads a string[][] with the training data and trains a BOW on it
             string[][] trainingTokens = FileHelper.ReadObjectFromFile<string[][]>(@"BagOfWords90.txt");
-
             bagOfWords.Learn(trainingTokens);
 
+            //Whitespace tokenizer
             //string[][] tokens = tweets.ToArray().Tokenize();
+
+            //Custom Tokenizer
             string[][] tokens = tp.Tokenizer(_tweets);
             
             double[][] input = bagOfWords.Transform(tokens);
@@ -64,6 +82,11 @@ namespace BubbleBuster.Helper
             return input;
         }
 
+        /// <summary>
+        /// Calculates the Bias according to an arbitrary method
+        /// </summary>
+        /// <param name="results"> A list of predictions </param>
+        /// <returns> Personal bias </returns>
         double CalcBias(List<int> results)
         {
             double left = results[0] - (results[1] / 2);

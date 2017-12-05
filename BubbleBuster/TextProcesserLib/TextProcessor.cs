@@ -11,7 +11,9 @@ namespace TextProcesserLib
         bool isNeg;
         Stemmer stem = new Stemmer();
 
-        //initialize regex dictionary
+        /// <summary>
+        /// Initialize regex dictionaries
+        /// </summary>
         public TextProcessor()
         {
             this.regexes = new Dictionary<string, Regex>
@@ -56,7 +58,13 @@ namespace TextProcesserLib
             };
         }
 
-        //Puts a token through a series of regexes
+
+        /// <summary>
+        /// Puts a token through a series of regexes
+        /// </summary>
+        /// <param name="token"> A token </param>
+        /// <param name="_isNeg"> Decides if we add "NEG_" in front of the token </param>
+        /// <returns> A processed token </returns>
         string ProcessToken(string token, bool _isNeg)
         {
             string procToken = token;
@@ -76,10 +84,12 @@ namespace TextProcesserLib
 
             procToken = regexes["punctuation"].Replace(procToken, "");
 
+            /* Not currently used as it decreases accuracy of NB
             if (isNeg && !String.IsNullOrWhiteSpace(procToken))
             {
-                //procToken = String.Concat("NEG_", procToken);
+                procToken = String.Concat("NEG_", procToken);
             }
+            */
 
             if (KeyWords.NotWordsList.Contains(procToken))
             {
@@ -89,36 +99,42 @@ namespace TextProcesserLib
             return procToken;
         }
 
-        //Tokenize list of tweets 
+
+        /// <summary>
+        /// Tokenize list of tweets
+        /// </summary>
+        /// <param name="tweets">A list of strings</param>
+        /// <returns> A jagged string array </returns>
         public string[][] Tokenizer(List<string> tweets)
         {
-            List<List<string>> tokens = new List<List<string>>();
+            List<List<string>> tokenizedTweets = new List<List<string>>();
 
             string stemmedWord;
 
             foreach (string tweet in tweets)
             {
                 isNeg = false;
-                List<string> tokenTweet = new List<string>();
+                List<string> tokens = new List<string>();
 
-                foreach (var token in tweet.ToLower().Split(' '))
+                //Split and process each token in a tweet with regexes and stemming
+                foreach (string token in tweet.ToLower().Split(' '))
                 {
                     if (!KeyWords.StopWordsList.Contains(token))
                     {
                         stemmedWord = ProcessToken(token, isNeg);
                         stemmedWord = stem.StemWord(token);
 
-                        tokenTweet.Add(stemmedWord);
+                        tokens.Add(stemmedWord);
                     }
                 }
-                tokens.Add(tokenTweet);
+                tokenizedTweets.Add(tokens);
             }
 
-            string[][] res = new string[tokens.Count][];
-
-            for (int i = 0; i < tokens.Count; i++)
+            //Transform to string[][] format
+            string[][] res = new string[tokenizedTweets.Count][];
+            for (int i = 0; i < tokenizedTweets.Count; i++)
             {
-                res[i] = tokens[i].ToArray();
+                res[i] = tokenizedTweets[i].ToArray();
             }
             return res;
         }
