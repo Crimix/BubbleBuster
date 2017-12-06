@@ -57,7 +57,7 @@ namespace BubbleBuster.Helper
             {
                 Log.Error("News Source file not loaded: " + e.Message);
             }
-            
+
             return newsHyperlinks;
         }
 
@@ -76,13 +76,13 @@ namespace BubbleBuster.Helper
 
             try
             {
-                foreach (string word in File.ReadAllLines(posWordsFilePath).Skip(35)) //Skip: Start reading from line 36
+                foreach (string word in File.ReadAllLines(posWordsFilePath).Skip(35)) //Skip: Start reading from line 36 from first word "Resources.positive-words"
                 {
                     if(!analysisWords.ContainsKey(word))
                         analysisWords.Add(word, 1);
                 }
 
-                foreach (string word in File.ReadAllLines(negWordsFilePath).Skip(35))
+                foreach (string word in File.ReadAllLines(negWordsFilePath).Skip(35)) //Skip: Start reading from line 36 from first word "Resources.negative-words"
                 {
                     if (!analysisWords.ContainsKey(word))
                         analysisWords.Add(word, -1);
@@ -115,7 +115,7 @@ namespace BubbleBuster.Helper
 
                 foreach (string keyword in temp)
                 {
-                    string[] tempArray = keyword.Split(';'); 
+                    string[] tempArray = keyword.Split(';');
                     keywords.Add(tempArray[0], new KeywordObj(keyword, int.Parse(tempArray[1]), int.Parse(tempArray[2]), int.Parse(tempArray[3])));
                     keywords.Add('#' + tempArray[0], new KeywordObj('#' + keyword, int.Parse(tempArray[1]), int.Parse(tempArray[2]), int.Parse(tempArray[3])));
                 }
@@ -240,7 +240,7 @@ namespace BubbleBuster.Helper
             {
                 Log.Error("Could not deserialize the file" + e.Message);
             }
-            
+
             return obj;
         }
 
