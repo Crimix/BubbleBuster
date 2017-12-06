@@ -73,13 +73,13 @@ namespace BubbleBuster.Helper
 
             try
             {
-                foreach (string word in File.ReadAllLines(posWordsFilePath).Skip(35)) //Skip: Start reading from line 36
+                foreach (string word in File.ReadAllLines(posWordsFilePath).Skip(35)) //Skip: Start reading from line 36 from first word "Resources.positive-words"
                 {
                     if (!analysisWords.ContainsKey(word))
                         analysisWords.Add(word, 1);
                 }
 
-                foreach (string word in File.ReadAllLines(negWordsFilePath).Skip(35))
+                foreach (string word in File.ReadAllLines(negWordsFilePath).Skip(35)) //Skip: Start reading from line 36 from first word "Resources.negative-words"
                 {
                     if (!analysisWords.ContainsKey(word))
                         analysisWords.Add(word, -1);
