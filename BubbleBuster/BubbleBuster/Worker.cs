@@ -5,6 +5,7 @@ using BubbleBuster.Web.ReturnedObjects;
 using BubbleBuster.Web.ReturnedObjects.RateLimit;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ namespace BubbleBuster
         private long userRecordId = -1;
         private AuthObj auth;
         private WebHandler webHandler;
+        private Classifier c = new Classifier();
 
         public Worker(AuthObj auth, string twitterName)
         {
@@ -44,7 +46,7 @@ namespace BubbleBuster
             Log.Info("Following " + friends.Users.Count + " users");
 
             //Analyse the tweets while retrieving and post them to the database
-            TweetRetriever.Instance.GetTweetsFromFriendsAndAnalyse(friends, auth, CheckIfResultExistOnDB, ClassifyTweet, PostResultToDBAndLink);
+            TweetRetriever.Instance.GetTweetsFromFriendsAndAnalyse(friends, auth, CheckIfResultExistOnDBAndLink, ClassifyTweet, PostResultToDBAndLink);
 
             FinalizeUser();
             Log.Info("Done!!!");
@@ -80,6 +82,14 @@ namespace BubbleBuster
         {
             long result = -1;
             bool succes = GetUsersRecordIdOnDb(user, ref result);
+
+            return succes;
+        }
+
+        private bool CheckIfResultExistOnDBAndLink(User user)
+        {
+            long result = -1;
+            bool succes = GetUsersRecordIdOnDb(user, ref result);
             if (succes)
             {
                 AddFollower(result);
@@ -90,7 +100,6 @@ namespace BubbleBuster
 
         private AnalysisResultObj ClassifyTweet(List<Tweet> tweetList)
         {
-            Classifier c = new Classifier();
             AnalysisResultObj result = TweetAnalyzer.Instance.AnalyzeAndDecorateTweetsThreaded(tweetList);
             result.MIResult = c.RunNaiveBayes(tweetList);
 
@@ -99,7 +108,7 @@ namespace BubbleBuster
 
         private bool PostResultToDB(AnalysisResultObj resultObj, User user)
         {
-            bool succes = webHandler.DatabaseSendDataRequest(Constants.DB_SERVER_IP + "twitter", "POST", "twitter_name=" + user.Name, "twitter_id=" + user.Id, "analysis=" + resultObj.GetAlgorithmResult(), "media=" + resultObj.MediaBias, "mi=" + resultObj.GetMIResult(), "sentiment=" + resultObj.GetSentiment(), "tweet_count=" + resultObj.Count, "protect=" + user.IsProtected);
+            bool succes = webHandler.DatabaseSendDataRequest(Constants.DB_SERVER_IP + "twitter", "POST", "twitter_name=" + user.ScreenName, "twitter_id=" + user.Id, "analysis_val=" + resultObj.GetAlgorithmResult().ToString(CultureInfo.InvariantCulture), "media_val=" + resultObj.GetMediaResult().ToString(CultureInfo.InvariantCulture), "mi_val=" + resultObj.GetMIResult().ToString(CultureInfo.InvariantCulture), "sentiment_val=" + resultObj.GetSentiment().ToString(CultureInfo.InvariantCulture), "tweet_count=" + resultObj.Count, "protect=" + Convert.ToInt32(user.IsProtected));
             if (!succes)
             {
                 lock (Log.LOCK)

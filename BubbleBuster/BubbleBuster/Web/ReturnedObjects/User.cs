@@ -23,5 +23,8 @@ namespace BubbleBuster.Web.ReturnedObjects
 
         [JsonProperty("name")]
         public string Name { get; set; }
+
+        [JsonProperty("screen_name")]
+        public string ScreenName { get; set; }
     }
 }

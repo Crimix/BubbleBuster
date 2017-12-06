@@ -6,7 +6,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Web;
 using BubbleBuster.Helper.Objects;
+using System.Globalization;
 
 namespace BubbleBuster.Web
 {
@@ -129,10 +131,12 @@ namespace BubbleBuster.Web
                 postData += item + "&";
             }
             postData = postData.Trim('&');
+
             var data = Encoding.ASCII.GetBytes(postData);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUrl);
             request.Headers[HttpRequestHeader.Authorization] = "Bearer " + Constants.DB_CREDS;
+            request.Accept = "application/json";
             request.Method = method;
             request.ContentType = "application/x-www-form-urlencoded";
             request.ContentLength = data.Length;
@@ -158,9 +162,15 @@ namespace BubbleBuster.Web
             }
             catch (WebException e)
             {
+                Stream receiveStream = e.Response.GetResponseStream();
+                StreamReader readStream = null;
+                readStream = new StreamReader(receiveStream);
+                string errorMsg = "";
+                errorMsg = readStream.ReadToEnd();
+
                 lock (Log.LOCK)
                 {
-                    Log.Error(e.Message + ": " + requestUrl );
+                    Log.Error(e.Message + ": " + requestUrl + ": " + errorMsg);
                 }
             }
 
@@ -193,7 +203,7 @@ namespace BubbleBuster.Web
                     Stream receiveStream = response.GetResponseStream();
                     StreamReader readStream = null;
 
-                    if (response.CharacterSet == null)
+                    if (string.IsNullOrWhiteSpace(response.CharacterSet))
                     {
                         readStream = new StreamReader(receiveStream);
                     }
@@ -207,8 +217,12 @@ namespace BubbleBuster.Web
                         result = readStream.ReadToEnd();
                         res = true;
                     }
-                    catch (IOException)
+                    catch (IOException e)
                     {
+                        lock (Log.LOCK)
+                        {
+                            Log.Error(e.Message);
+                        }
                     }
 
                     response.Close();

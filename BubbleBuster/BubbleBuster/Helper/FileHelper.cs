@@ -18,6 +18,7 @@ namespace BubbleBuster.Helper
         private static Dictionary<string, KeywordObj> keywords;
         private static Dictionary<string, int> analysisWords; //Value: -1=negativeWord, 1=positiveWord
         private static List<string> commonWords;
+        
 
         //path variables
         private static string hyperlinkFilePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + "news_hyperlinks";
