@@ -18,7 +18,6 @@ namespace BubbleBuster
         private long userRecordId = -1;
         private AuthObj auth;
         private WebHandler webHandler;
-        private Classifier c = new Classifier();
 
         public Worker(AuthObj auth, string twitterName)
         {
@@ -100,6 +99,7 @@ namespace BubbleBuster
 
         private AnalysisResultObj ClassifyTweet(List<Tweet> tweetList)
         {
+            Classifier c = new Classifier();
             AnalysisResultObj result = TweetAnalyzer.Instance.AnalyzeAndDecorateTweetsThreaded(tweetList);
             result.MIResult = c.RunNaiveBayes(tweetList);
 

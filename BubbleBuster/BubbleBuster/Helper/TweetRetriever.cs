@@ -152,12 +152,13 @@ namespace BubbleBuster.Helper
                     task.Start();
                     runningTasks.Add(task);
                     taskList.Add(task);
+                    Log.Info(String.Format("Queue one task"));
                 }
             }
             taskQueue = null;
 
             Task.WaitAll(taskList.ToArray());
-
+            Log.Info(String.Format("Tasks done"));
             foreach (var item in taskList)
             {
                 tweetList.AddRange(item.Result);
@@ -186,9 +187,12 @@ namespace BubbleBuster.Helper
             if (get != null)
             {
                 alreadyExist = get(user);
-                lock (Log.LOCK)
+                if (alreadyExist)
                 {
-                    Log.Info(String.Format("{0,-30} {1,-20}", user.Name, "Already exist in db"));
+                    lock (Log.LOCK)
+                    {
+                        Log.Info(String.Format("{0,-30} {1,-20} {2,-11}", user.Name, user.Id, "Already exist in db"));
+                    }
                 }
             }
 
