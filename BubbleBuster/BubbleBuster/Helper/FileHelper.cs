@@ -5,8 +5,11 @@ using System.IO;
 using System.Linq;
 using BubbleBuster.Helper.Objects;
 using Accord.IO;
+using Accord.MachineLearning;
+using Accord.Statistics.Distributions.Fitting;
 using Accord.MachineLearning.Bayes;
 using Accord.Statistics.Distributions.Univariate;
+
 
 namespace BubbleBuster.Helper
 {
@@ -170,6 +173,20 @@ namespace BubbleBuster.Helper
             GenerateDirectoryStructure();
             File.WriteAllText(filePath, JsonConvert.SerializeObject(data));
             data = null;
+        }
+        
+        /// <summary>
+        /// Writes an Accord Object to file
+        /// </summary>
+        /// <param name="fileName"> The name of the file</param>
+        /// <param name="classifier">The data object</param>
+        public static void WriteModelToFile(string fileName, NaiveBayes<NormalDistribution> model)
+        {
+            Console.WriteLine("Entered WriteModelToFile");
+            string filePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + fileName;
+            Console.WriteLine("Models: " + filePath);
+            GenerateDirectoryStructure();
+            Serializer.Save(model, fileName);
         }
 
         /// <summary>

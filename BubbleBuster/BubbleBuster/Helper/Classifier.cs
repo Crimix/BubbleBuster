@@ -1,14 +1,13 @@
-﻿using Accord.IO;
+﻿using System;
+using System.IO;
+using System.Collections.Generic;
+using BubbleBuster.Web.ReturnedObjects;
+using TextProcesserLib;
+using Accord.MachineLearning;
+using Accord.Statistics.Distributions.Fitting;
 using Accord.MachineLearning.Bayes;
 using Accord.Statistics.Distributions.Univariate;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BubbleBuster.Web.ReturnedObjects;
-using Accord.MachineLearning;
-using TextProcesserLib;
+
 
 namespace BubbleBuster.Helper
 {
@@ -17,9 +16,6 @@ namespace BubbleBuster.Helper
         private BagOfWords bagOfWords;
         private TextProcessor tp;
 
-        /// <summary>
-        /// Initialize a TextProcessor
-        /// </summary>
         public Classifier()
         {
             tp = new TextProcessor();
@@ -50,11 +46,11 @@ namespace BubbleBuster.Helper
         }
 
         /// <summary>
-        /// Formats a list of Tweets to the correct Accord.Net format
+        /// Formats a list of Tweets to Bag-of-Words format
         /// </summary>
         /// <param name="tweets"> A list of tweets </param>
-        /// <returns>  Formatted Tweets </returns>
-        public double[][] FormatTweets (List<Tweet> tweets)
+        /// <returns>  Formatted Tweets in Bag of Words format </returns>
+        double[][] FormatTweets (List<Tweet> tweets)
         {
             List<string> _tweets = new List<string>();
             foreach (Tweet item in tweets)
@@ -67,7 +63,9 @@ namespace BubbleBuster.Helper
                 MaximumOccurance = 1
             };
 
-            //Loads a string[][] with the training data and trains a BOW on it
+            //Loads a the formatted training tweets
+            //Accord does not support loading BOW from file
+            //Thus we have to train it
             string[][] trainingTokens = FileHelper.ReadObjectFromFile<string[][]>(@"BagOfWords90.txt");
             bagOfWords.Learn(trainingTokens);
 
@@ -104,6 +102,106 @@ namespace BubbleBuster.Helper
             double bias = left - right;
 
             return bias;
+        }
+
+        public void TrainNaiveBayes(string inputFile, string outputFile)
+        {
+            double[][] inputs;
+            int[] outputs;
+
+            bagOfWords = new BagOfWords()
+            {
+                MaximumOccurance = 1
+            };
+
+            inputs = ReadInput(inputFile);
+            outputs = ReadOutput(outputFile);
+
+            var teacher = new NaiveBayesLearning<NormalDistribution>();
+
+            teacher.Options.InnerOption = new NormalOptions
+            {
+                Regularization = 1e-6 // to avoid zero variances
+            };
+            
+            var nb = teacher.Learn(inputs, outputs);
+
+            FileHelper.WriteModelToFile("WhatDeFuckNaiveBayes90.accord", nb);
+            Console.WriteLine("Saving NB");
+        }
+
+        /// <summary> 
+        /// Saves the formatted tokens for future use.
+        /// Formats a list of strings using a Bag of Words.
+        /// </summary>
+        /// <param name="path">Path to the folder</param>
+        /// <param name="inputDoc">Name of training tweets document</param>
+        /// <returns> Formatted tweets to Bag of Words format </returns>
+        double[][] ReadInput(string inputDoc)
+        {
+            double[][] input;
+
+            using (StreamReader r = new StreamReader(Constants.PROGRAM_DATA_FILEPATH + @"\"  +inputDoc))
+            {
+                List<string> tweets = new List<string>();
+
+                while (!r.EndOfStream)
+                {
+                    tweets.Add(r.ReadLine());
+                }
+                
+                //Use custom tokenizer
+                string[][] tokens = tp.Tokenizer(tweets);
+
+                FileHelper.WriteObjectToFile("BagOfWords90.txt", tokens);
+
+                bagOfWords.Learn(tokens);
+
+                input = bagOfWords.Transform(tokens);
+
+                r.DiscardBufferedData();
+                r.Close();
+            };
+
+            return input;
+        }
+
+        /// <summary>
+        /// Reads a training document of labels
+        /// </summary>
+        /// <param name="path">Path to the Folder</param>
+        /// <param name="outputDoc">Name of training labels document</param>
+        /// <returns>A list of integers from 0-2 </returns>
+        int[] ReadOutput(string outputDoc)
+        {
+            List<int> result = new List<int>();
+            using (StreamReader r2 = new StreamReader(Constants.PROGRAM_DATA_FILEPATH + @"\" + outputDoc))
+            {
+                //Transforms from 5 labels to 3
+                while (!r2.EndOfStream)
+                {
+                    string line = r2.ReadLine();
+                    int i = int.Parse(line);
+
+                    if (i == 0 || i == 1)
+                    {
+                        result.Add(0);
+                    }
+                    else if (i == 3 || i == 4)
+                    {
+                        result.Add(2);
+                    }
+                    else
+                    {
+                        result.Add(1);
+                    }
+                }
+
+                r2.DiscardBufferedData();
+                r2.Close();
+            };
+
+            return result.ToArray();
         }
     }
 }
