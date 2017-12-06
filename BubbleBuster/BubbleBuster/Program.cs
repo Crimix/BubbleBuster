@@ -8,13 +8,16 @@ using System.Collections.Generic;
 
 namespace BubbleBuster
 {
+    /// <summary>
+    /// This class is just used for testing. Even though this is the Program class with the Main method.
+    /// This is because in normal use, this project should be used as a libray and as such does not use the Program class
+    /// </summary>
     public class Program
     {
         [STAThread]
         static void Main(string[] args)
         {
             List<PolUserObj> polusers = new List<PolUserObj>();
-            //(MI, ALG)
 
             //Leftwing Users
             polusers.Add(new PolUserObj(61734492, -1)); //fahrenthold,  (right, left)
