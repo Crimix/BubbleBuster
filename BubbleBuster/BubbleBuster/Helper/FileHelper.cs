@@ -128,6 +128,10 @@ namespace BubbleBuster.Helper
             return keywords;
         }
 
+        /// <summary>
+        /// Gets the trained Bag of words
+        /// </summary>
+        /// <returns></returns>
         public static BagOfWords GetBagOfWords()
         {
             if(bagOfWords == null)
@@ -141,6 +145,10 @@ namespace BubbleBuster.Helper
             return bagOfWords;
         }
 
+        /// <summary>
+        /// Get the NaiveBayes model
+        /// </summary>
+        /// <returns></returns>
         public static NaiveBayes<NormalDistribution> GetModel()
         {
             if(model == null)
@@ -205,7 +213,7 @@ namespace BubbleBuster.Helper
         /// Writes an Accord Object to file
         /// </summary>
         /// <param name="fileName"> The name of the file</param>
-        /// <param name="classifier">The data object</param>
+        /// <param name="model">The model</param>
         public static void WriteModelToFile(string fileName, NaiveBayes<NormalDistribution> model)
         {
             string filePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + fileName;

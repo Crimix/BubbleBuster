@@ -77,23 +77,20 @@ namespace BubbleBuster.Helper
         /// <returns> Personal bias </returns>
         double CalcBias(List<int> results)
         {
-            double left = results[0] - (results[1] / 2);
-            if (left < 0)
-            {
-                left = 0;
-            }
+            double left = (double)results[0];
+            double neutral = (double)results[1];
+            double right = (double)results[2];
 
-            double right = results[2] - (results[1] / 2);
-            if (right < 0)
-            {
-                right = 0;
-            }
-
-            double bias = left - right;
+            double bias = (right - left) / (left + neutral + right) * 10;
 
             return bias;
         }
 
+        /// <summary>
+        /// Trains a Naive Bayes classifier
+        /// </summary>
+        /// <param name="inputFile">File containing tweets</param>
+        /// <param name="outputFile">File containing labels</param>
         public void TrainNaiveBayes(string inputFile, string outputFile)
         {
             double[][] inputs;
@@ -116,7 +113,7 @@ namespace BubbleBuster.Helper
             
             var nb = teacher.Learn(inputs, outputs);
 
-            FileHelper.WriteModelToFile("Bayes90.accord", nb);
+            FileHelper.WriteModelToFile("NaiveBayes90.accord", nb);
         }
 
         /// <summary> 
