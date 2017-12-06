@@ -29,7 +29,7 @@ namespace BubbleBuster.Helper
         /// <returns> The bias </returns>
         public double RunNaiveBayes(List<Tweet> tweets)
         {
-            var model = FileHelper.ReadModelFromFile<NaiveBayes<NormalDistribution>>("NaiveBayes90.accord");
+            var model = FileHelper.GetModel();
 
             double[][] inputs = FormatTweets(tweets);
             
@@ -57,17 +57,7 @@ namespace BubbleBuster.Helper
             {
                 _tweets.Add(item.Text);
             }
-
-            BagOfWords bagOfWords = new BagOfWords()
-            {
-                MaximumOccurance = 1
-            };
-
-            //Loads a the formatted training tweets
-            //Accord does not support loading BOW from file
-            //Thus we have to train it
-            string[][] trainingTokens = FileHelper.ReadObjectFromFile<string[][]>(@"BagOfWords90.txt");
-            bagOfWords.Learn(trainingTokens);
+            bagOfWords = FileHelper.GetBagOfWords();
 
             //Whitespace tokenizer
             //string[][] tokens = tweets.ToArray().Tokenize();
@@ -126,7 +116,7 @@ namespace BubbleBuster.Helper
             
             var nb = teacher.Learn(inputs, outputs);
 
-            FileHelper.WriteModelToFile("WhatDeFuckNaiveBayes90.accord", nb);
+            FileHelper.WriteModelToFile("Bayes90.accord", nb);
             Console.WriteLine("Saving NB");
         }
 

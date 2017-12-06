@@ -9,6 +9,7 @@ using Accord.MachineLearning;
 using Accord.Statistics.Distributions.Fitting;
 using Accord.MachineLearning.Bayes;
 using Accord.Statistics.Distributions.Univariate;
+using Accord.MachineLearning;
 
 
 namespace BubbleBuster.Helper
@@ -21,6 +22,8 @@ namespace BubbleBuster.Helper
         private static Dictionary<string, KeywordObj> keywords;
         private static Dictionary<string, int> analysisWords; //Value: -1=negativeWord, 1=positiveWord
         private static List<string> commonWords;
+        private static BagOfWords bagOfWords;
+        private static NaiveBayes<NormalDistribution> model;
 
         //path variables
         private static string hyperlinkFilePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + "news_hyperlinks";
@@ -125,6 +128,29 @@ namespace BubbleBuster.Helper
             return keywords;
         }
 
+        public static BagOfWords GetBagOfWords()
+        {
+            if(bagOfWords == null)
+            {
+                bagOfWords = new BagOfWords()
+                {
+                    MaximumOccurance = 1
+                };
+                bagOfWords.Learn(ReadObjectFromFile<string[][]>(@"BagOfWords90.txt"));
+            }
+            return bagOfWords;
+        }
+
+        public static NaiveBayes<NormalDistribution> GetModel()
+        {
+            if(model == null)
+            {
+                model = ReadModelFromFile<NaiveBayes<NormalDistribution>>("NaiveBayes90.accord");
+            }
+            return model;
+        }
+
+
         /// <summary>
         /// Generates the directory structure
         /// </summary>
@@ -204,9 +230,9 @@ namespace BubbleBuster.Helper
             {
                 obj = JsonConvert.DeserializeObject<T>(File.ReadAllText(filePath));
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                Log.Error("Could not deserialize the file");
+                Log.Error("Could not deserialize the file" + e.Message);
             }
             
             return obj;
