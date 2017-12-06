@@ -21,6 +21,7 @@ namespace BubbleBuster
         [STAThread]
         static void Main(string[] args)
         {
+
             /*
             List<Tweet> returned3 = TweetRetriever.Instance.GetTweetsFromFriends(returned);
             FileHelper.WriteObjectToFile("BubbleBuster", "multTweets", returned3);
