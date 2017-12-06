@@ -21,15 +21,6 @@ namespace BubbleBuster
         [STAThread]
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello we shall start now.");
-
-            Classifier c = new Classifier();
-            c.TrainNaiveBayes("training_mod_tweets.txt", "training_mod_res.txt");
-
-            Console.WriteLine("Hello, it should be finished now.");
-            System.Threading.Thread.Sleep(5000);
-
-
 
             /*
             List<Tweet> returned3 = TweetRetriever.Instance.GetTweetsFromFriends(returned);

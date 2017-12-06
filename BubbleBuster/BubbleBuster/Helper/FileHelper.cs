@@ -208,9 +208,7 @@ namespace BubbleBuster.Helper
         /// <param name="classifier">The data object</param>
         public static void WriteModelToFile(string fileName, NaiveBayes<NormalDistribution> model)
         {
-            Console.WriteLine("Entered WriteModelToFile");
             string filePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + fileName;
-            Console.WriteLine("Models: " + filePath);
             GenerateDirectoryStructure();
             Serializer.Save(model, fileName);
         }

@@ -117,7 +117,6 @@ namespace BubbleBuster.Helper
             var nb = teacher.Learn(inputs, outputs);
 
             FileHelper.WriteModelToFile("Bayes90.accord", nb);
-            Console.WriteLine("Saving NB");
         }
 
         /// <summary> 
