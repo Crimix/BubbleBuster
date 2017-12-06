@@ -1,11 +1,7 @@
-﻿using System;
+﻿using BubbleBuster.Helper;
+using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.IO;
 using System.Threading.Tasks;
-using System.Runtime.InteropServices;
-using BubbleBuster.Helper;
 
 namespace QSLib
 {
@@ -14,6 +10,7 @@ namespace QSLib
         //The instance variable
         private static QueueServerInstance _instance;
 
+        //Private constructor such that it is a singleton 
         private QueueServerInstance() { }
 
         /// <summary>
@@ -81,13 +78,13 @@ namespace QSLib
         }
 
         //Checks if there are any requests
-        private bool ThereIsNewTask() 
+        private bool ThereIsNewTask()
         {
             return nonAddedRequests.Count > 0;
         }
 
         //Wrapper
-        private Task RunTaskAsync(Task task) 
+        private Task RunTaskAsync(Task task)
         {
             return Task.Run(() =>
             {
@@ -102,7 +99,7 @@ namespace QSLib
         }
 
         //The method used by the server to add requests to the request queue.
-        public bool AddTask (TwitterAcc tAcc)
+        public bool AddTask(TwitterAcc tAcc)
         {
             bool wasSuccesful = true;
             Log.Debug("Added task");

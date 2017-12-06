@@ -2,10 +2,7 @@
 using BubbleBuster.Web.ReturnedObjects.RateLimit;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace BubbleBuster.Helper
 {
@@ -135,7 +132,7 @@ namespace BubbleBuster.Helper
 
             DateTime now = DateTime.Now;
             DateTime to = DateTimeOffset.FromUnixTimeSeconds(resetTime).DateTime.ToLocalTime();
-            return to-now;
+            return to - now;
         }
 
         /// <summary>

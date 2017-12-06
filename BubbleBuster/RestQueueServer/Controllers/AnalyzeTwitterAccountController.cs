@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
-using QSLib;
+﻿using QSLib;
 using RestQueueServer.Models;
-using Microsoft.AspNetCore.Mvc;
+using System.Web.Http;
 
 namespace RestQueueServer.Controllers
 {
     public class AnalyzeTwitterAccountController : ApiController
     {
-        public Response Post([Microsoft.AspNetCore.Mvc.FromBody] TwitterAcc tAcc) //handles the request and adds it to the queue of requests.
+        /// <summary>
+        /// Handles the request and adds it to the queue of requests.
+        /// </summary>
+        /// <param name="tAcc">The twitter account analyse reqyest</param>
+        /// <returns>A response</returns>
+        public Response Post([Microsoft.AspNetCore.Mvc.FromBody] TwitterAcc tAcc)
         {
             bool wasSuccessful = QSLib.QueueServerInstance.Instance.AddTask(tAcc);
 

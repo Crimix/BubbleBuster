@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BubbleBuster.Helper.Objects
 {
@@ -19,12 +15,13 @@ namespace BubbleBuster.Helper.Objects
         /// <param name="OAuthToken">The user's OAuthToken</param>
         /// <param name="OAuthTokenSecret">The user's OAuthTokenSecret</param>
         /// <param name="Name">The user's name</param>
-        public AuthObj(string OAuthToken, string OAuthTokenSecret, string Name)
+        public AuthObj(string OAuthToken, string OAuthTokenSecret, string Name, string RequestID)
         {
             UID = Guid.NewGuid();
             this.OAuthToken = OAuthToken;
             this.OAuthTokenSecret = OAuthTokenSecret;
             this.Name = Name;
+            this.RequstID = RequstID;
             Type = AuthType.User;
         }
 
@@ -72,13 +69,18 @@ namespace BubbleBuster.Helper.Objects
         public string OAuthTokenSecret { get; private set; }
 
         /// <summary>
+        /// The id of the request, assigned by the GUI application
+        /// </summary>
+        public string RequstID { get; private set; }
+
+        /// <summary>
         /// Overridden, such that it uses the UID to compare objects 
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            if(obj is AuthObj)
+            if (obj is AuthObj)
             {
                 return (obj as AuthObj).UID == this.UID;
             }

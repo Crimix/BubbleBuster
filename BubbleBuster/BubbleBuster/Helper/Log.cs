@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BubbleBuster.Helper
 {
@@ -18,7 +14,7 @@ namespace BubbleBuster.Helper
         /// Writes the object to the log
         /// </summary>
         /// <param name="obj">The object</param>
-        public static void Debug(object obj) 
+        public static void Debug(object obj)
         {
             if (Constants.DEBUG)
             {

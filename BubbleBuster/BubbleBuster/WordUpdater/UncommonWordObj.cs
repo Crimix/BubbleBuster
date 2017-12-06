@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-/// <summary>
+﻿/// <summary>
 /// This object is used to represent words which are identified as not being among the 1000(0) most common english words.
 /// This object has a number of counters, which are incremented whenever the word is found in a tweet.
 /// There are individual counters for either right wing, left wing, and neutral affiliations of the user making the tweet.
@@ -37,8 +32,13 @@ namespace BubbleBuster.WordUpdater
         public int RightNeuCount { get; set; }
         public int CenterNeuCount { get; set; }
 
-        public int Count { get { return LeftNegCount + LeftNeuCount + LeftPosCount + CenterNegCount + CenterNeuCount 
-                    + CenterPosCount + RightNegCount + RightNeuCount + RightPosCount; } }
+        public int Count
+        {
+            get
+            {
+                return LeftNegCount + LeftNeuCount + LeftPosCount + CenterNegCount + CenterNeuCount + CenterPosCount + RightNegCount + RightNeuCount + RightPosCount;
+            }
+        }
 
     }
 }

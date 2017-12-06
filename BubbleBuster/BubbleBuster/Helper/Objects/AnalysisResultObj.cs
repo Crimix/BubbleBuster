@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BubbleBuster.Helper.Objects
+﻿namespace BubbleBuster.Helper.Objects
 {
     public class AnalysisResultObj
     {
@@ -17,7 +11,7 @@ namespace BubbleBuster.Helper.Objects
         public double PositiveSentiment { get; set; } = 0;
         public double NegativeSentiment { get; set; } = 0;
 
-        //Machine Learning
+        //Machine Learning, does not need to be divide by the count of tweets. This action has been performed by the classifier.
         public double MIResult { get; set; } = 0;
 
 
@@ -41,18 +35,6 @@ namespace BubbleBuster.Helper.Objects
         {
             if (Count != 0)
                 return (KeywordBias + MediaBias) / Count;
-            else
-                return 0;
-        }
-
-        /// <summary>
-        /// Get the Mi result value
-        /// </summary>
-        /// <returns>A double</returns>
-        public double GetMIResult()
-        {
-            if (Count != 0)
-                return MIResult / Count;
             else
                 return 0;
         }

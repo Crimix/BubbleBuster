@@ -1,16 +1,13 @@
-﻿using Newtonsoft.Json;
+﻿using Accord.IO;
+using Accord.MachineLearning;
+using Accord.MachineLearning.Bayes;
+using Accord.Statistics.Distributions.Univariate;
+using BubbleBuster.Helper.Objects;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using BubbleBuster.Helper.Objects;
-using Accord.IO;
-using Accord.MachineLearning;
-using Accord.Statistics.Distributions.Fitting;
-using Accord.MachineLearning.Bayes;
-using Accord.Statistics.Distributions.Univariate;
-using Accord.MachineLearning;
-
 
 namespace BubbleBuster.Helper
 {
@@ -38,7 +35,7 @@ namespace BubbleBuster.Helper
         /// <returns>A dictionary of hyperlinks and bias value</returns>
         public static Dictionary<string, int> GetHyperlinks()
         {
-            if(newsHyperlinks != null)
+            if (newsHyperlinks != null)
             {
                 return newsHyperlinks;
             }
@@ -57,7 +54,7 @@ namespace BubbleBuster.Helper
             {
                 Log.Error("News Source file not loaded: " + e.Message);
             }
-            
+
             return newsHyperlinks;
         }
 
@@ -78,7 +75,7 @@ namespace BubbleBuster.Helper
             {
                 foreach (string word in File.ReadAllLines(posWordsFilePath).Skip(35)) //Skip: Start reading from line 36
                 {
-                    if(!analysisWords.ContainsKey(word))
+                    if (!analysisWords.ContainsKey(word))
                         analysisWords.Add(word, 1);
                 }
 
@@ -115,7 +112,7 @@ namespace BubbleBuster.Helper
 
                 foreach (string keyword in temp)
                 {
-                    string[] tempArray = keyword.Split(';'); 
+                    string[] tempArray = keyword.Split(';');
                     keywords.Add(tempArray[0], new KeywordObj(keyword, int.Parse(tempArray[1]), int.Parse(tempArray[2]), int.Parse(tempArray[3])));
                     keywords.Add('#' + tempArray[0], new KeywordObj('#' + keyword, int.Parse(tempArray[1]), int.Parse(tempArray[2]), int.Parse(tempArray[3])));
                 }
@@ -134,7 +131,7 @@ namespace BubbleBuster.Helper
         /// <returns></returns>
         public static BagOfWords GetBagOfWords()
         {
-            if(bagOfWords == null)
+            if (bagOfWords == null)
             {
                 bagOfWords = new BagOfWords()
                 {
@@ -151,7 +148,7 @@ namespace BubbleBuster.Helper
         /// <returns></returns>
         public static NaiveBayes<NormalDistribution> GetModel()
         {
-            if(model == null)
+            if (model == null)
             {
                 model = ReadModelFromFile<NaiveBayes<NormalDistribution>>("NaiveBayes90.accord");
             }
@@ -208,7 +205,7 @@ namespace BubbleBuster.Helper
             File.WriteAllText(filePath, JsonConvert.SerializeObject(data));
             data = null;
         }
-        
+
         /// <summary>
         /// Writes an Accord Object to file
         /// </summary>
@@ -240,7 +237,7 @@ namespace BubbleBuster.Helper
             {
                 Log.Error("Could not deserialize the file" + e.Message);
             }
-            
+
             return obj;
         }
 

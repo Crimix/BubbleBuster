@@ -1,13 +1,11 @@
-﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using BubbleBuster.Web.ReturnedObjects;
-using TextProcesserLib;
-using Accord.MachineLearning;
-using Accord.Statistics.Distributions.Fitting;
+﻿using Accord.MachineLearning;
 using Accord.MachineLearning.Bayes;
+using Accord.Statistics.Distributions.Fitting;
 using Accord.Statistics.Distributions.Univariate;
-
+using BubbleBuster.Web.ReturnedObjects;
+using System.Collections.Generic;
+using System.IO;
+using TextProcesserLib;
 
 namespace BubbleBuster.Helper
 {
@@ -32,11 +30,11 @@ namespace BubbleBuster.Helper
             var model = FileHelper.GetModel();
 
             double[][] inputs = FormatTweets(tweets);
-            
+
             //Predicts each tweets class
             int[] answers = model.Decide(inputs);
 
-            List<int> result = new List<int>(){ 0, 0, 0};
+            List<int> result = new List<int>() { 0, 0, 0 };
             foreach (var item in answers)
             {
                 result[item] += 1;
@@ -50,7 +48,7 @@ namespace BubbleBuster.Helper
         /// </summary>
         /// <param name="tweets"> A list of tweets </param>
         /// <returns>  Formatted Tweets in Bag of Words format </returns>
-        double[][] FormatTweets (List<Tweet> tweets)
+        double[][] FormatTweets(List<Tweet> tweets)
         {
             List<string> _tweets = new List<string>();
             foreach (Tweet item in tweets)
@@ -64,7 +62,7 @@ namespace BubbleBuster.Helper
 
             //Custom Tokenizer
             string[][] tokens = tp.Tokenizer(_tweets);
-            
+
             double[][] input = bagOfWords.Transform(tokens);
 
             return input;
@@ -77,9 +75,9 @@ namespace BubbleBuster.Helper
         /// <returns> Personal bias </returns>
         double CalcBias(List<int> results)
         {
-            double left = (double)results[0];
-            double neutral = (double)results[1];
-            double right = (double)results[2];
+            double left = results[0];
+            double neutral = results[1];
+            double right = results[2];
 
             double bias = (right - left) / (left + neutral + right) * 10;
 
@@ -110,7 +108,7 @@ namespace BubbleBuster.Helper
             {
                 Regularization = 1e-6 // to avoid zero variances
             };
-            
+
             var nb = teacher.Learn(inputs, outputs);
 
             FileHelper.WriteModelToFile("NaiveBayes90.accord", nb);
@@ -127,7 +125,7 @@ namespace BubbleBuster.Helper
         {
             double[][] input;
 
-            using (StreamReader r = new StreamReader(Constants.PROGRAM_DATA_FILEPATH + @"\"  +inputDoc))
+            using (StreamReader r = new StreamReader(Constants.PROGRAM_DATA_FILEPATH + @"\" + inputDoc))
             {
                 List<string> tweets = new List<string>();
 
@@ -135,7 +133,7 @@ namespace BubbleBuster.Helper
                 {
                     tweets.Add(r.ReadLine());
                 }
-                
+
                 //Use custom tokenizer
                 string[][] tokens = tp.Tokenizer(tweets);
 

@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using BubbleBuster;
-using BubbleBuster.Web.ReturnedObjects;
-using BubbleBuster.Helper;
+﻿using BubbleBuster.Helper;
 using BubbleBuster.Helper.Objects;
-using BubbleBuster.Web.ReturnedObjects.RateLimit;
 using BubbleBuster.Web;
+using BubbleBuster.Web.ReturnedObjects;
 using BubbleBuster.WordUpdater;
+using System;
+using System.Collections.Generic;
 
 namespace BubbleBuster
 {
@@ -140,7 +132,7 @@ namespace BubbleBuster
 
             // Console.WriteLine(a.BuildAuthHeader(OAuthHelper.DataType.GET, name, accessToken, tokenSecret, baseUrl, extraParams));
 
-            
+
 
             /*
             List<string> elist = new List<string>();

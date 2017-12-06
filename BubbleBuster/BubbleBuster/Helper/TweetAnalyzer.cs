@@ -1,13 +1,11 @@
-﻿using BubbleBuster.Web.ReturnedObjects;
+﻿using BubbleBuster.Helper.Objects;
+using BubbleBuster.Web.ReturnedObjects;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BubbleBuster.Helper.Objects;
 using System.Text.RegularExpressions;
-using System.Globalization;
+using System.Threading.Tasks;
+
 /// <summary>
 /// This class is used to classify the political leaning of a user, based on the content of the tweets they post.
 /// This is done by looking at the media they share (political leaning of different news outlets. This info is stored in a file, 
@@ -33,6 +31,7 @@ namespace BubbleBuster.Helper
         //Formatted URLs from a numer of news media. Each has a politcal value 1-5.
         private Dictionary<string, int> newsHyperlinks = new Dictionary<string, int>(StringComparer.InvariantCultureIgnoreCase);
 
+        //Private constructor such that it is a singleton 
         private TweetAnalyzer()
         {
         }
@@ -107,7 +106,7 @@ namespace BubbleBuster.Helper
             }
             Log.Debug("Combining tweets");
             Log.Debug("Result " + res.GetAlgorithmResult());
-            
+
             return res;
         }
 
@@ -146,20 +145,20 @@ namespace BubbleBuster.Helper
         {
             foreach (string word in wordList)
             {
-                if (keywords.ContainsKey(word) && 
-                    !tweet.TagList.Contains(word, StringComparer.InvariantCultureIgnoreCase) && 
+                if (keywords.ContainsKey(word) &&
+                    !tweet.TagList.Contains(word, StringComparer.InvariantCultureIgnoreCase) &&
                     keywords.TryGetValue(word, out KeywordObj keywordObj))
                 {
-                        tweet.TagList.Add(word);
+                    tweet.TagList.Add(word);
 
-                        int sentiment = tweet.GetSentiment();
+                    int sentiment = tweet.GetSentiment();
 
-                        if (sentiment > 1)
-                            tweet.KeywordBias += keywordObj.Pos;
-                        else if (sentiment < -1)
-                            tweet.KeywordBias += keywordObj.Neg;
-                        else
-                            tweet.KeywordBias += keywordObj.Bas;
+                    if (sentiment > 1)
+                        tweet.KeywordBias += keywordObj.Pos;
+                    else if (sentiment < -1)
+                        tweet.KeywordBias += keywordObj.Neg;
+                    else
+                        tweet.KeywordBias += keywordObj.Bas;
                 }
             }
         }
@@ -203,7 +202,7 @@ namespace BubbleBuster.Helper
                 {
                     var puncturation = tweet.Text.Where(Char.IsPunctuation).Distinct().ToArray();
                     List<String> wordList = tweet.Text.Split(' ').Select(x => x.Trim(puncturation)).ToList<String>();
-                    
+
                     SentimentAnalysis(wordList, tweet);
                     KeywordAnalysis(wordList, tweet);
                     MediaAnalysis(tweet);

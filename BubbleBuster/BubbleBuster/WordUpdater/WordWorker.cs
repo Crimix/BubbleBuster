@@ -1,12 +1,9 @@
 ﻿using BubbleBuster.Helper;
 using BubbleBuster.Helper.Objects;
-using BubbleBuster.Web;
 using BubbleBuster.Web.ReturnedObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 /// <summary>
 /// This class is used to scan the tweets of a number of twitter users, and determine what words they use 
@@ -21,6 +18,7 @@ namespace BubbleBuster.WordUpdater
         //Instance variable
         private static WordWorker _instance;
 
+        //Private constructor such that it is a singleton 
         private WordWorker()
         {
         }
@@ -78,7 +76,7 @@ namespace BubbleBuster.WordUpdater
                                 Console.WriteLine(listWord);
                                 double sentiment = tweet.GetSentiment();
                                 uncommonWords.Add(listWord, sentiment);
-                            }                          
+                            }
                         }
                     }
                 }
@@ -90,13 +88,13 @@ namespace BubbleBuster.WordUpdater
         //Determines each words affiliation
         private Dictionary<string, UncommonWordObj> DetermineWords(Dictionary<PolUserObj, List<Tweet>> dic)
         {
-            Dictionary<string, UncommonWordObj> returnObj = new Dictionary<string, UncommonWordObj>();            
+            Dictionary<string, UncommonWordObj> returnObj = new Dictionary<string, UncommonWordObj>();
 
-            foreach(PolUserObj user in dic.Keys)
+            foreach (PolUserObj user in dic.Keys)
             {
                 Dictionary<string, double> tempWordList = IdentifyUncommonWords(dic[user]);
 
-                foreach(string word in tempWordList.Keys)
+                foreach (string word in tempWordList.Keys)
                 {
                     if (!returnObj.ContainsKey(word))
                     {
@@ -106,11 +104,11 @@ namespace BubbleBuster.WordUpdater
                     switch (user.Affiliation)
                     {
                         case -1:
-                            if(tempWordList[word] > 1)
+                            if (tempWordList[word] > 1)
                                 returnObj[word].LeftPosCount++;
                             else if (tempWordList[word] < -1)
                                 returnObj[word].LeftNegCount++;
-                            else 
+                            else
                                 returnObj[word].LeftNeuCount++;
                             break;
                         case 0:
@@ -136,7 +134,7 @@ namespace BubbleBuster.WordUpdater
             }
 
             return returnObj;
-        } 
+        }
 
         /// <summary>
         /// Method used to update the words based on a set of pol users
