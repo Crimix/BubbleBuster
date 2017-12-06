@@ -83,7 +83,7 @@ namespace BubbleBuster
             User user = new WebHandler(auth).TwitterGetRequest<User>(TwitterRequestBuilder.BuildRequest(RequestType.user, auth, "screen_name=" + "realDonaldTrump"));
             var userTweets = TweetRetriever.Instance.GetTweetsFromUser(user, auth);
             var friends = FriendsRetriever.Instance.GetFriends(user, auth);
-            Log.Info("Following " + friends.Users.Count + "users");
+            Log.Debug("Following " + friends.Users.Count + "users");
 
             Dictionary<Tweet, string> asf = new Dictionary<Tweet, string>();
 

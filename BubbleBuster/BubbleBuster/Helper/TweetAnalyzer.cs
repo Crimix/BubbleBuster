@@ -62,7 +62,7 @@ namespace BubbleBuster.Helper
         /// <returns></returns>
         public AnalysisResultObj AnalyzeAndDecorateTweetsThreaded(List<Tweet> tweetList)
         {
-            Log.Info("Spliting " + tweetList.Count + " tweets");
+            Log.Debug("Spliting " + tweetList.Count + " tweets");
             int tweets = tweetList.Count;
             List<Task<AnalysisResultObj>> tasks = new List<Task<AnalysisResultObj>>();
             var copyTweetList = tweetList;
@@ -101,12 +101,12 @@ namespace BubbleBuster.Helper
             {
                 res.KeywordBias += task.Result.KeywordBias;
                 res.MediaBias += task.Result.MediaBias;
-                res.Count = task.Result.Count;
+                res.Count += task.Result.Count;
                 res.NegativeSentiment += task.Result.NegativeSentiment;
                 res.PositiveSentiment += task.Result.PositiveSentiment;
             }
-            Log.Info("Combining tweets");
-            Log.Info("Result " + res.GetAlgorithmResult());
+            Log.Debug("Combining tweets");
+            Log.Debug("Result " + res.GetAlgorithmResult());
             
             return res;
         }

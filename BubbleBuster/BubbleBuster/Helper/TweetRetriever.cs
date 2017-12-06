@@ -118,7 +118,7 @@ namespace BubbleBuster.Helper
             List<Task<List<Tweet>>> runningTasks = new List<Task<List<Tweet>>>();
             List<Task<List<Tweet>>> taskList = new List<Task<List<Tweet>>>();
             Queue<Task<List<Tweet>>> taskQueue = new Queue<Task<List<Tweet>>>();
-            Log.Info(String.Format("{0,-30} {1,-20} {2,-11}", "User name", "User id", "Tweet count"));
+            Log.Debug(String.Format("{0,-30} {1,-20} {2,-11}", "User name", "User id", "Tweet count"));
 
             foreach (User user in friends.Users)
             {
@@ -140,7 +140,6 @@ namespace BubbleBuster.Helper
                             task.Start();
                             runningTasks.Add(task);
                             taskList.Add(task);
-                            Log.Info(String.Format("Queue one task"));
                         }
                     }
                 }
@@ -152,13 +151,11 @@ namespace BubbleBuster.Helper
                     task.Start();
                     runningTasks.Add(task);
                     taskList.Add(task);
-                    Log.Info(String.Format("Queue one task"));
                 }
             }
             taskQueue = null;
 
             Task.WaitAll(taskList.ToArray());
-            Log.Info(String.Format("Tasks done"));
             foreach (var item in taskList)
             {
                 tweetList.AddRange(item.Result);
@@ -189,27 +186,21 @@ namespace BubbleBuster.Helper
                 alreadyExist = get(user);
                 if (alreadyExist)
                 {
-                    lock (Log.LOCK)
-                    {
-                        Log.Info(String.Format("{0,-30} {1,-20} {2,-11}", user.Name, user.Id, "Already exist in db"));
-                    }
+                    Log.Debug(String.Format("{0,-30} {1,-20} {2,-11}", user.Name, user.Id, "Already exist in db"));
                 }
             }
 
             if (!alreadyExist)
             {
                 temp = RetrieveTweets(user, auth);
-                lock (Log.LOCK)
-                {
                     if (user.IsProtected)
                     {
-                        Log.Info(String.Format("{0,-30} {1,-20} {2,-11}", user.Name, user.Id, "Protected"));
+                        Log.Debug(String.Format("{0,-30} {1,-20} {2,-11}", user.Name, user.Id, "Protected"));
                     }
                     else
                     {
-                        Log.Info(String.Format("{0,-30} {1,-20} {2,-11}", user.Name, user.Id, temp.Count));
+                        Log.Debug(String.Format("{0,-30} {1,-20} {2,-11}", user.Name, user.Id, temp.Count));
                     }
-                }
 
                 if (classifyMethod != null  && post != null)
                 {

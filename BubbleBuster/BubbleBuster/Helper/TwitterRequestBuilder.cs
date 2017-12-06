@@ -46,16 +46,9 @@ namespace BubbleBuster
                 TimeSpan sleepTime = LimitHelper.Instance(apiKey).GetResetTime(returnType);
                 if (sleepTime.TotalMinutes > 0)
                 {
-
-                    lock (Log.LOCK)
-                    {
-                        Log.Warn("Sleep at " + DateTime.Now + " until " + LimitHelper.Instance(apiKey).GetResetDateTime(returnType));
-                    }
+                    Log.Debug("Sleep at " + DateTime.Now + " until " + LimitHelper.Instance(apiKey).GetResetDateTime(returnType));
                     Thread.Sleep(sleepTime);
-                    lock (Log.LOCK)
-                    {
-                        Log.Warn("Wakeup at " + DateTime.Now);
-                    }
+                    Log.Debug("Wakeup at " + DateTime.Now);
                 }
                 LimitHelper.Instance(apiKey).InitPropertises(new WebHandler(apiKey).TwitterGetRequest<Limit>(BuildStartupRequest()));
                 result = BuildRequest(returnType, apiKey, parameters);

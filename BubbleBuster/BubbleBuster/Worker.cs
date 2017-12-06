@@ -42,13 +42,13 @@ namespace BubbleBuster
 
             //Gets the friends for the user
             var friends = FriendsRetriever.Instance.GetFriends(user, auth);
-            Log.Info("Following " + friends.Users.Count + " users");
+            Log.Debug("Following " + friends.Users.Count + " users");
 
             //Analyse the tweets while retrieving and post them to the database
             TweetRetriever.Instance.GetTweetsFromFriendsAndAnalyse(friends, auth, CheckIfResultExistOnDBAndLink, ClassifyTweet, PostResultToDBAndLink);
 
             FinalizeUser();
-            Log.Info("Done!!!");
+            Log.Debug("Done!!!");
         }
 
         private bool GetUsersRecordIdOnDb(User user, ref long result)
@@ -62,10 +62,7 @@ namespace BubbleBuster
                 }
                 catch (Exception e)
                 {
-                    lock (Log.LOCK)
-                    {
-                        Log.Error(e.Message);
-                    }
+                    Log.Error(e.Message);
                     return false;
                 }
                 return true;
@@ -111,10 +108,7 @@ namespace BubbleBuster
             bool succes = webHandler.DatabaseSendDataRequest(Constants.DB_SERVER_IP + "twitter", "POST", "twitter_name=" + user.ScreenName, "twitter_id=" + user.Id, "analysis_val=" + resultObj.GetAlgorithmResult().ToString(CultureInfo.InvariantCulture), "media_val=" + resultObj.GetMediaResult().ToString(CultureInfo.InvariantCulture), "mi_val=" + resultObj.GetMIResult().ToString(CultureInfo.InvariantCulture), "sentiment_val=" + resultObj.GetSentiment().ToString(CultureInfo.InvariantCulture), "tweet_count=" + resultObj.Count, "protect=" + Convert.ToInt32(user.IsProtected));
             if (!succes)
             {
-                lock (Log.LOCK)
-                {
-                    Log.Error("Could not post the user to the database");
-                }
+                Log.Error("Could not post the user to the database");
                 return false;
             }
 
@@ -129,10 +123,7 @@ namespace BubbleBuster
             succes = GetUsersRecordIdOnDb(user, ref temp);
             if (!succes)
             {
-                lock (Log.LOCK)
-                {
-                    Log.Error("Could not find the posted user");
-                }
+                Log.Error("Could not find the posted user");
                 return false;
             }
             AddFollower(temp);
@@ -145,10 +136,7 @@ namespace BubbleBuster
             bool succes = webHandler.DatabaseSendDataRequest(Constants.DB_SERVER_IP + "twitter/add_follower", "PUT", "record_id=" + userRecordId, "follows_id=" + frinedRecordId);
             if (!succes)
             {
-                lock (Log.LOCK)
-                {
-                    Log.Error("Could not add the follower");
-                }
+                Log.Error("Could not add the follower");
             }
             return succes;
         }
@@ -157,10 +145,7 @@ namespace BubbleBuster
         {
             if(!webHandler.DatabaseSendDataRequest(Constants.DB_SERVER_IP + "twitter/finalize", "PUT", "record_id=" + userRecordId))
             {
-                lock (Log.LOCK)
-                {
-                    Log.Error("Could not finalize the request");
-                }
+                Log.Error("Could not finalize the request");
             }
         }
 

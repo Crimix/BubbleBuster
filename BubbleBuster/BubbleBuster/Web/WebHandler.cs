@@ -72,10 +72,7 @@ namespace BubbleBuster.Web
             }
             catch (JsonException e)
             {
-                lock (Log.LOCK)
-                {
-                    Log.Info(e.Message);
-                }
+                Log.Error(e.Message);
             }
 
             if (tempRes != null)
@@ -165,10 +162,7 @@ namespace BubbleBuster.Web
             catch (WebException e)
             {
                 response?.Close();
-                lock (Log.LOCK)
-                {
-                    Log.Error(e.Message + ": " + requestUrl);
-                }
+                Log.Error(e.Message + ": " + requestUrl + ": " + postData);
             }
 
             return result;
@@ -219,10 +213,7 @@ namespace BubbleBuster.Web
                     }
                     catch (IOException e)
                     {
-                        lock (Log.LOCK)
-                        {
-                            Log.Error(e.Message);
-                        }
+                        Log.Error(e.Message);
                     }
 
                     response?.Close();
@@ -235,10 +226,7 @@ namespace BubbleBuster.Web
                 response?.Close();
                 receiveStream?.Close();
                 readStream?.Close();
-                lock (Log.LOCK)
-                {
-                    Log.Error(e.Message + ": " + requestString);
-                }
+                Log.Error(e.Message + ": " + requestString);
             }
            
 
