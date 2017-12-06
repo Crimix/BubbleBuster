@@ -56,5 +56,18 @@ namespace BubbleBuster.Helper.Objects
             else
                 return 0;
         }
+
+        /// <summary>
+        /// Get the media result value
+        /// </summary>
+        /// <returns>A double</returns>
+        public double GetMediaResult()
+        {
+            if (Count != 0)
+                return MediaBias / Count;
+            else
+                return 0;
+        }
+
     }
 }

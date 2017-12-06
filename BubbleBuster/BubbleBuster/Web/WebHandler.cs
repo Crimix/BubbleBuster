@@ -6,7 +6,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Web;
 using BubbleBuster.Helper.Objects;
+using System.Globalization;
 
 namespace BubbleBuster.Web
 {
@@ -129,10 +131,12 @@ namespace BubbleBuster.Web
                 postData += item + "&";
             }
             postData = postData.Trim('&');
+
             var data = Encoding.ASCII.GetBytes(postData);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUrl);
             request.Headers[HttpRequestHeader.Authorization] = "Bearer " + Constants.DB_CREDS;
+            request.Accept = "application/json";
             request.Method = method;
             request.ContentType = "application/x-www-form-urlencoded";
             request.ContentLength = data.Length;
@@ -143,9 +147,10 @@ namespace BubbleBuster.Web
                 stream.Write(data, 0, data.Length);
             }
 
+            HttpWebResponse response = null;
             try
             {
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                response = (HttpWebResponse)request.GetResponse();
 
                 if (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Created)
                 {
@@ -155,12 +160,14 @@ namespace BubbleBuster.Web
                 { 
                     result = false;
                 }
+                response?.Close();
             }
             catch (WebException e)
             {
+                response?.Close();
                 lock (Log.LOCK)
                 {
-                    Log.Error(e.Message + ": " + requestUrl );
+                    Log.Error(e.Message + ": " + requestUrl);
                 }
             }
 
@@ -184,16 +191,19 @@ namespace BubbleBuster.Web
             request.Method = "GET";
             request.Timeout = 1800000;
 
+            Stream receiveStream = null;
+            StreamReader readStream = null;
+            HttpWebResponse response = null;
             try
             {
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                response = (HttpWebResponse)request.GetResponse();
 
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    Stream receiveStream = response.GetResponseStream();
-                    StreamReader readStream = null;
+                    receiveStream = response.GetResponseStream();
+                    readStream = null;
 
-                    if (response.CharacterSet == null)
+                    if (string.IsNullOrWhiteSpace(response.CharacterSet))
                     {
                         readStream = new StreamReader(receiveStream);
                     }
@@ -207,16 +217,24 @@ namespace BubbleBuster.Web
                         result = readStream.ReadToEnd();
                         res = true;
                     }
-                    catch (IOException)
+                    catch (IOException e)
                     {
+                        lock (Log.LOCK)
+                        {
+                            Log.Error(e.Message);
+                        }
                     }
 
-                    response.Close();
-                    readStream.Close();
+                    response?.Close();
+                    receiveStream?.Close();
+                    readStream?.Close();
                 }
             }
             catch (WebException e)
             {
+                response?.Close();
+                receiveStream?.Close();
+                readStream?.Close();
                 lock (Log.LOCK)
                 {
                     Log.Error(e.Message + ": " + requestString);

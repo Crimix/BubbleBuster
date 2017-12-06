@@ -124,7 +124,6 @@ namespace BubbleBuster.Helper
             {
                 Task<List<Tweet>> task = new Task<List<Tweet>>(() => retrieveMethod(user));
                 taskQueue.Enqueue(task);
-                task = null;
             }
 
             friends = null;
@@ -141,6 +140,7 @@ namespace BubbleBuster.Helper
                             task.Start();
                             runningTasks.Add(task);
                             taskList.Add(task);
+                            Log.Info(String.Format("Queue one task"));
                         }
                     }
                 }
@@ -152,12 +152,13 @@ namespace BubbleBuster.Helper
                     task.Start();
                     runningTasks.Add(task);
                     taskList.Add(task);
+                    Log.Info(String.Format("Queue one task"));
                 }
             }
             taskQueue = null;
 
             Task.WaitAll(taskList.ToArray());
-
+            Log.Info(String.Format("Tasks done"));
             foreach (var item in taskList)
             {
                 tweetList.AddRange(item.Result);
@@ -186,6 +187,13 @@ namespace BubbleBuster.Helper
             if (get != null)
             {
                 alreadyExist = get(user);
+                if (alreadyExist)
+                {
+                    lock (Log.LOCK)
+                    {
+                        Log.Info(String.Format("{0,-30} {1,-20} {2,-11}", user.Name, user.Id, "Already exist in db"));
+                    }
+                }
             }
 
             if (!alreadyExist)

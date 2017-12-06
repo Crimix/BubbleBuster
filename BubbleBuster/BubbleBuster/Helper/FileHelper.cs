@@ -5,8 +5,12 @@ using System.IO;
 using System.Linq;
 using BubbleBuster.Helper.Objects;
 using Accord.IO;
+using Accord.MachineLearning;
+using Accord.Statistics.Distributions.Fitting;
 using Accord.MachineLearning.Bayes;
 using Accord.Statistics.Distributions.Univariate;
+using Accord.MachineLearning;
+
 
 namespace BubbleBuster.Helper
 {
@@ -18,6 +22,8 @@ namespace BubbleBuster.Helper
         private static Dictionary<string, KeywordObj> keywords;
         private static Dictionary<string, int> analysisWords; //Value: -1=negativeWord, 1=positiveWord
         private static List<string> commonWords;
+        private static BagOfWords bagOfWords;
+        private static NaiveBayes<NormalDistribution> model;
 
         //path variables
         private static string hyperlinkFilePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + "news_hyperlinks";
@@ -51,7 +57,7 @@ namespace BubbleBuster.Helper
             {
                 Log.Error("News Source file not loaded: " + e.Message);
             }
-            
+
             return newsHyperlinks;
         }
 
@@ -70,13 +76,13 @@ namespace BubbleBuster.Helper
 
             try
             {
-                foreach (string word in File.ReadAllLines(posWordsFilePath).Skip(35)) //Skip: Start reading from line 36
+                foreach (string word in File.ReadAllLines(posWordsFilePath).Skip(35)) //Skip: Start reading from line 36 from first word "Resources.positive-words"
                 {
                     if(!analysisWords.ContainsKey(word))
                         analysisWords.Add(word, 1);
                 }
 
-                foreach (string word in File.ReadAllLines(negWordsFilePath).Skip(35))
+                foreach (string word in File.ReadAllLines(negWordsFilePath).Skip(35)) //Skip: Start reading from line 36 from first word "Resources.negative-words"
                 {
                     if (!analysisWords.ContainsKey(word))
                         analysisWords.Add(word, -1);
@@ -109,7 +115,7 @@ namespace BubbleBuster.Helper
 
                 foreach (string keyword in temp)
                 {
-                    string[] tempArray = keyword.Split(';'); 
+                    string[] tempArray = keyword.Split(';');
                     keywords.Add(tempArray[0], new KeywordObj(keyword, int.Parse(tempArray[1]), int.Parse(tempArray[2]), int.Parse(tempArray[3])));
                     keywords.Add('#' + tempArray[0], new KeywordObj('#' + keyword, int.Parse(tempArray[1]), int.Parse(tempArray[2]), int.Parse(tempArray[3])));
                 }
@@ -121,6 +127,37 @@ namespace BubbleBuster.Helper
 
             return keywords;
         }
+
+        /// <summary>
+        /// Gets the trained Bag of words
+        /// </summary>
+        /// <returns></returns>
+        public static BagOfWords GetBagOfWords()
+        {
+            if(bagOfWords == null)
+            {
+                bagOfWords = new BagOfWords()
+                {
+                    MaximumOccurance = 1
+                };
+                bagOfWords.Learn(ReadObjectFromFile<string[][]>(@"BagOfWords90.txt"));
+            }
+            return bagOfWords;
+        }
+
+        /// <summary>
+        /// Get the NaiveBayes model
+        /// </summary>
+        /// <returns></returns>
+        public static NaiveBayes<NormalDistribution> GetModel()
+        {
+            if(model == null)
+            {
+                model = ReadModelFromFile<NaiveBayes<NormalDistribution>>("NaiveBayes90.accord");
+            }
+            return model;
+        }
+
 
         /// <summary>
         /// Generates the directory structure
@@ -171,6 +208,18 @@ namespace BubbleBuster.Helper
             File.WriteAllText(filePath, JsonConvert.SerializeObject(data));
             data = null;
         }
+        
+        /// <summary>
+        /// Writes an Accord Object to file
+        /// </summary>
+        /// <param name="fileName"> The name of the file</param>
+        /// <param name="model">The model</param>
+        public static void WriteModelToFile(string fileName, NaiveBayes<NormalDistribution> model)
+        {
+            string filePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + fileName;
+            GenerateDirectoryStructure();
+            Serializer.Save(model, fileName);
+        }
 
         /// <summary>
         /// Reads a file and tries to deserialize it from Json to the type T
@@ -191,7 +240,7 @@ namespace BubbleBuster.Helper
             {
                 Log.Error("Could not deserialize the file" + e.Message);
             }
-            
+
             return obj;
         }
 

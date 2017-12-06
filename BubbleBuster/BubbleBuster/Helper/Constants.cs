@@ -19,7 +19,7 @@ namespace BubbleBuster.Helper
         //Auth string for the APP
         public const string APP_API_CREDS = "Bearer AAAAAAAAAAAAAAAAAAAAAPRw2QAAAAAAsXqGsVRPgYFVjSScMX3ZVa9YifA%3DkPvipEcLJj3QooYO7aVke3vZ9ruSJp9CgkTlKKtvlmSsGqLUdG";
 
-        public static string PROGRAM_DATA_FILEPATH { get { return PROGRAM_DATA + @"\\BubbleBuster"; } }
+        public static string PROGRAM_DATA_FILEPATH { get { return PROGRAM_DATA + @"\BubbleBuster"; } }
 
         //Constants used for tweet analysis
         public const int HASHTAG_WEIGHT = 1; //Factor. 1 = base. Do not use negative values.
