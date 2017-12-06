@@ -173,7 +173,7 @@ namespace BubbleBuster.Helper
             foreach (Url link in tweet.Entities.Urls)
             {
                 string shortenedUrl = UrlHelper.Instance.ShortenUrl(link.ExpandedUrl);
-                if (newsHyperlinks.Keys.Contains(shortenedUrl))
+                if (newsHyperlinks.ContainsKey(shortenedUrl))
                 {
                     tweet.MediaBias += newsHyperlinks[shortenedUrl];
                 }
