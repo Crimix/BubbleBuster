@@ -8,11 +8,12 @@ namespace TextProcesserLib
     {
         private static List<string> _stopWordsList;
 
-        //Might need to be trimmed
-        //Could be ignored with little to no result
+        //list stopwords
+        //Taken from http://xpo6.com/list-of-english-stop-words/
         public static List<string> StopWordsList => _stopWordsList ?? (_stopWordsList = new List<string>
                                                                                         {
             #region Word list
+                                                                                            "a",
                                                                                             "able",
                                                                                             "about",
                                                                                             "above",
@@ -514,6 +515,8 @@ namespace TextProcesserLib
 
         private static List<string> _notWordsList;
 
+        //list of not-words
+        //Taken from the Web Intelligence Course - Lecture 8, page 16
         public static List<string> NotWordsList => _notWordsList ?? (_notWordsList = new List<string>
                                                                                     {
             #region notwords
