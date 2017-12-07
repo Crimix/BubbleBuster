@@ -44,7 +44,7 @@ namespace BubbleBuster.Helper
         /// <param name="get">The method to check the database for previous results</param>
         /// <param name="classifyMethod">The method to classify tweets</param>
         /// <param name="post">The method to post the result to the database</param>
-        public void GetTweetsFromUserAndAnalyse(User user, AuthObj auth, Func<User, bool> get, Func<List<Tweet>, AnalysisResultObj> classifyMethod, Func<AnalysisResultObj,User, bool> post)
+        public void GetTweetsFromUserAndAnalyse(User user, AuthObj auth, Func<User, bool> get, Func<List<Tweet>, AnalysisResultObj> classifyMethod, Func<AnalysisResultObj, User, bool> post)
         {
             GetTweetsFromUserHelper(user, auth, (() => TweetThreadMethod(user, auth, get, classifyMethod, post)));
         }
@@ -88,7 +88,7 @@ namespace BubbleBuster.Helper
         /// <param name="get">The method to check the database for previous results</param>
         /// <param name="classifyMethod">The method to classify tweets</param>
         /// <param name="post">The method to post the result to the database</param>
-        public void GetTweetsFromFriendsAndAnalyse(Friends friends, AuthObj auth, Func<User, bool> get, Func<List<Tweet>, AnalysisResultObj> classifyMethod,  Func<AnalysisResultObj,User, bool> post)
+        public void GetTweetsFromFriendsAndAnalyse(Friends friends, AuthObj auth, Func<User, bool> get, Func<List<Tweet>, AnalysisResultObj> classifyMethod, Func<AnalysisResultObj, User, bool> post)
         {
             GetTweetsFromFriendsHelper(friends, auth, ((x) => TweetThreadMethod(x, auth, get, classifyMethod, post)));
         }
@@ -112,13 +112,12 @@ namespace BubbleBuster.Helper
         /// <param name="auth">The auth object</param>
         /// <param name="retrieveMethod">Method to retrieve the tweets</param>
         /// <returns>A list of tweets from the friends</returns>
-        private List<Tweet> GetTweetsFromFriendsHelper(Friends friends, AuthObj apiKey, Func<User,List<Tweet>> retrieveMethod)
+        private List<Tweet> GetTweetsFromFriendsHelper(Friends friends, AuthObj apiKey, Func<User, List<Tweet>> retrieveMethod)
         {
             List<Tweet> tweetList = new List<Tweet>();
             List<Task<List<Tweet>>> runningTasks = new List<Task<List<Tweet>>>();
             List<Task<List<Tweet>>> taskList = new List<Task<List<Tweet>>>();
             Queue<Task<List<Tweet>>> taskQueue = new Queue<Task<List<Tweet>>>();
-            Log.Info(String.Format("{0,-30} {1,-20} {2,-11}", "User name", "User id", "Tweet count"));
 
             foreach (User user in friends.Users)
             {
@@ -128,23 +127,23 @@ namespace BubbleBuster.Helper
 
             friends = null;
 
-            while(taskQueue.Count != 0)
+            while (taskQueue.Count != 0)
             {
-                if(taskList.Count < 3)
+                //Startup process of starting 3 tasks
+                if (taskList.Count < 3)
                 {
                     for (int i = 0; i < 3; i++)
                     {
-                        if(taskQueue.Count != 0)
-                        { 
+                        if (taskQueue.Count != 0)
+                        {
                             var task = taskQueue.Dequeue();
                             task.Start();
                             runningTasks.Add(task);
                             taskList.Add(task);
-                            Log.Info(String.Format("Queue one task"));
                         }
                     }
                 }
-                else
+                else //Just start a new task when one finishes
                 {
                     int index = Task.WaitAny(runningTasks.ToArray(), -1);
                     runningTasks.RemoveAt(index);
@@ -152,13 +151,11 @@ namespace BubbleBuster.Helper
                     task.Start();
                     runningTasks.Add(task);
                     taskList.Add(task);
-                    Log.Info(String.Format("Queue one task"));
                 }
             }
             taskQueue = null;
 
             Task.WaitAll(taskList.ToArray());
-            Log.Info(String.Format("Tasks done"));
             foreach (var item in taskList)
             {
                 tweetList.AddRange(item.Result);
@@ -179,42 +176,36 @@ namespace BubbleBuster.Helper
         /// <param name="classifyMethod">The method to classify tweets</param>
         /// <param name="post">The method to post the result to the database</param>
         /// <returns>A list of tweets </returns>
-        private List<Tweet> TweetThreadMethod(User user, AuthObj auth, Func<User,bool> get = null, Func<List<Tweet>, AnalysisResultObj> classifyMethod = null, Func<AnalysisResultObj,User, bool> post = null)
+        private List<Tweet> TweetThreadMethod(User user, AuthObj auth, Func<User, bool> get = null, Func<List<Tweet>, AnalysisResultObj> classifyMethod = null, Func<AnalysisResultObj, User, bool> post = null)
         {
             bool alreadyExist = false;
             AnalysisResultObj tempResult = new AnalysisResultObj();
             List<Tweet> temp = new List<Tweet>();
             if (get != null)
             {
-                alreadyExist = get(user);
+                alreadyExist = get(user); //Uses the supplied method to find out if the result already exist on the database
                 if (alreadyExist)
                 {
-                    lock (Log.LOCK)
-                    {
-                        Log.Info(String.Format("{0,-30} {1,-20} {2,-11}", user.Name, user.Id, "Already exist in db"));
-                    }
+                    Log.Debug(String.Format("{0,-30} {1,-20} {2,-11}", user.Name, user.Id, "Already exist in db"));
                 }
             }
 
             if (!alreadyExist)
             {
                 temp = RetrieveTweets(user, auth);
-                lock (Log.LOCK)
+                if (user.IsProtected)
                 {
-                    if (user.IsProtected)
-                    {
-                        Log.Info(String.Format("{0,-30} {1,-20} {2,-11}", user.Name, user.Id, "Protected"));
-                    }
-                    else
-                    {
-                        Log.Info(String.Format("{0,-30} {1,-20} {2,-11}", user.Name, user.Id, temp.Count));
-                    }
+                    Log.Debug(String.Format("{0,-30} {1,-20} {2,-11}", user.Name, user.Id, "Protected"));
+                }
+                else
+                {
+                    Log.Debug(String.Format("{0,-30} {1,-20} {2,-11}", user.Name, user.Id, temp.Count));
                 }
 
-                if (classifyMethod != null  && post != null)
+                if (classifyMethod != null && post != null)
                 {
-                    tempResult = classifyMethod(temp);
-                    post(tempResult,user);
+                    tempResult = classifyMethod(temp); //Use the supplied method to classify the list of tweets
+                    post(tempResult, user); //Use the supplied method to post the result to the database
                     temp = new List<Tweet>();
                 }
             }

@@ -1,9 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BubbleBuster.Web.ReturnedObjects
 {
@@ -82,14 +79,14 @@ namespace BubbleBuster.Web.ReturnedObjects
         //Overridden such that a tweet object can be compared based on id
         public override bool Equals(object obj)
         {
-            if(obj is Tweet)
+            if (obj is Tweet)
             {
                 return ((Tweet)obj).Id == Id;
             }
             else
             {
                 return false;
-            }           
+            }
         }
 
         //Overridden because Equals is

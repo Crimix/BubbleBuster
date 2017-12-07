@@ -1,29 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using BubbleBuster;
-using System.Threading.Tasks;
+﻿using BubbleBuster;
 using BubbleBuster.Helper.Objects;
 
 namespace QSLib
 {
-    public class ServerTask // Class that parses the data from its input to the worker when run.
+    // Class that parses the data from its input to the worker when run.
+    public class ServerTask 
     {
-        private AuthObj twitterApiKey;
+        //The two variables for the task
+        private AuthObj twitterAuth;
         private string twitterName;
 
-        public ServerTask (TwitterAcc twitterRequest)
+        public ServerTask(TwitterAcc twitterRequest)
         {
-            twitterRequest.GetAuthObj(out twitterApiKey);
+            twitterRequest.GetAuthObj(out twitterAuth);
             twitterName = twitterRequest.Name;
         }
 
         /// <summary>
         /// Executes the task
         /// </summary>
-        public void Run ()
+        public void Run()
         {
-            new Worker(twitterApiKey, twitterName);
+            new Worker(twitterAuth, twitterName);
         }
     }
 }

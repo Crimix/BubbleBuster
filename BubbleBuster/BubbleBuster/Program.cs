@@ -1,28 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using BubbleBuster;
-using BubbleBuster.Web.ReturnedObjects;
-using BubbleBuster.Helper;
+﻿using BubbleBuster.Helper;
 using BubbleBuster.Helper.Objects;
-using BubbleBuster.Web.ReturnedObjects.RateLimit;
 using BubbleBuster.Web;
+using BubbleBuster.Web.ReturnedObjects;
 using BubbleBuster.WordUpdater;
+using System;
+using System.Collections.Generic;
 
 namespace BubbleBuster
 {
+    /// <summary>
+    /// This class is just used for testing. Even though this is the Program class with the Main method.
+    /// This is because in normal use, this project should be used as a libray and as such does not use the Program class
+    /// </summary>
     public class Program
     {
         [STAThread]
         static void Main(string[] args)
         {
             List<PolUserObj> polusers = new List<PolUserObj>();
-            //(MI, ALG)
 
             //Leftwing Users
             /*polusers.Add(new PolUserObj(61734492, -1)); //fahrenthold,  (right, left)

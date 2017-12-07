@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BubbleBuster.Helper
 {
@@ -18,9 +14,12 @@ namespace BubbleBuster.Helper
         /// Writes the object to the log
         /// </summary>
         /// <param name="obj">The object</param>
-        public static void Debug(object obj) 
+        public static void Debug(object obj)
         {
-            Append(DateTime.Now + " | Debug~ " + obj.ToString());
+            if (Constants.DEBUG)
+            {
+                Append(DateTime.Now + " | Debug~ " + obj.ToString());
+            }
         }
 
         /// <summary>
@@ -61,7 +60,10 @@ namespace BubbleBuster.Helper
         //Appends the file with the supplied text and a new line.
         private static void Append(string text)
         {
-            File.AppendAllText(Constants.PROGRAM_DATA_FILEPATH+@"\log.txt", text + Environment.NewLine);
+            lock (LOCK)
+            {
+                File.AppendAllText(Constants.PROGRAM_DATA_FILEPATH + @"\log.txt", text + Environment.NewLine);
+            }
         }
     }
 }

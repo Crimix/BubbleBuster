@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace BubbleBuster.Helper
 {
@@ -37,7 +35,7 @@ namespace BubbleBuster.Helper
         /// <summary>
         /// The method to be used for the request either Post or Get.
         /// </summary>
-        public enum RequestMethod { POST, GET }; 
+        public enum RequestMethod { POST, GET };
 
         /// <summary>
         /// Builds the auth header bases on the supplied parameters.
@@ -64,7 +62,7 @@ namespace BubbleBuster.Helper
                 nonce += "a";
 
             //Add parameters to dictionary
-            if(extraParameters == null)
+            if (extraParameters == null)
             {
                 extraParameters = new Dictionary<string, string>();
             }
@@ -80,13 +78,13 @@ namespace BubbleBuster.Helper
             List<string> signatureParameters = new List<string>();
             string parameterString = "";
 
-            foreach(string key in parameters.Keys)
+            foreach (string key in parameters.Keys)
             {
                 signatureParameters.Add(Uri.EscapeDataString(key) + "=" + Uri.EscapeDataString(parameters[key]) + "&");
             }
             signatureParameters.Sort();
 
-            foreach(string param in signatureParameters)
+            foreach (string param in signatureParameters)
             {
                 parameterString += param;
             }
@@ -125,11 +123,11 @@ namespace BubbleBuster.Helper
         public static string HMACSHA1(string key, string data)
         {
             var encoding = new UTF8Encoding();
-            byte[] keyByte = encoding.GetBytes(key);
-            var hmacsha1 = new HMACSHA1(keyByte);
+            byte[] keyBytes = encoding.GetBytes(key);
+            var hmacsha1 = new HMACSHA1(keyBytes);
             byte[] messageBytes = encoding.GetBytes(data);
-            byte[] hashMessage = hmacsha1.ComputeHash(messageBytes);
-            return Convert.ToBase64String(hashMessage);
+            byte[] hashMessageBytes = hmacsha1.ComputeHash(messageBytes);
+            return Convert.ToBase64String(hashMessageBytes);
         }
     }
 }

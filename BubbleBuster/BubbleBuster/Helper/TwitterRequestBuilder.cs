@@ -3,72 +3,92 @@ using BubbleBuster.Helper.Objects;
 using BubbleBuster.Web;
 using BubbleBuster.Web.ReturnedObjects.RateLimit;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace BubbleBuster
 {
-    public enum RequestType { friendsId, friendsObj, tweets, limit, user }; //Expand based on what data is needed
+    /// <summary>
+    /// Type to tell the request builder what kind of request it is.
+    /// </summary>
+    public enum RequestType { friendsId, friendsObj, tweets, limit, user };
 
     public static class TwitterRequestBuilder
     {
         private static string baseUrl = "https://api.twitter.com/1.1/";
 
+        /// <summary>
+        /// Builds the startup request. Which means that the limit request is built. 
+        /// </summary>
+        /// <returns>The startup request object</returns>
         public static RequestUrlObject BuildStartupRequest()
         {
             return Build(RequestType.limit);
         }
-     
-        public static RequestUrlObject BuildRequest(RequestType returnType, AuthObj apiKey, params string[] parameters)
-        {
-            RequestUrlObject result = Build(returnType, parameters);
 
-            if(CheckIfAllowedToMakeRequestOrSleep(returnType, ref result, apiKey, parameters))
+        /// <summary>
+        /// Builds a request using the request type to determine which url to use. 
+        /// </summary>
+        /// <param name="requestType">The request type</param>
+        /// <param name="auth">The auth object</param>
+        /// <param name="parameters">The parameters of the request</param>
+        /// <returns>The request url object</returns>
+        public static RequestUrlObject BuildRequest(RequestType requestType, AuthObj auth, params string[] parameters)
+        {
+            RequestUrlObject result = Build(requestType, parameters);
+
+            //Checks if the worker is allowed to make the request
+            if (CheckIfAllowedToMakeRequestOrSleep(requestType, ref result, auth, parameters))
             {
                 /*Because we need to make sure after wakeup that we have a new request pool and thus we recursly call build.
                 Then when we have the result, we can just return it, if we do not then the request would subtract 2 from the pool*/
-                return result;   
+                return result;
             }
 
-            LimitHelper.Instance(apiKey).SubtractFrom(returnType);
+            //Subtracts one from the pool of request the worker is allowed to make.
+            LimitHelper.Instance(auth).SubtractFrom(requestType);
 
             return result;
         }
 
-
-        private static bool CheckIfAllowedToMakeRequestOrSleep(RequestType returnType, ref RequestUrlObject result, AuthObj apiKey, params string[] parameters)
+        /// <summary>
+        /// Checks if the request is a allowed to be made, else the thread will sleep until the request pool should be refiled
+        /// So the return value should not be able to become false.
+        /// </summary>
+        /// <param name="requestType">The request type</param>
+        /// <param name="result">The result requestUrl object</param>
+        /// <param name="auth">The auth object</param>
+        /// <param name="parameters">The request parameters</param>
+        /// <returns>True if allowed to make the request, else false.</returns>
+        private static bool CheckIfAllowedToMakeRequestOrSleep(RequestType requestType, ref RequestUrlObject result, AuthObj auth, params string[] parameters)
         {
-            if (!LimitHelper.Instance(apiKey).AllowedToMakeRequest(returnType))
+            if (!LimitHelper.Instance(auth).AllowedToMakeRequest(requestType))
             {
-                TimeSpan sleepTime = LimitHelper.Instance(apiKey).GetResetTime(returnType);
+                TimeSpan sleepTime = LimitHelper.Instance(auth).GetResetTime(requestType);
                 if (sleepTime.TotalMinutes > 0)
                 {
-
-                    lock (Log.LOCK)
-                    {
-                        Log.Warn("Sleep at " + DateTime.Now + " until " + LimitHelper.Instance(apiKey).GetResetDateTime(returnType));
-                    }
+                    Log.Debug("Sleep at " + DateTime.Now + " until " + LimitHelper.Instance(auth).GetResetDateTime(requestType));
                     Thread.Sleep(sleepTime);
-                    lock (Log.LOCK)
-                    {
-                        Log.Warn("Wakeup at " + DateTime.Now);
-                    }
+                    Log.Debug("Wakeup at " + DateTime.Now);
                 }
-                LimitHelper.Instance(apiKey).InitPropertises(new WebHandler(apiKey).TwitterGetRequest<Limit>(BuildStartupRequest()));
-                result = BuildRequest(returnType, apiKey, parameters);
+                LimitHelper.Instance(auth).InitPropertises(new WebHandler(auth).TwitterGetRequest<Limit>(BuildStartupRequest()));
+                result = BuildRequest(requestType, auth, parameters); //Such that we check again
                 return true;
             }
             return false;
         }
 
-        private static RequestUrlObject Build(RequestType returnType, params string[] parameters)
+        /// <summary>
+        /// Builds the request based on the request type and the parameters
+        /// </summary>
+        /// <param name="requestType">The request type</param>
+        /// <param name="parameters">The request parameters</param>
+        /// <returns>Request url object</returns>
+        private static RequestUrlObject Build(RequestType requestType, params string[] parameters)
         {
             RequestUrlObject returnObject = new RequestUrlObject();
 
-            switch (returnType)
+            //Assigns the base url needed for OAuth and the intermediate full url.
+            switch (requestType)
             {
                 case RequestType.friendsId:
                     returnObject.BaseUrl += baseUrl + "friends/ids.json";
@@ -97,6 +117,7 @@ namespace BubbleBuster
                     break;
             }
 
+            //Adds the parameters to the intermediate full url. Such that it becomes the full url.
             foreach (string par in parameters)
             {
                 string[] param = par.Split('=');
@@ -104,6 +125,7 @@ namespace BubbleBuster
                 returnObject.Url += par + "&";
             }
 
+            //Trims the last & such that it is a valid url.
             returnObject.Url = returnObject.Url.TrimEnd('&');
             return returnObject;
         }

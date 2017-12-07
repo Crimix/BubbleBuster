@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace BubbleBuster.Web
 {
@@ -11,7 +7,6 @@ namespace BubbleBuster.Web
     /// </summary>
     public class RequestUrlObject
     {
-
         /// <summary>
         /// The full url
         /// </summary>

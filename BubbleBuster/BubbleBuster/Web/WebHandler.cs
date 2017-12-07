@@ -1,14 +1,10 @@
 ﻿using BubbleBuster.Helper;
+using BubbleBuster.Helper.Objects;
 using Newtonsoft.Json;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
-using System.Web;
-using BubbleBuster.Helper.Objects;
-using System.Globalization;
 
 namespace BubbleBuster.Web
 {
@@ -72,10 +68,7 @@ namespace BubbleBuster.Web
             }
             catch (JsonException e)
             {
-                lock (Log.LOCK)
-                {
-                    Log.Info(e.Message);
-                }
+                Log.Error(e.Message);
             }
 
             if (tempRes != null)
@@ -107,7 +100,7 @@ namespace BubbleBuster.Web
             requestUrl = requestUrl.Trim('&');
 
             //Uses the private method to get the result
-            if(GetRequestBody(requestUrl, "Bearer " + Constants.DB_CREDS, ref tempResult))
+            if (GetRequestBody(requestUrl, "Bearer " + Constants.DB_CREDS, ref tempResult))
             {
                 res = true;
                 result = tempResult;
@@ -125,13 +118,15 @@ namespace BubbleBuster.Web
         public bool DatabaseSendDataRequest(string requestUrl, string method, params string[] parameters)
         {
             bool result = false;
+
+            //Construct the parameter string 
             string postData = "";
             foreach (var item in parameters)
             {
                 postData += item + "&";
             }
             postData = postData.Trim('&');
-
+            //Prepare the payload to be written to the request stream
             var data = Encoding.ASCII.GetBytes(postData);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUrl);
@@ -157,18 +152,17 @@ namespace BubbleBuster.Web
                     result = true;
                 }
                 else
-                { 
+                {
                     result = false;
                 }
+                //Close the connection
                 response?.Close();
             }
             catch (WebException e)
             {
+                //Close the connections
                 response?.Close();
-                lock (Log.LOCK)
-                {
-                    Log.Error(e.Message + ": " + requestUrl);
-                }
+                Log.Error(e.Message + ": " + requestUrl + ": " + postData);
             }
 
             return result;
@@ -203,6 +197,7 @@ namespace BubbleBuster.Web
                     receiveStream = response.GetResponseStream();
                     readStream = null;
 
+                    //Read the result
                     if (string.IsNullOrWhiteSpace(response.CharacterSet))
                     {
                         readStream = new StreamReader(receiveStream);
@@ -219,12 +214,10 @@ namespace BubbleBuster.Web
                     }
                     catch (IOException e)
                     {
-                        lock (Log.LOCK)
-                        {
-                            Log.Error(e.Message);
-                        }
+                        Log.Error(e.Message);
                     }
 
+                    //Close the connections
                     response?.Close();
                     receiveStream?.Close();
                     readStream?.Close();
@@ -232,15 +225,17 @@ namespace BubbleBuster.Web
             }
             catch (WebException e)
             {
+                //Close the connections
                 response?.Close();
                 receiveStream?.Close();
                 readStream?.Close();
-                lock (Log.LOCK)
+                //Because the 404 of a has-id does just mean that the user does not exist, not that it fails
+                if (!requestString.Contains("http://localhost:8000/api/twitter/has-id") && (e.Response != null && ((HttpWebResponse)e.Response).StatusCode != HttpStatusCode.NotFound))
                 {
                     Log.Error(e.Message + ": " + requestString);
                 }
             }
-           
+
 
             return res;
         }
