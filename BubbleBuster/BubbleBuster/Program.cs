@@ -5,6 +5,8 @@ using BubbleBuster.Web.ReturnedObjects;
 using BubbleBuster.WordUpdater;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 
 namespace BubbleBuster
 {
@@ -65,19 +67,54 @@ namespace BubbleBuster
             List<Tweet> filterBubble = TweetRetriever.Instance.GetTweetsFromUser(user, auth);
             FileHelper.WriteObjectToFile("TestData/" + screenName + "-" + leaning, filterBubble);
             */
-            
+
+            string[] fileList = Directory.GetFileSystemEntries(Constants.PROGRAM_DATA_FILEPATH + "\\TestData");
+
+            List<Tweet> tweetList = new List<Tweet>();
+
+            foreach (string str in fileList)
+            {
+                string temp = str.Replace(Constants.PROGRAM_DATA_FILEPATH, "");
+                tweetList.AddRange(FileHelper.ReadObjectFromFile<List<Tweet>>(temp));
+            }
+
+            //53944
+
+            //tweetList.AddRange(tweetList);
+            //tweetList.AddRange(tweetList);
+            //tweetList.AddRange(tweetList);
+            //tweetList.AddRange(tweetList);
+
+            long totalMiliseconds = 0;
+            Classifier classifier = new Classifier();
+
+            /*
+            for (int a = 0; a < 100; a++)
+            {
+                Stopwatch stp = new Stopwatch();
+                stp.Start();
+                double result = classifier.RunNaiveBayes(tweetList);
+                //AnalysisResultObj output = TweetAnalyzer.Instance.AnalyzeAndDecorateTweets(tweetList);
+                stp.Stop();
+                totalMiliseconds += stp.ElapsedMilliseconds;
+                Console.WriteLine("Count: " + tweetList.Count + "\nTime Milliseconds: " + stp.ElapsedMilliseconds);
+            }
+
+            Console.WriteLine("Total: " + totalMiliseconds + "\nAverage: " + (totalMiliseconds/100));
+            */
+            /*
             string screenName = "wpjenna";
             string leaning = "Left";
 
             List<Tweet> filterBubble = FileHelper.ReadObjectFromFile<List<Tweet>>("TestData/" + screenName + "-" + leaning + ".json");
-            double result = new Classifier().RunNaiveBayes(filterBubble);
+            
 
             AnalysisResultObj output = TweetAnalyzer.Instance.AnalyzeAndDecorateTweets(filterBubble);
             Console.WriteLine("Name: " + screenName + "\nCount: " + output.Count + "\nPolCount: " + output.PolCount + "\nPol%: " 
                 + output.GetPolPercent() + "\nResult: " + output.GetAlgorithmResult() + "\nKeywordBias: " + output.GetKeywordResult() 
                 + "\nSentiment: " + output.GetSentiment() + "\nMI: " + result + "\nNegative Tweets: " + output.NegativeTweetsCount 
                 + "\nPositive Tweets: " + output.PositiveTweetsCount + "\nMedia Bias: " + output.GetMediaResult());
-            
+            */
             Console.WriteLine("?");
             Console.ReadLine();
         }
