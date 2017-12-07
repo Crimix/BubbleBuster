@@ -4,13 +4,16 @@
     {
         //General Info
         public double Count { get; set; } = 0;
+        public double PolCount { get; set; } = 0;
+        public int PositiveTweetsCount { get; set; } = 0;
+        public int NegativeTweetsCount { get; set; } = 0;
 
         //Analysis Algorithm
         public double KeywordBias { get; set; } = 0;
         public double MediaBias { get; set; } = 0;
         public double PositiveSentiment { get; set; } = 0;
         public double NegativeSentiment { get; set; } = 0;
-
+                
         //Machine Learning, does not need to be divide by the count of tweets. This action has been performed by the classifier.
         public double MIResult { get; set; } = 0;
 
@@ -33,10 +36,14 @@
         /// <returns>A double</returns>
         public double GetAlgorithmResult()
         {
-            if (Count != 0)
-                return (KeywordBias + MediaBias) / Count;
-            else
+            if (GetPolPercent() < Constants.POL_PERCENT_THRESHOLD)
                 return 0;
+            else if (Count == 0)
+                return 0;
+            else if (((KeywordBias + MediaBias) / PolCount) < Constants.POL_VALUE_THRESHOLD && ((KeywordBias + MediaBias) / PolCount) > (-1 * Constants.POL_VALUE_THRESHOLD))
+                return 0;
+            else
+                return (KeywordBias + MediaBias) / PolCount;
         }
 
         /// <summary>
@@ -46,7 +53,27 @@
         public double GetMediaResult()
         {
             if (Count != 0)
-                return MediaBias / Count;
+                return MediaBias / PolCount;
+            else
+                return 0;
+        }
+
+        /// <summary>
+        /// Get the media result value
+        /// </summary>
+        /// <returns>A double</returns>
+        public double GetKeywordResult()
+        {
+            if (Count != 0)
+                return KeywordBias / PolCount;
+            else
+                return 0;
+        }
+
+        public double GetPolPercent()
+        {
+            if (Count != 0)
+                return (PolCount / Count) * 100;
             else
                 return 0;
         }

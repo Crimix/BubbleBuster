@@ -207,10 +207,26 @@ namespace BubbleBuster.Helper
                     KeywordAnalysis(wordList, tweet);
                     MediaAnalysis(tweet);
 
-                    output.KeywordBias += tweet.KeywordBias;
-                    output.MediaBias += tweet.MediaBias;
-                    output.NegativeSentiment += tweet.NegativeValue;
-                    output.PositiveSentiment += tweet.PositiveValue;
+                    if (tweet.GetSentiment() > 0)
+                        output.PositiveTweetsCount++;
+                    else if (tweet.GetSentiment() < 0)
+                        output.NegativeTweetsCount++;
+
+
+                    if ((tweet.KeywordBias + tweet.MediaBias) != 0)
+                    {
+                        output.PolCount++;
+
+                        output.KeywordBias += tweet.KeywordBias;
+                        output.MediaBias += tweet.MediaBias;
+                        output.NegativeSentiment += tweet.NegativeValue;
+                        output.PositiveSentiment += tweet.PositiveValue;
+                    }
+
+                    //output.KeywordBias += tweet.KeywordBias;
+                    //output.MediaBias += tweet.MediaBias;
+                    //output.NegativeSentiment += tweet.NegativeValue;
+                    //output.PositiveSentiment += tweet.PositiveValue;
                 }
             }
             output.Count = tweetList.Count;

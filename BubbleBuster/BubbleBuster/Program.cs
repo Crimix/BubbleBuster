@@ -17,10 +17,11 @@ namespace BubbleBuster
         [STAThread]
         static void Main(string[] args)
         {
+            /*
             List<PolUserObj> polusers = new List<PolUserObj>();
 
             //Leftwing Users
-            /*polusers.Add(new PolUserObj(61734492, -1)); //fahrenthold,  (right, left)
+            polusers.Add(new PolUserObj(61734492, -1)); //fahrenthold,  (right, left)
             polusers.Add(new PolUserObj(15893354, -1)); //wpjenna       (right, left)
             polusers.Add(new PolUserObj(15689503, -1)); //cbellantoni    (right, left)
             polusers.Add(new PolUserObj(15691197, -1));//Atrios         (right, left)
@@ -48,8 +49,8 @@ namespace BubbleBuster
             polusers.Add(new PolUserObj(17454769, 1)); //glennbeck      (
             polusers.Add(new PolUserObj(17980523, 1)); //mitchellvii    (
 
-            string screenName = "mitchellvii";
-            string leaning = "Right";
+            string screenName = "JonTronShow";
+            string leaning = "IDK";
 
             Console.WriteLine("Begin Retrieving: " + DateTime.Now);
             AuthObj auth = new AuthObj();
@@ -64,14 +65,18 @@ namespace BubbleBuster
             List<Tweet> filterBubble = TweetRetriever.Instance.GetTweetsFromUser(user, auth);
             FileHelper.WriteObjectToFile("TestData/" + screenName + "-" + leaning, filterBubble);
             */
-
-            string screenName = "mitchellvii";
-            string leaning = "Right";
+            
+            string screenName = "wpjenna";
+            string leaning = "Left";
 
             List<Tweet> filterBubble = FileHelper.ReadObjectFromFile<List<Tweet>>("TestData/" + screenName + "-" + leaning + ".json");
+            double result = new Classifier().RunNaiveBayes(filterBubble);
 
             AnalysisResultObj output = TweetAnalyzer.Instance.AnalyzeAndDecorateTweets(filterBubble);
-            Console.WriteLine("Result: " + output.GetAlgorithmResult() + " KeywordBias: " + output.KeywordBias + "Sentiment: " + output.GetSentiment());
+            Console.WriteLine("Name: " + screenName + "\nCount: " + output.Count + "\nPolCount: " + output.PolCount + "\nPol%: " 
+                + output.GetPolPercent() + "\nResult: " + output.GetAlgorithmResult() + "\nKeywordBias: " + output.GetKeywordResult() 
+                + "\nSentiment: " + output.GetSentiment() + "\nMI: " + result + "\nNegative Tweets: " + output.NegativeTweetsCount 
+                + "\nPositive Tweets: " + output.PositiveTweetsCount + "\nMedia Bias: " + output.GetMediaResult());
             
             Console.WriteLine("?");
             Console.ReadLine();

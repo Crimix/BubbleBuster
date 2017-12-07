@@ -29,5 +29,9 @@ namespace BubbleBuster.Helper
 
         //IP to the database server
         public const string DB_SERVER_IP = "http://localhost:8000/api/";
+
+        //Pol% Threshold for not neutral
+        public const int POL_PERCENT_THRESHOLD = 1; //Percent
+        public const double POL_VALUE_THRESHOLD = 0.5; //Value
     }
 }

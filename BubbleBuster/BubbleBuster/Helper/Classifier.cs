@@ -27,6 +27,9 @@ namespace BubbleBuster.Helper
         /// <returns> The bias </returns>
         public double RunNaiveBayes(List<Tweet> tweets)
         {
+            if (tweets.Count == 0)
+                return 0;
+
             var model = FileHelper.GetModel();
 
             double[][] inputs = FormatTweets(tweets);
