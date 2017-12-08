@@ -19,6 +19,15 @@ namespace BubbleBuster
         [STAThread]
         static void Main(string[] args)
         {
+            Console.WriteLine("Beginning now:");
+
+            Classifier c = new Classifier();
+            c.TrainNaiveBayes("training_mod_tweets.txt", "training_mod_res.txt");
+
+            Console.WriteLine("Finished");
+
+
+
             /*
             List<PolUserObj> polusers = new List<PolUserObj>();
 

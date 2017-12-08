@@ -13,6 +13,7 @@ namespace TextProcesserLib
         public static List<string> StopWordsList => _stopWordsList ?? (_stopWordsList = new List<string>
                                                                                         {
             #region Word list
+                                                                                            "",
                                                                                             "a",
                                                                                             "able",
                                                                                             "about",
@@ -341,6 +342,7 @@ namespace TextProcesserLib
                                                                                             "relatively",
                                                                                             "respectively",
                                                                                             "right",
+                                                                                            "rt",
                                                                                             "said",
                                                                                             "same",
                                                                                             "saw",

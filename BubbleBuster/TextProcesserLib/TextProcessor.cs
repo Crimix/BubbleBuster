@@ -49,7 +49,7 @@ namespace TextProcesserLib
                 },
                 {
                     "punctuation",
-                    new Regex(@"([!-/]|[;-?]|['])")
+                    new Regex(@"\p{P}")
                 },
                 {
                     "numbers",
@@ -119,9 +119,9 @@ namespace TextProcesserLib
                 //process each token in a tweet with regexes and stemming
                 foreach (string token in tweet.ToLower().Split(' '))
                 {
-                    if (!KeyWords.StopWordsList.Contains(token))
+                    feature = ProcessToken(token, isNeg);
+                    if (!KeyWords.StopWordsList.Contains(feature))
                     {
-                        feature = ProcessToken(token, isNeg);
                         feature = stem.StemWord(feature);
 
                         tokens.Add(feature);
