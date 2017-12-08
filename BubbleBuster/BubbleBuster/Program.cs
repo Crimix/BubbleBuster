@@ -50,8 +50,16 @@ namespace BubbleBuster
             polusers.Add(new PolUserObj(65493023, 1)); //sarahpalinUSA  (
             polusers.Add(new PolUserObj(17454769, 1)); //glennbeck      (
             polusers.Add(new PolUserObj(17980523, 1)); //mitchellvii    (
+            */
 
-            string screenName = "JonTronShow";
+            //Queen_UK - Neutral
+            //ShitGirlsSay - Neutral
+            //FreeMemesKids - Neutral
+            //Oatmeal
+            //Sosadtoday
+
+
+            string screenName = "sosadtoday";
             string leaning = "IDK";
 
             Console.WriteLine("Begin Retrieving: " + DateTime.Now);
@@ -65,42 +73,58 @@ namespace BubbleBuster
             //List<Tweet> filterBubble = TweetRetriever.Instance.GetTweetsFromFriends(friends, auth);
             
             List<Tweet> filterBubble = TweetRetriever.Instance.GetTweetsFromUser(user, auth);
-            FileHelper.WriteObjectToFile("TestData/" + screenName + "-" + leaning, filterBubble);
-            */
 
-            string[] fileList = Directory.GetFileSystemEntries(Constants.PROGRAM_DATA_FILEPATH + "\\TestData");
+            AnalysisResultObj output = TweetAnalyzer.Instance.AnalyzeAndDecorateTweets(filterBubble);
+            Console.WriteLine("\nConclusion: " + output.GetAlgorithmResult() + " / " + output.GetUnprocessedAlgorithmResult()  + "\nUProcess: " + output.GetUnprocessedAlgorithmResult() + "\nPol%: " + output.GetPolPercent() + "\n\n");
+            //FileHelper.WriteObjectToFile("TestData/" + screenName + "-" + leaning, filterBubble);
 
-            List<Tweet> tweetList = new List<Tweet>();
+
+
+
+            /*string[] fileList = Directory.GetFileSystemEntries(Constants.PROGRAM_DATA_FILEPATH + "\\TestData");
+
+            Dictionary<string, List<Tweet>> tweetList = new Dictionary<string, List<Tweet>>();
 
             foreach (string str in fileList)
             {
                 string temp = str.Replace(Constants.PROGRAM_DATA_FILEPATH, "");
-                tweetList.AddRange(FileHelper.ReadObjectFromFile<List<Tweet>>(temp));
+                tweetList.Add(str, FileHelper.ReadObjectFromFile<List<Tweet>>(temp));
             }
-
+            */
             //53944
 
             //tweetList.AddRange(tweetList);
             //tweetList.AddRange(tweetList);
             //tweetList.AddRange(tweetList);
             //tweetList.AddRange(tweetList);
-
+            /*
             long totalMiliseconds = 0;
             Classifier classifier = new Classifier();
 
-            /*
-            for (int a = 0; a < 100; a++)
+            Tweet twe = new Tweet();
+            twe.Text = "reality";
+            List<Tweet> asd = new List<Tweet>();
+            asd.Add(twe);
+            Console.WriteLine("??? " + classifier.RunNaiveBayes(asd));
+
+            Console.ReadLine();
+
+
+
+            List<Tweet> newTweetList = new List<Tweet>();
+
+            foreach (string str in tweetList.Keys)
             {
                 Stopwatch stp = new Stopwatch();
                 stp.Start();
-                double result = classifier.RunNaiveBayes(tweetList);
-                //AnalysisResultObj output = TweetAnalyzer.Instance.AnalyzeAndDecorateTweets(tweetList);
+                double result = classifier.RunNaiveBayes(tweetList[str]);
+                AnalysisResultObj output = TweetAnalyzer.Instance.AnalyzeAndDecorateTweets(tweetList[str]);
                 stp.Stop();
                 totalMiliseconds += stp.ElapsedMilliseconds;
-                Console.WriteLine("Count: " + tweetList.Count + "\nTime Milliseconds: " + stp.ElapsedMilliseconds);
+                Console.WriteLine("Name: " + str + "\nConclusion: " + output.GetAlgorithmResult() + " / " + result + "\nUProcess: " + output.GetUnprocessedAlgorithmResult() + "\nPol%: " + output.GetPolPercent() + "\nCount: " + tweetList.Count + "\nTime Milliseconds: " + stp.ElapsedMilliseconds + "\n\n");
             }
 
-            Console.WriteLine("Total: " + totalMiliseconds + "\nAverage: " + (totalMiliseconds/100));
+            Console.WriteLine("Total: " + totalMiliseconds + "\nAverage: " + (totalMiliseconds/50));
             */
             /*
             string screenName = "wpjenna";

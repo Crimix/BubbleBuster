@@ -212,6 +212,8 @@ namespace BubbleBuster.Helper
                     else if (tweet.GetSentiment() < 0)
                         output.NegativeTweetsCount++;
 
+                    output.NegativeSentiment += tweet.NegativeValue;
+                    output.PositiveSentiment += tweet.PositiveValue;
 
                     if ((tweet.KeywordBias + tweet.MediaBias) != 0)
                     {
@@ -219,8 +221,7 @@ namespace BubbleBuster.Helper
 
                         output.KeywordBias += tweet.KeywordBias;
                         output.MediaBias += tweet.MediaBias;
-                        output.NegativeSentiment += tweet.NegativeValue;
-                        output.PositiveSentiment += tweet.PositiveValue;
+                        
                     }
 
                     //output.KeywordBias += tweet.KeywordBias;

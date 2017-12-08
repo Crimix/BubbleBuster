@@ -25,7 +25,7 @@
         public double GetSentiment()
         {
             if (Count != 0)
-                return (PositiveSentiment + NegativeSentiment) / Count;
+                return (PositiveSentiment - NegativeSentiment) / Count;
             else
                 return 0;
         }
@@ -40,10 +40,25 @@
                 return 0;
             else if (Count == 0)
                 return 0;
-            else if (((KeywordBias + MediaBias) / PolCount) < Constants.POL_VALUE_THRESHOLD && ((KeywordBias + MediaBias) / PolCount) > (-1 * Constants.POL_VALUE_THRESHOLD))
-                return 0;
+            /*else if (((KeywordBias + MediaBias) / PolCount) < Constants.POL_VALUE_THRESHOLD && ((KeywordBias + MediaBias) / PolCount) > (-1 * Constants.POL_VALUE_THRESHOLD))
+                return 0;*/
             else
+            {
+                if ((KeywordBias + MediaBias) / PolCount < -10)
+                    return -10;
+                else if ((KeywordBias + MediaBias) / PolCount > 10)
+                    return 10;
+                else
+                    return (KeywordBias + MediaBias) / PolCount;
+            }
+        }
+
+        public double GetUnprocessedAlgorithmResult()
+        {
+            if (PolCount > 0)
                 return (KeywordBias + MediaBias) / PolCount;
+            else
+                return 0;
         }
 
         /// <summary>
