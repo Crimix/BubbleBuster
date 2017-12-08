@@ -4,6 +4,8 @@ using System;
 
 namespace TextProcesserLib
 {
+    // Can be used free of charge
+    // see: https://tartarus.org/martin/PorterStemmer/index.html
     /// <summary>
     ///     The Stemmer class transforms a word into its root form.
     ///     Implementing the Porter Stemming Algorithm
