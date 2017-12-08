@@ -49,7 +49,7 @@ namespace TextProcesserLib
                 },
                 {
                     "punctuation",
-                    new Regex(@"([!-/]|[;-?]|['])")
+                    new Regex(@"\p{P}")
                 },
                 {
                     "numbers",
@@ -77,25 +77,25 @@ namespace TextProcesserLib
             procToken = regexes["numbers"].Replace(procToken, "");
             procToken = regexes["multiSpaces"].Replace(procToken, "");
 
+
+            /* Not currently used as it decreases accuracy of NaiveBayes
+             * As there are too few training samples
             if (regexes["negChecker"].IsMatch(procToken))
             {
                 isNeg = false;
             }
-
-            procToken = regexes["punctuation"].Replace(procToken, "");
-
-            /* Not currently used as it decreases accuracy of NB
             if (isNeg && !String.IsNullOrWhiteSpace(procToken))
             {
                 procToken = String.Concat("NEG_", procToken);
             }
-            */
-
             if (KeyWords.NotWordsList.Contains(procToken))
             {
                 isNeg = true;
             }
-            
+            */
+
+            procToken = regexes["punctuation"].Replace(procToken, "");
+
             return procToken;
         }
 
@@ -109,22 +109,22 @@ namespace TextProcesserLib
         {
             List<List<string>> tokenizedTweets = new List<List<string>>();
 
-            string stemmedWord;
+            string feature;
 
             foreach (string tweet in tweets)
             {
                 isNeg = false;
                 List<string> tokens = new List<string>();
 
-                //Split and process each token in a tweet with regexes and stemming
+                //process each token in a tweet with regexes and stemming
                 foreach (string token in tweet.ToLower().Split(' '))
                 {
-                    if (!KeyWords.StopWordsList.Contains(token))
+                    feature = ProcessToken(token, isNeg);
+                    if (!KeyWords.StopWordsList.Contains(feature))
                     {
-                        stemmedWord = ProcessToken(token, isNeg);
-                        stemmedWord = stem.StemWord(token);
+                        feature = stem.StemWord(feature);
 
-                        tokens.Add(stemmedWord);
+                        tokens.Add(feature);
                     }
                 }
                 tokenizedTweets.Add(tokens);
