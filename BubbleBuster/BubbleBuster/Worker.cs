@@ -13,7 +13,7 @@ using System.Web;
 
 namespace BubbleBuster
 {
-    public class Worker //TODO: Implement the last things
+    public class Worker
     {
         private long userRecordId = -1;
         private AuthObj auth;

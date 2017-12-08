@@ -115,6 +115,8 @@ namespace BubbleBuster.Helper
             var nb = teacher.Learn(inputs, outputs);
 
             FileHelper.WriteModelToFile("NaiveBayes90.accord", nb);
+
+
         }
 
         /// <summary> 
