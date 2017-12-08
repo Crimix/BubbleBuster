@@ -9,13 +9,13 @@ namespace QSLib
         {
         }
 
-        public TwitterAcc(string Token, string Name, string Secret, string RequestID, string RequsterName)
+        public TwitterAcc(string Token, string Name, string Secret, string RequestID, string RequesterName)
         {
             this.Token = Token;
             this.Name = Name;
             this.Secret = Secret;
             this.RequestID = RequestID;
-            this.RequsterName = RequsterName;
+            this.RequesterName = RequesterName;
         }
 
 
@@ -28,14 +28,14 @@ namespace QSLib
         /// <returns>True if the auth variable was assigned</returns>
         public bool GetAuthObj(out AuthObj auth)
         {
-            if (string.IsNullOrWhiteSpace(Token) || string.IsNullOrWhiteSpace(Secret) || string.IsNullOrWhiteSpace(Name) || string.IsNullOrWhiteSpace(RequsterName))
+            if (string.IsNullOrWhiteSpace(Token) || string.IsNullOrWhiteSpace(Secret) || string.IsNullOrWhiteSpace(Name) || string.IsNullOrWhiteSpace(RequesterName))
             {
                 auth = null;
                 return false;
             }
             else
             {
-                auth = new AuthObj(Token, Secret, Name, RequestID, RequsterName);
+                auth = new AuthObj(Token, Secret, Name, RequestID, RequesterName);
                 return true;
             }
         }
@@ -49,6 +49,6 @@ namespace QSLib
 
         public string Secret { get; set; }
 
-        public string RequsterName { get; set; }
+        public string RequesterName { get; set; }
     }
 }

@@ -67,7 +67,7 @@
         /// <returns>A double</returns>
         public double GetMediaResult()
         {
-            if (Count != 0)
+            if (PolCount != 0)
                 return MediaBias / PolCount;
             else
                 return 0;
@@ -79,7 +79,7 @@
         /// <returns>A double</returns>
         public double GetKeywordResult()
         {
-            if (Count != 0)
+            if (PolCount != 0)
                 return KeywordBias / PolCount;
             else
                 return 0;

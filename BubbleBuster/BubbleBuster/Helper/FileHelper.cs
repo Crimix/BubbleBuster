@@ -14,6 +14,9 @@ namespace BubbleBuster.Helper
     //This class is static because it is only a helper class.
     public static class FileHelper
     {
+
+        private static object _lock = "lockString";
+
         //Such that we do only need to read the file once
         private static Dictionary<string, int> newsHyperlinks;
         private static Dictionary<string, KeywordObj> keywords;
@@ -249,9 +252,12 @@ namespace BubbleBuster.Helper
         /// <returns>An object of type T</returns>
         public static T ReadModelFromFile<T>(string filename)
         {
-            string filePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + filename;
-            Serializer.Load(filePath, out T model);
-
+            T model = default(T);
+            lock (_lock)
+            {
+                string filePath = Constants.PROGRAM_DATA_FILEPATH + @"\" + filename;
+                Serializer.Load(filePath, out model);
+            }
             return model;
         }
 

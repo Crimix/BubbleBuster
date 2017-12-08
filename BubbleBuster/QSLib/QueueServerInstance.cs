@@ -103,7 +103,6 @@ namespace QSLib
         public bool AddTask(TwitterAcc tAcc)
         {
             bool wasSuccesful = true;
-            Log.Debug("Added task");
 
             try
             {
