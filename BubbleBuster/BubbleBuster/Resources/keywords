@@ -5,6 +5,10 @@
 ;;These values indicate if the tweet is Right, Neutral or Left given a positive/Negative connotation.
 ;;Tweet			Neg	Base	Pos
 
+@realDonaldTrump;-10;0;10
+realDonaldTrump;-10;0;10
+tax cut;-10;0;10
+tax cuts;-10;0;10
 white supremacist;-10;0;0
 white supremacy;-10;0;0
 nazi;-10;0;0
@@ -85,7 +89,7 @@ travelban;-10;-10;-10
 travel ban;-10;-10;-10
 feminism;3;0;-3
 racism;3;0;-3
-racists;3;0;-3
+racists;-3;0;-3
 racist;3;0;-3
 equality;-10;-10;-10
 acceptance;-10;-10;-10
@@ -148,3 +152,267 @@ thenewyorktimes;3;0;-3
 donald;-3;0;3
 jews;3;0;-3
 hilaryclinton;3;0;-3
+Rex Tillerson;-6;0;6
+Steven Mnuchin;-6;0;6
+Jim Mattis;-6;0;6
+Jeff Sessions;-6;0;6
+Ryan Zinke;-6;0;6
+Sonny Perdue;-6;0;6
+Wilbur Ross;-6;0;6
+Alex Acosta;-6;0;6
+Eric Hargan;-6;0;6
+Ben Carson;-6;0;6
+Elaine Chao;-6;0;6
+Rick Perry;-6;0;6
+Betsy DeVos;-6;0;6
+David Shulkin;-6;0;6
+Kirstjen Nielsen;-6;0;6
+John Kelly;-6;0;6
+Robert Lightizer;-6;0;6
+Dan Coats;-6;0;6
+Nikki Haley;-6;0;6
+Mick Mulvaney;-6;0;6
+Mike Pompeo;-6;0;6
+Scott Pruitt;-6;0;6
+Linda McMahon;-6;0;6
+RexTillerson;-6;0;6
+StevenMnuchin;-6;0;6
+JimMattis;-6;0;6
+JeffSessions;-6;0;6
+RyanZinke;-6;0;6
+SonnyPerdue;-6;0;6
+WilburRoss;-6;0;6
+AlexAcosta;-6;0;6
+EricHargan;-6;0;6
+BenCarson;-6;0;6
+ElaineChao;-6;0;6
+RickPerry;-6;0;6
+BetsyDeVos;-6;0;6
+DavidShulkin;-6;0;6
+KirstjenNielsen;-6;0;6
+JohnKelly;-6;0;6
+RobertLightizer;-6;0;6
+DanCoats;-6;0;6
+NikkiHaley;-6;0;6
+MickMulvaney;-6;0;6
+MikePompeo;-6;0;6
+ScottPruitt;-6;0;6
+LindaMcMahon;-6;0;6
+Tillerson;-6;0;6
+Mnuchin;-6;0;6
+Mattis;-6;0;6
+Sessions;-6;0;6
+Acosta;-6;0;6
+Carson;-6;0;6
+DeVos;-6;0;6
+Shulkin;-6;0;6
+Pompeo;-6;0;6
+McMahon;-6;0;6
+Mike Pence;-6;0;6
+Orrin Hatch;-6;0;6
+Mitch McConnell;-6;0;6
+John Cornyn;-6;0;6
+John Thune;-6;0;6
+John Barasso;-6;0;6
+Cory Gardner;-6;0;6
+Mike Lee;-6;0;6
+Mike Crapo;-6;0;6
+Mike Enzi;-6;0;6
+Ron Johnson;-6;0;6
+Shelly Moore Capito;-6;0;6
+Ted Cruz;-6;0;6
+Lamar Alexander;-6;0;6
+Bob Corker;-6;0;6
+Mike Rounds;-6;0;6
+Lindsey Graham;-6;0;6
+Tim Scott;-6;0;6
+Pat Toomey;-6;0;6
+Jim Inhofe;-6;0;6
+James Lankford;-6;0;6
+Rob Portman;-6;0;6
+John Hoeven;-6;0;6
+Richard Burr;-6;0;6
+Thom Tillis;-6;0;6
+Deal Heller;-6;0;6
+Deb Fischer;-6;0;6
+Ben Sasse;-6;0;6
+Steve Daines;-6;0;6
+Roy Blunt;-6;0;6
+Thad Cochran;-6;0;6
+Roger Wicker;-6;0;6
+Susan Collins;-6;0;6
+Bill Cassidy;-6;0;6
+John N. Kennedy;-6;0;6
+Rand Paul;-6;0;6
+Pat Roberts;-6;0;6
+Jerry Moran;-6;0;6
+Chuck Grassly;-6;0;6
+Joni Ernst;-6;0;6
+Todd Young;-6;0;6
+Jim Risch;-6;0;6
+Johnny Isakson;-6;0;6
+David Perdue;-6;0;6
+Marco Rubio;-6;0;6
+John Boozman;-6;0;6
+Tom Cotton;-6;0;6
+John McCain;-6;0;6
+Jeff Flake;-6;0;6
+Lisa Murkowski;-6;0;6
+Dan Sullivan;-6;0;6
+Richard Shelby;-6;0;6
+Luther Strange;-6;0;6
+MikePence;-6;0;6
+OrrinHatch;-6;0;6
+MitchMcConnell;-6;0;6
+JohnCornyn;-6;0;6
+JohnThune;-6;0;6
+JohnBarasso;-6;0;6
+RoyBlunt;-6;0;6
+CoryGardner;-6;0;6
+MikeLee;-6;0;6
+MikeCrapo;-6;0;6
+MikeEnzi;-6;0;6
+RonJohnson;-6;0;6
+ShellyMooreCapito;-6;0;6
+TedCruz;-6;0;6
+LamarAlexander;-6;0;6
+BobCorker;-6;0;6
+MikeRounds;-6;0;6
+LindseyGraham;-6;0;6
+TimScott;-6;0;6
+PatToomey;-6;0;6
+JimInhofe;-6;0;6
+JamesLankford;-6;0;6
+RobPortman;-6;0;6
+JohnHoeven;-6;0;6
+RichardBurr;-6;0;6
+ThomTillis;-6;0;6
+DealHeller;-6;0;6
+DebFischer;-6;0;6
+BenSasse;-6;0;6
+SteveDaines;-6;0;6
+ThadCochran;-6;0;6
+RogerWicker;-6;0;6
+SusanCollins;-6;0;6
+BillCassidy;-6;0;6
+JohnN.Kennedy;-6;0;6
+RandPaul;-6;0;6
+PatRoberts;-6;0;6
+JerryMoran;-6;0;6
+ChuckGrassly;-6;0;6
+JoniErnst;-6;0;6
+ToddYoung;-6;0;6
+JimRisch;-6;0;6
+JohnnyIsakson;-6;0;6
+DavidPerdue;-6;0;6
+MarcoRubio;-6;0;6
+JohnBoozman;-6;0;6
+TomCotton;-6;0;6
+JohnMcCain;-6;0;6
+JeffFlake;-6;0;6
+LisaMurkowski;-6;0;6
+DanSullivan;-6;0;6
+RichardShelby;-6;0;6
+LutherStrange;-6;0;6
+Pence;-6;0;6
+McConnell;-6;0;6
+Cruz;-6;0;6
+Rubio;-6;0;6
+Chuck Schumer;6;0;-6
+Patty Murray;6;0;-6
+Mark Warner;6;0;-6
+Elizabeth Warren;6;0;-6
+Bernie Sanders;6;0;-6
+Joe Manchin;6;0;-6
+Tammy Baldwin;6;0;-6
+Chris Van Hollen;6;0;-6
+Jeff Merkley;6;0;-6
+Patrick Leahy;6;0;-6
+Maria Cantwell;6;0;-6
+Tim Kaine;6;0;-6
+Jack Reed;6;0;-6
+Sheldon Whitehouse;6;0;-6
+Bob Casey;6;0;-6
+Ron Wyden;6;0;-6
+Sherrod Brown;6;0;-6
+Heidi Heitkamp;6;0;-6
+Kirsten Gillibrand;6;0;-6
+Tim Udall;6;0;-6
+Martin Heinrich;6;0;-6
+Bob Menendez;6;0;-6
+Cory Booker;6;0;-6
+Jeanne Shaheen;6;0;-6
+Maggie Hassan;6;0;-6
+Catherine Cortez Masto;6;0;-6
+Jon Tester;6;0;-6
+Claire McCaskill;6;0;-6
+Amy Klobuchar;6;0;-6
+Al Franken;6;0;-6
+Debbie Stabenow;6;0;-6
+Gary Peters;6;0;-6
+Ben Cardin;6;0;-6
+Joe Donnelly;6;0;-6
+Dick Durbin;6;0;-6
+Tammy Duckworth;6;0;-6
+Brian Schatz;6;0;-6
+Mazie Hirono;6;0;-6
+Bill Nelson;6;0;-6
+Tom Carper;6;0;-6
+Chris Coons;6;0;-6
+Richard Blumenthal;6;0;-6
+Chris Murphy;6;0;-6
+Dianne Feinstein;6;0;-6
+Kamala Harris;6;0;-6
+ChuckSchumer;6;0;-6
+DickDurbin;6;0;-6
+PattyMurray;6;0;-6
+MarkWarner;6;0;-6
+AmyKlobuchar;6;0;-6
+BernieSanders;6;0;-6
+JoeManchin;6;0;-6
+TammyBaldwin;6;0;-6
+ChrisVanHollen;6;0;-6
+JeffMerkley;6;0;-6
+PatrickLeahy;6;0;-6
+MariaCantwell;6;0;-6
+TimKaine;6;0;-6
+JackReed;6;0;-6
+SheldonWhitehouse;6;0;-6
+BobCasey;6;0;-6
+RonWyden;6;0;-6
+SherrodBrown;6;0;-6
+HeidiHeitkamp;6;0;-6
+KirstenGillibrand;6;0;-6
+TimUdall;6;0;-6
+MartinHeinrich;6;0;-6
+BobMenendez;6;0;-6
+CoryBooker;6;0;-6
+JeanneShaheen;6;0;-6
+MaggieHassan;6;0;-6
+CatherineCortezMasto;6;0;-6
+JonTester;6;0;-6
+ClaireMcCaskill;6;0;-6
+AlFranken;6;0;-6
+DebbieStabenow;6;0;-6
+GaryPeters;6;0;-6
+ElizabethWarren;6;0;-6
+BenCardin;6;0;-6
+JoeDonnelly;6;0;-6
+TammyDuckworth;6;0;-6
+BrianSchatz;6;0;-6
+MazieHirono;6;0;-6
+BillNelson;6;0;-6
+TomCarper;6;0;-6
+ChrisCoons;6;0;-6
+RichardBlumenthal;6;0;-6
+ChrisMurphy;6;0;-6
+DianneFeinstein;6;0;-6
+KamalaHarris;6;0;-6
+Feinstein;6;0;-6
+Blumenthal;6;0;-6
+Schumer;6;0;-6
+Manchin;6;0;-6
+Warren;6;0;-6
+Gillibrand;6;0;-6
+Menendez;6;0;-6
+Sanders;6;0;-6
