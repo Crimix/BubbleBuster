@@ -4,16 +4,18 @@ namespace QSLib
 {
     public class TwitterAcc //Class of all information needed about a Twitter account
     {
+        //Just such that an object can be made without the parameters
         public TwitterAcc()
         {
         }
 
-        public TwitterAcc(string Token, string Name, string Secret, string RequestID)
+        public TwitterAcc(string Token, string Name, string Secret, string RequestID, string RequsterName)
         {
             this.Token = Token;
             this.Name = Name;
             this.Secret = Secret;
             this.RequestID = RequestID;
+            this.RequsterName = RequsterName;
         }
 
 
@@ -26,14 +28,14 @@ namespace QSLib
         /// <returns>True if the auth variable was assigned</returns>
         public bool GetAuthObj(out AuthObj auth)
         {
-            if (string.IsNullOrWhiteSpace(Token) || string.IsNullOrWhiteSpace(Secret) || string.IsNullOrWhiteSpace(Name))
+            if (string.IsNullOrWhiteSpace(Token) || string.IsNullOrWhiteSpace(Secret) || string.IsNullOrWhiteSpace(Name) || string.IsNullOrWhiteSpace(RequsterName))
             {
                 auth = null;
                 return false;
             }
             else
             {
-                auth = new AuthObj(Token, Secret, Name, RequestID);
+                auth = new AuthObj(Token, Secret, Name, RequestID, RequsterName);
                 return true;
             }
         }
@@ -46,5 +48,7 @@ namespace QSLib
         public string Name { get; set; }
 
         public string Secret { get; set; }
+
+        public string RequsterName { get; set; }
     }
 }
