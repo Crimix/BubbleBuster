@@ -200,9 +200,9 @@ namespace BubbleBuster
             //This just updates the processed value of the record.
             //The request id is to inform which request has been proccessed
             //If the request id is null then the request was not from the GUI application, and as such the id should not be sent
-            if(auth.RequstID != null)
+            if(auth.RequestID != null)
             {
-                if (!webHandler.DatabaseSendDataRequest(Constants.DB_SERVER_IP + "twitter/finalize", "PUT", "record_id=" + userRecordId, "request_id=" + auth.RequstID))
+                if (!webHandler.DatabaseSendDataRequest(Constants.DB_SERVER_IP + "twitter/finalize", "PUT", "record_id=" + userRecordId, "request_id=" + auth.RequestID))
                 {
                     Log.Error("Could not finalize the request");
                 }

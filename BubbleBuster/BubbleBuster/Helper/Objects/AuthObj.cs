@@ -14,14 +14,14 @@ namespace BubbleBuster.Helper.Objects
         /// </summary>
         /// <param name="OAuthToken">The user's OAuthToken</param>
         /// <param name="OAuthTokenSecret">The user's OAuthTokenSecret</param>
-        /// <param name="Name">The user's name</param>
-        public AuthObj(string OAuthToken, string OAuthTokenSecret, string Name, string RequestID)
+        /// <param name="SearchedForUser">The user's name</param>
+        public AuthObj(string OAuthToken, string OAuthTokenSecret, string SearchedForUser, string RequestID, string Name)
         {
-            UID = Guid.NewGuid();
+            this.Name = Name;
             this.OAuthToken = OAuthToken;
             this.OAuthTokenSecret = OAuthTokenSecret;
-            this.Name = Name;
-            this.RequstID = RequstID;
+            this.SearchedForUser = SearchedForUser;
+            this.RequestID = RequestID;
             Type = AuthType.User;
         }
 
@@ -32,9 +32,8 @@ namespace BubbleBuster.Helper.Objects
         /// <param name="apiKey">The api key. OPTIONAL</param>
         public AuthObj(string apiKey = Constants.APP_API_CREDS)
         {
-            UID = Guid.NewGuid();
-            APIKey = apiKey;
             Name = "FilterBubble_SW709";
+            APIKey = apiKey;
             Type = AuthType.App;
         }
 
@@ -49,14 +48,14 @@ namespace BubbleBuster.Helper.Objects
         public AuthType Type { get; private set; }
 
         /// <summary>
-        /// The unique id of this auth object
-        /// </summary>
-        public Guid UID { get; private set; }
-
-        /// <summary>
-        /// The name of the user
+        /// The name of the user who requested the request
         /// </summary>
         public string Name { get; private set; }
+
+        /// <summary>
+        /// The name of the user, who should be analysed
+        /// </summary>
+        public string SearchedForUser { get; private set; }
 
         /// <summary>
         /// The OAuthToken
@@ -71,10 +70,10 @@ namespace BubbleBuster.Helper.Objects
         /// <summary>
         /// The id of the request, assigned by the GUI application
         /// </summary>
-        public string RequstID { get; private set; }
+        public string RequestID { get; private set; }
 
         /// <summary>
-        /// Overridden, such that it uses the UID to compare objects 
+        /// Overridden, such that it uses the Name to compare objects 
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
@@ -82,7 +81,7 @@ namespace BubbleBuster.Helper.Objects
         {
             if (obj is AuthObj)
             {
-                return (obj as AuthObj).UID == this.UID;
+                return (obj as AuthObj).Name == Name;
             }
             else
             {
@@ -91,12 +90,12 @@ namespace BubbleBuster.Helper.Objects
         }
 
         /// <summary>
-        /// Overridden, such that it uses the hashcode of the UID
+        /// Overridden, such that it uses the hashcode of the Name
         /// </summary>
         /// <returns></returns>
         public override int GetHashCode()
         {
-            return UID.GetHashCode();
+            return Name.GetHashCode();
         }
     }
 }
