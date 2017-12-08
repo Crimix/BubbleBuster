@@ -42,6 +42,7 @@ namespace QSLib
                 while (ThereIsNewTask()) // Adds all requests to the queue as tasks.
                 {
                     TwitterAcc input = nonAddedRequests.Peek();
+                    Log.Debug("Task entered queue with ID " + input.RequestID);
 
                     Task newTask = new Task(() =>
                     {

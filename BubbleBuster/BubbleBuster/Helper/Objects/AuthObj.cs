@@ -70,7 +70,7 @@ namespace BubbleBuster.Helper.Objects
         /// <summary>
         /// The id of the request, assigned by the GUI application
         /// </summary>
-        public string RequestID { get; private set; }
+        public string RequestID { get; private set; } = ""
 
         /// <summary>
         /// Overridden, such that it uses the Name to compare objects 
