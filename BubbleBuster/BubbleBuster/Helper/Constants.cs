@@ -28,6 +28,6 @@ namespace BubbleBuster.Helper
         public const int TWEET_LIST_AMOUNT = 8; //How many theads should the tweet list be split to 
 
         //IP to the database server
-        public const string DB_SERVER_IP = "http://localhost:8000/api/";
+        public const string DB_SERVER_IP = "http://localhost:8001/api/";
     }
 }
