@@ -31,6 +31,7 @@ namespace BubbleBuster.Helper
                 return 0;
 
             var model = FileHelper.GetModel();
+            bagOfWords = FileHelper.GetBagOfWords();
 
             double[][] inputs = FormatTweets(tweets);
 
@@ -58,7 +59,6 @@ namespace BubbleBuster.Helper
             {
                 _tweets.Add(item.Text);
             }
-            bagOfWords = FileHelper.GetBagOfWords();
 
             //Whitespace tokenizer
             //string[][] tokens = tweets.ToArray().Tokenize();
@@ -115,8 +115,6 @@ namespace BubbleBuster.Helper
             var nb = teacher.Learn(inputs, outputs);
 
             FileHelper.WriteModelToFile("NaiveBayes90.accord", nb);
-
-
         }
 
         /// <summary> 
