@@ -34,7 +34,6 @@ namespace QSLib
         /// </summary>
         public async void TaskQueue()
         {
-            const int TASKLIMIT = 5;
             Queue<Task> taskQueue = new Queue<Task>(); //Queue of tasks that are not started yet
             List<Task> runningTasksList = new List<Task>(); //List of currently running tasks.
             while (true) //runs for as long as the server is up.
@@ -53,7 +52,7 @@ namespace QSLib
                     nonAddedRequests.Dequeue();
                 }
 
-                while (runningTasksList.Count < TASKLIMIT) //Starts tasks from the queue until there are none left or the limit is reached.
+                while (runningTasksList.Count < Constants.QUEUE_SERVER_TASK_LIMIT) //Starts tasks from the queue until there are none left or the limit is reached.
                 {
                     if (taskQueue.Count > 0)
                     {
