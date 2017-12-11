@@ -41,12 +41,12 @@ namespace BubbleBuster.Helper
         /// </summary>
         /// <param name="user">The user</param>
         /// <param name="auth">The auth object</param>
-        /// <param name="get">The method to check the database for previous results</param>
+        /// <param name="checkDB">The method to check the database for previous results</param>
         /// <param name="classifyMethod">The method to classify tweets</param>
-        /// <param name="post">The method to post the result to the database</param>
-        public void GetTweetsFromUserAndAnalyse(User user, AuthObj auth, Func<User, bool> get, Func<List<Tweet>, AnalysisResultObj> classifyMethod, Func<AnalysisResultObj, User, bool> post)
+        /// <param name="postToDB">The method to post the result to the database</param>
+        public void GetTweetsFromUserAndAnalyse(User user, AuthObj auth, Func<User, bool> checkDB, Func<List<Tweet>, AnalysisResultObj> classifyMethod, Func<AnalysisResultObj, User, bool> postToDB)
         {
-            GetTweetsFromUserHelper(user, auth, (() => TweetThreadMethod(user, auth, get, classifyMethod, post)));
+            GetTweetsFromUserHelper(user, auth, (() => TweetThreadMethod(user, auth, checkDB, classifyMethod, postToDB)));
         }
 
         /// <summary>
@@ -85,12 +85,12 @@ namespace BubbleBuster.Helper
         /// </summary>
         /// <param name="friends">The friends of an user </param>
         /// <param name="auth">The auth object</param>
-        /// <param name="get">The method to check the database for previous results</param>
+        /// <param name="checkDB">The method to check the database for previous results</param>
         /// <param name="classifyMethod">The method to classify tweets</param>
-        /// <param name="post">The method to post the result to the database</param>
-        public void GetTweetsFromFriendsAndAnalyse(Friends friends, AuthObj auth, Func<User, bool> get, Func<List<Tweet>, AnalysisResultObj> classifyMethod, Func<AnalysisResultObj, User, bool> post)
+        /// <param name="postToDB">The method to post the result to the database</param>
+        public void GetTweetsFromFriendsAndAnalyse(Friends friends, AuthObj auth, Func<User, bool> checkDB, Func<List<Tweet>, AnalysisResultObj> classifyMethod, Func<AnalysisResultObj, User, bool> postToDB)
         {
-            GetTweetsFromFriendsHelper(friends, auth, ((x) => TweetThreadMethod(x, auth, get, classifyMethod, post)));
+            GetTweetsFromFriendsHelper(friends, auth, ((x) => TweetThreadMethod(x, auth, checkDB, classifyMethod, postToDB)));
         }
 
         /// <summary>
@@ -172,18 +172,18 @@ namespace BubbleBuster.Helper
         /// </summary>
         /// <param name="user">The user</param>
         /// <param name="auth">The auth object</param>
-        /// <param name="get">The method to check the database for previous results</param>
+        /// <param name="checkDB">The method to check the database for previous results</param>
         /// <param name="classifyMethod">The method to classify tweets</param>
-        /// <param name="post">The method to post the result to the database</param>
+        /// <param name="postToDB">The method to post the result to the database</param>
         /// <returns>A list of tweets </returns>
-        private List<Tweet> TweetThreadMethod(User user, AuthObj auth, Func<User, bool> get = null, Func<List<Tweet>, AnalysisResultObj> classifyMethod = null, Func<AnalysisResultObj, User, bool> post = null)
+        private List<Tweet> TweetThreadMethod(User user, AuthObj auth, Func<User, bool> checkDB = null, Func<List<Tweet>, AnalysisResultObj> classifyMethod = null, Func<AnalysisResultObj, User, bool> postToDB = null)
         {
             bool alreadyExist = false;
             AnalysisResultObj tempResult = new AnalysisResultObj();
             List<Tweet> temp = new List<Tweet>();
-            if (get != null)
+            if (checkDB != null)
             {
-                alreadyExist = get(user); //Uses the supplied method to find out if the result already exist on the database
+                alreadyExist = checkDB(user); //Uses the supplied method to find out if the result already exist on the database
                 if (alreadyExist)
                 {
                     Log.Debug(String.Format("{0,-30} {1,-20} {2,-11}", user.Name, user.Id, "Already exist in db"));
@@ -202,10 +202,10 @@ namespace BubbleBuster.Helper
                     Log.Debug(String.Format("{0,-30} {1,-20} {2,-11}", user.Name, user.Id, temp.Count));
                 }
 
-                if (classifyMethod != null && post != null)
+                if (classifyMethod != null && postToDB != null)
                 {
                     tempResult = classifyMethod(temp); //Use the supplied method to classify the list of tweets
-                    post(tempResult, user); //Use the supplied method to post the result to the database
+                    postToDB(tempResult, user); //Use the supplied method to post the result to the database
                     temp = new List<Tweet>();
                 }
             }

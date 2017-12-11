@@ -37,6 +37,7 @@ namespace StressTesting
             name.Add("glennbeck");
             name.Add("mitchellvii");
 
+            Console.WriteLine(name.Count);
             Console.ReadLine();
 
             foreach (var item in name)
