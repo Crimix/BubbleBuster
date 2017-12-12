@@ -45,7 +45,7 @@ namespace BubbleBuster
             var friends = FriendsRetriever.Instance.GetFriends(user, auth);
             Log.Debug("Following " + friends.Users.Count + " users");
 
-            //Analyse the tweets of each frind and post the result to the database, then link the users result to the global userRecordId
+            //Analyse the tweets of each friend and post the result to the database, then link the users result to the global userRecordId
             TweetRetriever.Instance.GetTweetsFromFriendsAndAnalyse(friends, auth, CheckIfResultExistOnDBAndLink, ClassifyTweet, PostResultToDBAndLink);
 
             //Finalizes the user by informing the database that the user has been proccessed.

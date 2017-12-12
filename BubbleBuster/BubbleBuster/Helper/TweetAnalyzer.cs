@@ -219,7 +219,7 @@ namespace BubbleBuster.Helper
                     output.NegativeSentiment += tweet.NegativeValue;
                     output.PositiveSentiment += tweet.PositiveValue;
 
-                    if ((tweet.KeywordBias + tweet.MediaBias) != 0)
+                    if (tweet.KeywordBias != 0 || tweet.MediaBias != 0)
                     {
                         output.PolCount++;
 
@@ -227,11 +227,6 @@ namespace BubbleBuster.Helper
                         output.MediaBias += tweet.MediaBias;
                         
                     }
-
-                    //output.KeywordBias += tweet.KeywordBias;
-                    //output.MediaBias += tweet.MediaBias;
-                    //output.NegativeSentiment += tweet.NegativeValue;
-                    //output.PositiveSentiment += tweet.PositiveValue;
                 }
             }
             output.Count = tweetList.Count;
