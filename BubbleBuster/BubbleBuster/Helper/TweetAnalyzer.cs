@@ -64,7 +64,8 @@ namespace BubbleBuster.Helper
             Log.Debug("Spliting " + tweetList.Count + " tweets");
             int tweets = tweetList.Count;
             List<Task<AnalysisResultObj>> tasks = new List<Task<AnalysisResultObj>>();
-            var copyTweetList = tweetList;
+            List<Tweet> copyTweetList = new List<Tweet>();
+            copyTweetList.AddRange(tweetList);
             int e = tweetList.Count / Constants.TWEET_LIST_AMOUNT;
             List<List<Tweet>> splittedList = new List<List<Tweet>>();
             int tweetsSplitted = 0;
