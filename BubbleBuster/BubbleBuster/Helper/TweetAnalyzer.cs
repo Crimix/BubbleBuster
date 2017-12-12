@@ -98,11 +98,14 @@ namespace BubbleBuster.Helper
             //Combines the result 
             foreach (var task in tasks)
             {
+                res.Count += task.Result.Count;
+                res.PolCount += task.Result.PolCount;
                 res.KeywordBias += task.Result.KeywordBias;
                 res.MediaBias += task.Result.MediaBias;
-                res.Count += task.Result.Count;
-                res.NegativeSentiment += task.Result.NegativeSentiment;
                 res.PositiveSentiment += task.Result.PositiveSentiment;
+                res.NegativeSentiment += task.Result.NegativeSentiment;
+                res.PositiveTweetsCount += task.Result.PositiveTweetsCount;
+                res.NegativeTweetsCount += task.Result.NegativeTweetsCount;
             }
             Log.Debug("Combining tweets");
             Log.Debug("Result " + res.GetAlgorithmResult());
