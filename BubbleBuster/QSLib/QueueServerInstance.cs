@@ -34,7 +34,6 @@ namespace QSLib
         /// </summary>
         public async void TaskQueue()
         {
-            const int TASKLIMIT = 5;
             Queue<Task> taskQueue = new Queue<Task>(); //Queue of tasks that are not started yet
             List<Task> runningTasksList = new List<Task>(); //List of currently running tasks.
             while (true) //runs for as long as the server is up.
@@ -42,6 +41,7 @@ namespace QSLib
                 while (ThereIsNewTask()) // Adds all requests to the queue as tasks.
                 {
                     TwitterAcc input = nonAddedRequests.Peek();
+                    Log.Debug("Task entered queue with ID " + input.RequestID);
 
                     Task newTask = new Task(() =>
                     {
@@ -52,7 +52,7 @@ namespace QSLib
                     nonAddedRequests.Dequeue();
                 }
 
-                while (runningTasksList.Count < TASKLIMIT) //Starts tasks from the queue until there are none left or the limit is reached.
+                while (runningTasksList.Count < Constants.QUEUE_SERVER_TASK_LIMIT) //Starts tasks from the queue until there are none left or the limit is reached.
                 {
                     if (taskQueue.Count > 0)
                     {
@@ -102,7 +102,6 @@ namespace QSLib
         public bool AddTask(TwitterAcc tAcc)
         {
             bool wasSuccesful = true;
-            Log.Debug("Added task");
 
             try
             {

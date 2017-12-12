@@ -1,4 +1,5 @@
 ﻿using BubbleBuster;
+using BubbleBuster.Helper;
 using BubbleBuster.Helper.Objects;
 
 namespace QSLib
@@ -12,7 +13,10 @@ namespace QSLib
 
         public ServerTask(TwitterAcc twitterRequest)
         {
-            twitterRequest.GetAuthObj(out twitterAuth);
+            if(!twitterRequest.GetAuthObj(out twitterAuth))
+            {
+                Log.Error("Auth failed");
+            }
             twitterName = twitterRequest.Name;
         }
 
@@ -21,7 +25,11 @@ namespace QSLib
         /// </summary>
         public void Run()
         {
-            new Worker(twitterAuth, twitterName);
+            if(twitterAuth != null)
+            {
+                Log.Debug("Task started " + twitterAuth.RequestID);
+                new Worker(twitterAuth, twitterName);
+            }
         }
     }
 }

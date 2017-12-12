@@ -50,7 +50,7 @@ namespace BubbleBuster
 
             //Finalizes the user by informing the database that the user has been proccessed.
             FinalizeUser();
-            Log.Debug("Done!!!");
+            Log.Debug("Done task with id "+  auth.RequestID +"!!!");
         }
 
 #region Methods to be passed to TweetRetriever
@@ -200,7 +200,7 @@ namespace BubbleBuster
             //This just updates the processed value of the record.
             //The request id is to inform which request has been proccessed
             //If the request id is null then the request was not from the GUI application, and as such the id should not be sent
-            if(auth.RequestID != null)
+            if(!string.IsNullOrWhiteSpace(auth.RequestID))
             {
                 if (!webHandler.DatabaseSendDataRequest(Constants.DB_SERVER_IP + "twitter/finalize", "PUT", "record_id=" + userRecordId, "request_id=" + auth.RequestID))
                 {
