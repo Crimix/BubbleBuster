@@ -21,6 +21,21 @@ namespace BubbleBuster
         [STAThread]
         static void Main(string[] args)
         {
+            List<Tweet> tweetList = new List<Tweet>();
+            List<Tweet> tweetList2 = new List<Tweet>();
+
+            tweetList = FileHelper.ReadObjectFromFile<List<Tweet>>("\\TestData\\MaggieNYT-Left.json");
+            tweetList2 = FileHelper.ReadObjectFromFile<List<Tweet>>("\\TestData\\MaggieNYT-Left.json");
+
+
+            AnalysisResultObj result = TweetAnalyzer.Instance.AnalyzeAndDecorateTweetsThreaded(tweetList);
+            AnalysisResultObj result2 = TweetAnalyzer.Instance.AnalyzeAndDecorateTweets(tweetList2);
+
+            Console.WriteLine(tweetList[10].Text);
+            Console.WriteLine(result.GetPolPercent() + " " + result.GetAlgorithmResult() + " " + result.GetMediaResult() + " " + result.Count + " " + result.PolCount + " " + result.KeywordBias + " " + result.MediaBias);
+            Console.WriteLine(result2.GetPolPercent() + " " + result2.GetAlgorithmResult() + " " + result2.GetMediaResult() + " " + result2.Count + " " + result2.PolCount + " " + result2.KeywordBias + " " + result2.MediaBias);
+
+
             Console.WriteLine("?");
             Console.ReadLine();
         }
