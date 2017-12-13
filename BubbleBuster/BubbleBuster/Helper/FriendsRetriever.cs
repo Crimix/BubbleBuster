@@ -7,6 +7,7 @@ namespace BubbleBuster.Helper
 {
     public class FriendsRetriever
     {
+        private static object _lock = new object();
         private static FriendsRetriever _instance; //Variable for the singleton instance
 
         //To make it a singleton 
@@ -25,7 +26,13 @@ namespace BubbleBuster.Helper
             {
                 if (_instance == null)
                 {
-                    _instance = new FriendsRetriever();
+                    lock (_lock)
+                    {
+                        if (_instance == null)
+                        {
+                            _instance = new FriendsRetriever();
+                        }
+                    }
                 }
                 return _instance;
             }

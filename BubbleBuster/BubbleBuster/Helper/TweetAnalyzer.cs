@@ -21,6 +21,7 @@ namespace BubbleBuster.Helper
     {
         //Instance variable
         private static TweetAnalyzer _instance;
+        private static object _lock = new object();
 
         //"Keywords" are key-words used in analysis. Each has a number of fields determining their political value in a given positive/negative sentimental context.
         private Dictionary<string, KeywordObj> keywords = new Dictionary<string, KeywordObj>(StringComparer.InvariantCultureIgnoreCase);
@@ -45,10 +46,16 @@ namespace BubbleBuster.Helper
             {
                 if (_instance == null)
                 {
-                    _instance = new TweetAnalyzer();
-                    _instance.analysisWords = FileHelper.GetAnalysisWords();
-                    _instance.newsHyperlinks = FileHelper.GetHyperlinks();
-                    _instance.keywords = FileHelper.GetKeywords();
+                    lock (_lock)
+                    {
+                        if (_instance == null)
+                        {
+                            _instance = new TweetAnalyzer();
+                            _instance.analysisWords = FileHelper.GetAnalysisWords();
+                            _instance.newsHyperlinks = FileHelper.GetHyperlinks();
+                            _instance.keywords = FileHelper.GetKeywords();
+                        }
+                    }
                 }
                 return _instance;
             }
@@ -175,7 +182,7 @@ namespace BubbleBuster.Helper
         {
             foreach (Url link in tweet.Entities.Urls)
             {
-                string shortenedUrl = UrlHelper.Instance.ShortenUrl(link.ExpandedUrl);
+                string shortenedUrl = UrlHelper.ShortenUrl(link.ExpandedUrl);
                 if (newsHyperlinks.ContainsKey(shortenedUrl))
                 {
                     tweet.MediaBias += newsHyperlinks[shortenedUrl];

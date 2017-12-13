@@ -17,6 +17,7 @@ namespace BubbleBuster.WordUpdater
     {
         //Instance variable
         private static WordWorker _instance;
+        private static object _lock = new object();
 
         //Private constructor such that it is a singleton 
         private WordWorker()
@@ -33,7 +34,13 @@ namespace BubbleBuster.WordUpdater
             {
                 if (_instance == null)
                 {
-                    _instance = new WordWorker();
+                    lock (_lock)
+                    {
+                        if (_instance == null)
+                        {
+                            _instance = new WordWorker();
+                        }
+                    }
                 }
                 return _instance;
             }

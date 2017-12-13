@@ -11,6 +11,7 @@ namespace BubbleBuster.Helper
     public class TweetRetriever
     {
         private static TweetRetriever _instance; //Variable for the singleton instance
+        private static object _lock = new object();
 
         //To make it a singleton 
         private TweetRetriever()
@@ -27,7 +28,13 @@ namespace BubbleBuster.Helper
             {
                 if (_instance == null)
                 {
-                    _instance = new TweetRetriever();
+                    lock (_lock)
+                    {
+                        if (_instance == null)
+                        {
+                            _instance = new TweetRetriever();
+                        }
+                    }
                 }
                 return _instance;
             }

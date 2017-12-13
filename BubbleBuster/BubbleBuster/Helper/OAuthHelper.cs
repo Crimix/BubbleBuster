@@ -10,6 +10,7 @@ namespace BubbleBuster.Helper
     {
         //Instance variable
         private static OAuthHelper _instance;
+        private static object _lock = new object();
 
         //Private constructor such that it is a singleton
         private OAuthHelper()
@@ -26,7 +27,13 @@ namespace BubbleBuster.Helper
             {
                 if (_instance == null)
                 {
-                    _instance = new OAuthHelper();
+                    lock (_lock)
+                    {
+                        if (_instance == null)
+                        {
+                            _instance = new OAuthHelper();
+                        }
+                    }
                 }
                 return _instance;
             }

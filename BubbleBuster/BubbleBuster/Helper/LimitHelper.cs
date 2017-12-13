@@ -10,6 +10,7 @@ namespace BubbleBuster.Helper
     {
         //Such that each auth object gets its own pool of limits. This is also the dictionary which holds each instance of the limit helper.
         private static Dictionary<AuthObj, LimitHelper> limitsByAuth = new Dictionary<AuthObj, LimitHelper>();
+        private static object _lock = new object();
 
 
         /// <summary>
@@ -34,7 +35,13 @@ namespace BubbleBuster.Helper
             }
             else
             {
-                limitsByAuth.Add(auth, new LimitHelper());
+                lock (_lock)
+                {
+                    if (!limitsByAuth.ContainsKey(auth))
+                    {
+                        limitsByAuth.Add(auth, new LimitHelper());
+                    }
+                }
                 return limitsByAuth[auth];
             }
         }

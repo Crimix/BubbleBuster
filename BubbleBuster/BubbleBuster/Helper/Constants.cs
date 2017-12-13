@@ -6,7 +6,7 @@ namespace BubbleBuster.Helper
     {
         public const int REMAINING_OFFSET = 5; //How many there should be left of each request type
         public const string USER_AGENT = "FilterBubble_SW709"; //The name of the APP
-        public const int TWEETS_TO_RETRIEVE = 3200; //How many tweets to retrieve per user.
+        public const int TWEETS_TO_RETRIEVE = 1000; //How many tweets to retrieve per user.
         private static string PROGRAM_DATA = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData); //The path to the files
         public const bool DEBUG = true; //Such that the log file can be for just warnings infos and errors
         public const int QUEUE_SERVER_TASK_LIMIT = 5; //Task limit for the queue server
