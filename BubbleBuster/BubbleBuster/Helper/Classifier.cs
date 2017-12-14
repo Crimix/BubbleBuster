@@ -461,8 +461,18 @@ namespace BubbleBuster.Helper
             int correct3 = 0;
             int correct4 = 0;
 
+            int[][] confusionMatrix = new int[3][];
+            confusionMatrix[0] = new int[3] { 0, 0, 0 };
+            confusionMatrix[1] = new int[3] { 0, 0, 0 };
+            confusionMatrix[2] = new int[3] { 0, 0, 0 };
+
+
             for (int i = 0; i < testOutputs1.Length; i++)
             {
+                confusionMatrix[testOutputs1[i]][answers1[i]]++;
+                confusionMatrix[testOutputs2[i]][answers2[i]]++;
+                confusionMatrix[testOutputs3[i]][answers3[i]]++;
+                confusionMatrix[testOutputs4[i]][answers4[i]]++;
                 if (answers1[i] == testOutputs1[i])
                 {
                     correct1++;
@@ -489,6 +499,18 @@ namespace BubbleBuster.Helper
 
             Console.WriteLine(accuracy1 + " " + accuracy2 + " " + accuracy3 + " " + accuracy4);
             Console.WriteLine(averageAccuracy);
+
+
+            Console.WriteLine();
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    Console.Write(confusionMatrix[i][j] + " ");
+                }
+                Console.WriteLine();
+            }
+            
 
         }
 #endregion
