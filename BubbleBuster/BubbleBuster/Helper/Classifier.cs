@@ -285,7 +285,6 @@ namespace BubbleBuster.Helper
                     if (n < excludeStart || n > excludeEnd)
                     {
                         string line = r2.ReadLine();
-                        Console.WriteLine(line);
                         int i = int.Parse(line);
 
                         if (i == 0 || i == 1)
